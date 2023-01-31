@@ -35,6 +35,9 @@ public class ModelLoader : MonoBehaviour {
     }
     
     public async Task Load() {
+        if (loaded) {
+            return ;
+        }
         Assembly asm = Assembly.GetAssembly(typeof(ModelContainerOf));
         Type[] types = asm.GetExportedTypes().Where((Type type) => type.IsDefined(typeof(ModelContainerOf), false)).OrderBy((type) => {
             return ((ModelContainerOf)type.GetCustomAttribute(typeof(ModelContainerOf), false)).LoadOrder;

@@ -33,6 +33,8 @@
 .vs/**/*
 .VSCodeCounter/**/*
 
+.idea/**/*
+
 # Gradle cache directory
 .gradle/
 

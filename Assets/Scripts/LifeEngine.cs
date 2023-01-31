@@ -28,13 +28,6 @@ public class LifeEngine : MonoBehaviour {
         LifeCardManager.Instance.UpdateCardActions();
         OnLifeStart?.Invoke();
         AfterLifeChange?.Invoke();
-        BattleStartConfig config = new BattleStartConfig();
-        config.Roles.Add(new BattleCharacter(10001, 0, false));
-        config.Roles.Add(new BattleCharacter(10002, 1, true));
-        config.Positions.Add(new Vector2(-5, 0));
-        config.Positions.Add(new Vector2(5, 0));
-
-        BattleManager.Instance.DoBattle(config).Coroutine();
     }
 
     private async void OnNextMonth() {

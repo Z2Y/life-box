@@ -9,21 +9,14 @@ using System.Collections.Generic;
 
 public class ExpressionExcutor : MonoBehaviour
 {
-    private static ExpressionExcutor _instance;
-    public static ExpressionExcutor Instance
+    public static ExpressionExcutor Instance { get; private set; }
+
+    private void Awake()
     {
-        get
-        {
-            return _instance;
-        }
+        Instance = this;
     }
 
-    void Awake()
-    {
-        _instance = this;
-    }
-
-    public async Task<object> Excute(string command, string data, List<object> listData, Dictionary<string, object> env)
+    public static async Task<object> Execute(string command, string data, List<object> listData, Dictionary<string, object> env)
     {
         ICommandResolver resolver = ExpressionCommandResolver.GetResolver(command);
         if (resolver != null)
@@ -33,7 +26,7 @@ public class ExpressionExcutor : MonoBehaviour
         return null;
     }
 
-    public bool Compare(string field, string op, int value)
+    public static bool Compare(string field, string op, int value)
     {
         int fieldValue;
 
@@ -67,49 +60,50 @@ public class ExpressionExcutor : MonoBehaviour
 
     public bool Contains(string name, List<object> data)
     {
-        string container = name.ToUpper();
-        object resolved = ExpressionFieldResolver.Resolve(name.StartsWith("#") ? name.Substring(1) : name);
+        var container = name.ToUpper();
+        var resolved = ExpressionFieldResolver.Resolve(name.StartsWith("#") ? name.Substring(1) : name);
         if (resolved == null) return false;
 
         try
         {
-            IDictionary dictContainer = resolved as IDictionary;
-
-            if (dictContainer != null)
+            if (resolved is IDictionary dictContainer)
             {
-                Type dictType = dictContainer.GetType();
-                Type keyType = dictType.IsGenericType ? dictType.GetGenericArguments()[0] : typeof(object);
+                var dictType = dictContainer.GetType();
+                var keyType = dictType.IsGenericType ? dictType.GetGenericArguments()[0] : typeof(object);
 
-                foreach (var item in data)
+                for (var index = 0; index < data.Count; index++)
                 {
+                    var item = data[index];
                     if (dictContainer.Contains(Convert.ChangeType(item, keyType)))
                     {
                         return true;
                     }
                 }
+
                 return false;
             }
 
-            IList listContainer = resolved as IList;
-
-            if (listContainer != null)
+            if (resolved is IList listContainer)
             {
-                Type listType = listContainer.GetType();
-                Type keyType = listType.IsGenericType ? listType.GetGenericArguments()[0] : typeof(object);
+                var listType = listContainer.GetType();
+                var keyType = listType.IsGenericType ? listType.GetGenericArguments()[0] : typeof(object);
 
-                foreach (var item in data)
+                for (var index = 0; index < data.Count; index++)
                 {
+                    var item = data[index];
                     if (listContainer.Contains(Convert.ChangeType(item, keyType)))
                     {
                         return true;
                     }
                 }
+
                 return false;
             }
 
-            foreach (var item in data)
+            for (var index = 0; index < data.Count; index++)
             {
-                object converted = Convert.ChangeType(item, resolved.GetType());
+                var item = data[index];
+                var converted = Convert.ChangeType(item, resolved.GetType());
                 if (resolved.Equals(converted))
                 {
                     return true;
@@ -118,7 +112,7 @@ public class ExpressionExcutor : MonoBehaviour
         }
         catch (Exception e)
         {
-            UnityEngine.Debug.LogWarning(e);
+            Debug.LogWarning(e);
         }
 
         return false;
@@ -222,7 +216,7 @@ public class ExpressionNode
         switch (op)
         {
             case "@":
-                return ExpressionExcutor.Instance.Excute(command, data, listData, environments);
+                return ExpressionExcutor.Execute(command, data, listData, environments);
             case ">":
             case ">=":
             case "<":
@@ -232,7 +226,7 @@ public class ExpressionNode
                 int rightValue;
                 if (int.TryParse(data, out rightValue))
                 {
-                    return ExpressionExcutor.Instance.Compare(command, op, rightValue);
+                    return ExpressionExcutor.Compare(command, op, rightValue);
                 }
                 break;
             case "?":
@@ -399,9 +393,8 @@ public class ExecuteResult
     public object value;
     public ExecuteResult(object value)
     {
-        if (value is Task<object>)
+        if (value is Task<object> taskResult)
         {
-            Task<object> taskResult = value as Task<object>;
             if (taskResult.IsCompleted)
             {
                 this.value = taskResult.Result;
@@ -409,7 +402,7 @@ public class ExecuteResult
             else
             {
                 Debug.LogWarning("ExecuteResult Task Not Completed!");
-                this.value = value;
+                this.value = taskResult;
             }
         }
         else
