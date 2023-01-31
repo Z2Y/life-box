@@ -71,9 +71,8 @@ public class ExpressionExcutor : MonoBehaviour
                 var dictType = dictContainer.GetType();
                 var keyType = dictType.IsGenericType ? dictType.GetGenericArguments()[0] : typeof(object);
 
-                for (var index = 0; index < data.Count; index++)
+                foreach (var item in data)
                 {
-                    var item = data[index];
                     if (dictContainer.Contains(Convert.ChangeType(item, keyType)))
                     {
                         return true;
@@ -88,9 +87,8 @@ public class ExpressionExcutor : MonoBehaviour
                 var listType = listContainer.GetType();
                 var keyType = listType.IsGenericType ? listType.GetGenericArguments()[0] : typeof(object);
 
-                for (var index = 0; index < data.Count; index++)
+                foreach (var item in data)
                 {
-                    var item = data[index];
                     if (listContainer.Contains(Convert.ChangeType(item, keyType)))
                     {
                         return true;
@@ -100,9 +98,8 @@ public class ExpressionExcutor : MonoBehaviour
                 return false;
             }
 
-            for (var index = 0; index < data.Count; index++)
+            foreach (var item in data)
             {
-                var item = data[index];
                 var converted = Convert.ChangeType(item, resolved.GetType());
                 if (resolved.Equals(converted))
                 {
@@ -160,14 +157,13 @@ public class ExpressionNode
 
     public string InjectEnv()
     {
-        MatchCollection mathcs = Regex.Matches(expression, @"\{(\$\w+)\}");
-        for (int i = 0; i < mathcs.Count; i++)
+        var matches = Regex.Matches(expression, @"\{(\$\w+)\}");
+        for (var i = 0; i < matches.Count; i++)
         {
-            string valueKey = mathcs[i].Groups[1].Value;
-            object envValue;
-            if (environments.TryGetValue(valueKey, out envValue) && envValue != null)
+            var valueKey = matches[i].Groups[1].Value;
+            if (environments.TryGetValue(valueKey, out var envValue) && envValue != null)
             {
-                expression = expression.Replace(mathcs[i].Value, envValue.ToString());
+                expression = expression.Replace(matches[i].Value, envValue.ToString());
             }
         }
         return expression;
@@ -186,7 +182,7 @@ public class ExpressionNode
         }
         catch (Exception e)
         {
-            UnityEngine.Debug.LogWarning(e);
+            Debug.LogWarning(e);
         }
         return null;
     }
@@ -223,8 +219,7 @@ public class ExpressionNode
             case "%":
             case "<=":
             case "==":
-                int rightValue;
-                if (int.TryParse(data, out rightValue))
+                if (int.TryParse(data, out var rightValue))
                 {
                     return ExpressionExcutor.Compare(command, op, rightValue);
                 }
@@ -438,40 +433,34 @@ public static class ExpressionHelper
 
     public static string InjectedExpression(this string expression, Dictionary<string, object> environments = null)
     {
-        if (expression.Length <= 0) { return expression; }
-        ExpressionNode node = new ExpressionNode(expression);
-        if (environments != null)
+        if (expression.Length <= 0) { return ""; }
+        var node = new ExpressionNode(expression);
+        if (environments == null) return node.InjectEnv();
+        foreach (var item in environments)
         {
-            foreach (var item in environments)
-            {
-                node.SetEnv(item.Key, item.Value);
-            }
+            node.SetEnv(item.Key, item.Value);
         }
         return node.InjectEnv();
     }
     public static object ExecuteExpression(this string expression, Dictionary<string, object> environments = null)
     {
         if (expression.Length <= 0) { return null; }
-        ExpressionNode node = ExpressionNode.ParseExpression(expression);
-        if (environments != null)
+        var node = ExpressionNode.ParseExpression(expression);
+        if (environments == null) return node.Execute();
+        foreach (var item in environments)
         {
-            foreach (var item in environments)
-            {
-                node.SetEnv(item.Key, item.Value);
-            }
+            node.SetEnv(item.Key, item.Value);
         }
         return node.Execute();
     }
 
     public static async Task<object> ExecuteExpressionAsync(this string expression, Dictionary<string, object> environments = null) {
         if (expression.Length <= 0) { return null; }
-        ExpressionNode node = ExpressionNode.ParseExpression(expression);
-        if (environments != null)
+        var node = ExpressionNode.ParseExpression(expression);
+        if (environments == null) return await node.ExecuteAsync();
+        foreach (var item in environments)
         {
-            foreach (var item in environments)
-            {
-                node.SetEnv(item.Key, item.Value);
-            }
+            node.SetEnv(item.Key, item.Value);
         }
         return await node.ExecuteAsync();        
     }
