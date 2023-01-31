@@ -48,7 +48,7 @@ public class ModelLoader : MonoBehaviour {
             Type modelType = modelAttr.ModelType;
             ResourceRequest loader = Resources.LoadAsync($"{dir}{modelType.Name}");
             while (!loader.isDone) {
-                await YieldCoroutine.Instance.WaitForSeconds(0.005f);
+                await YieldCoroutine.WaitForSeconds(0.005f);
             }
             TextAsset asset = loader.asset as TextAsset;
             Type modelListType = typeof(List<>).MakeGenericType(modelType);

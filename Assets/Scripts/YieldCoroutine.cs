@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,17 +5,7 @@ using UnityEngine;
 
 public class YieldCoroutine : MonoBehaviour
 {
-    private static YieldCoroutine _instance;
-    public static YieldCoroutine Instance {
-        get {
-            if (_instance == null) {
-                _instance = (new GameObject("YieldCoroutine")).AddComponent<YieldCoroutine>();
-            }
-            return _instance;
-        }
-     }
-
-    protected List<YieldTask> Tasks = new List<YieldTask>();
+    protected static readonly List<YieldTask> Tasks = new List<YieldTask>();
 
     private void Awake()
     {
@@ -30,14 +19,14 @@ public class YieldCoroutine : MonoBehaviour
         }
     }
 
-    public async Task WaitForSeconds(float t)
+    public static async Task WaitForSeconds(float t)
     {
         var yieldTask = new YieldTask(new WaitForSeconds(t));
         Tasks.Add(yieldTask);
         await yieldTask.Wait();
     }
 
-    public async Task WaitForInstruction(YieldInstruction instruction)
+    public static async Task WaitForInstruction(YieldInstruction instruction)
     {
         var yieldTask = new YieldTask(instruction);
         Tasks.Add(yieldTask);
@@ -53,7 +42,7 @@ public class YieldCoroutine : MonoBehaviour
         Tasks.Clear();
     }
 
-    private IEnumerator DoTask(YieldTask task)
+    private static IEnumerator DoTask(YieldTask task)
     {
         yield return task.instruction;
         task.source.TrySetResult(true);
@@ -61,8 +50,8 @@ public class YieldCoroutine : MonoBehaviour
 
     protected class YieldTask
     {
-        public YieldInstruction instruction;
-        public TaskCompletionSource<bool> source;
+        public readonly YieldInstruction instruction;
+        public readonly TaskCompletionSource<bool> source;
 
         public YieldTask(YieldInstruction instruction)
         {

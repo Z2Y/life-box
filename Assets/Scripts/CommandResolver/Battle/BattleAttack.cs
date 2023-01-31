@@ -58,7 +58,7 @@ public class BattleNormalAttackEffect : IBattleEffect
             Vector3 jumpDirection = target.View.transform.position - self.View.transform.position;
             target.View.ShowAttackInfo($"<color=#FD5C36>-{damage}</color>", jumpDirection.normalized);
         }
-        await YieldCoroutine.Instance.WaitForInstruction(new WaitForEndOfFrame());
+        await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
     }
 
     public int GetScore()

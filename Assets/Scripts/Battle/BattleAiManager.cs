@@ -110,7 +110,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
             if (frameCount > 5)
             {
                 frameCount = 0;
-                await YieldCoroutine.Instance.WaitForInstruction(new WaitForEndOfFrame());
+                await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
             }
         }
         selectCache.Add(cacheKey, aiSelect);
@@ -286,6 +286,6 @@ public class BattleAIResult
             action.self.skills.Remove(action.skill);
             BattleLogConsole.Instance.LogBattleEffect(action, aISelect.effectResult);
         }
-        await YieldCoroutine.Instance.WaitForInstruction(new WaitForSeconds(0.05f));
+        await YieldCoroutine.WaitForInstruction(new WaitForSeconds(0.05f));
     }
 }

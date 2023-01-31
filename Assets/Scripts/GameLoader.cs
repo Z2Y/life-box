@@ -38,18 +38,18 @@ public class GameLoader : MonoBehaviour
     {
         Sequence animation = crossFase();
         await LoadSceneAsync(name, mode);
-        await YieldCoroutine.Instance.WaitForInstruction(animation.WaitForCompletion());
+        await YieldCoroutine.WaitForInstruction(animation.WaitForCompletion());
     }
 
     public async Task SwitchSceneWithAnimation(Scene origin, Scene current)
     {
         Sequence animation = crossFase();
-        await YieldCoroutine.Instance.WaitForSeconds(0.5f);
+        await YieldCoroutine.WaitForSeconds(0.5f);
         UnityEngine.Debug.Log(origin.name);
         UnityEngine.Debug.Log(current.name);
         SceneManager.UnloadSceneAsync(origin);
         SceneManager.SetActiveScene(current);
-        await YieldCoroutine.Instance.WaitForInstruction(animation.WaitForCompletion());
+        await YieldCoroutine.WaitForInstruction(animation.WaitForCompletion());
     }
 
     public async Task LoadSceneAsync(string name, LoadSceneMode mode = LoadSceneMode.Single)
@@ -58,7 +58,7 @@ public class GameLoader : MonoBehaviour
         while (!loadOp.isDone)
         {
             loadingText.text = string.Format("载入中。。。 {0}%", (int)(loadOp.progress * 100));
-            await YieldCoroutine.Instance.WaitForInstruction(new WaitForEndOfFrame());
+            await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
         }
         loadingText.text = "载入中。。。 100%";
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(name));
@@ -84,7 +84,7 @@ public class GameLoader : MonoBehaviour
         while (!(ModelLoader.Instance?.loaded ?? false))
         {
             loadingText.text = string.Format("读取数据。。。");
-            await YieldCoroutine.Instance.WaitForInstruction(new WaitForEndOfFrame());
+            await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
         }
     }
 }
