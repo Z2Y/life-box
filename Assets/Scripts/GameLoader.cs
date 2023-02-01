@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -34,20 +33,18 @@ public class GameLoader : MonoBehaviour
 
     public async Task LoadSceneWithAnimation(string name, LoadSceneMode mode = LoadSceneMode.Single)
     {
-        Sequence animation = crossFade();
+        var anim = crossFade();
         await LoadSceneAsync(name, mode);
-        await YieldCoroutine.WaitForInstruction(animation.WaitForCompletion());
+        await YieldCoroutine.WaitForInstruction(anim.WaitForCompletion());
     }
 
     public async Task SwitchSceneWithAnimation(Scene origin, Scene current)
     {
-        Sequence animation = crossFade();
+        var anim = crossFade();
         await YieldCoroutine.WaitForSeconds(0.5f);
-        UnityEngine.Debug.Log(origin.name);
-        UnityEngine.Debug.Log(current.name);
         SceneManager.UnloadSceneAsync(origin);
         SceneManager.SetActiveScene(current);
-        await YieldCoroutine.WaitForInstruction(animation.WaitForCompletion());
+        await YieldCoroutine.WaitForInstruction(anim.WaitForCompletion());
     }
 
     public async Task LoadSceneAsync(string name, LoadSceneMode mode = LoadSceneMode.Single)
@@ -55,7 +52,7 @@ public class GameLoader : MonoBehaviour
         var loadOp = SceneManager.LoadSceneAsync(name, mode);
         while (!loadOp.isDone)
         {
-            loadingText.text = string.Format("载入中。。。 {0}%", (int)(loadOp.progress * 100));
+            loadingText.text = $"载入中。。。 {(int)(loadOp.progress * 100)}%";
             await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
         }
         loadingText.text = "载入中。。。 100%";
@@ -71,7 +68,7 @@ public class GameLoader : MonoBehaviour
 
     private Sequence crossFade()
     {
-        Sequence sequence = DOTween.Sequence();
+        var sequence = DOTween.Sequence();
         sequence.Append(loadingCanvas.DOFade(1f, 0.5f));
         sequence.Append(loadingCanvas.DOFade(0f, 0.5f));
         return sequence;
@@ -81,7 +78,7 @@ public class GameLoader : MonoBehaviour
     {
         while (!(ModelLoader.Instance?.loaded ?? false))
         {
-            loadingText.text = string.Format("读取数据。。。");
+            loadingText.text = "读取数据。。。";
             await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
         }
     }

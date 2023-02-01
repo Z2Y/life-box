@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Model;
 using ModelContainer;
@@ -25,9 +24,11 @@ public class LifeData
 
     public static LifeData CreateNew()
     {
-        LifeData life = new LifeData();
-        life.current = LifeNode.CreateBornNode();
-        life.property = LifePropertyFactory.Ramdom(40);
+        var life = new LifeData
+        {
+            current = LifeNode.CreateBornNode(),
+            property = LifePropertyFactory.Ramdom(40)
+        };
         life.moneyInventory.BindToWealth(life.property.GetProperty(SubPropertyType.Wealth));
         return life;
     }

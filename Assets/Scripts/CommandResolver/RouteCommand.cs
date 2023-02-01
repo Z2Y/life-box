@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -9,35 +8,35 @@ using ModelContainer;
 public class RouteCommand : CommandResolver
 {
     protected TaskCompletionSource<long> routeCompleteSource;
-    public List<Place> nearbyPlaces = new List<Place>();
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         routeCompleteSource = new TaskCompletionSource<long>();
-        nearbyPlaces.Clear();
-        Place currentPlace = await ExpressionCommandResolver.GetResolver("CurrentPlace").Resolve(arg, args, env) as Place;
+        var nearbyPlaces = new List<Place>();
+        var currentPlace = await ExpressionCommandResolver.GetResolver("CurrentPlace").Resolve(arg, args, env) as Place;
 
         if (currentPlace.Parent > 0)
         {
-            Place parent = PlaceCollection.Instance.GetPlace(currentPlace.Parent);
+            var parent = PlaceCollection.Instance.GetPlace(currentPlace.Parent);
             if (parent != null) nearbyPlaces.Add(parent);
         }
         foreach (var place in currentPlace.Child)
         {
-            Place child = PlaceCollection.Instance.GetPlace(place);
+            var child = PlaceCollection.Instance.GetPlace(place);
             if (child != null) nearbyPlaces.Add(child);
         }
-        SelectPanel.Show("选择想要去的地点", nearbyPlaces.Select((place) => place.Name).ToList(), OnRoute).SetCancelable(true, OnCancel);
+        SelectPanel.Show(
+            "选择想要去的地点", 
+            nearbyPlaces.Select((place) => place.Name).ToList(), 
+            (idx) => OnRoute(nearbyPlaces[idx])).SetCancelable(true, OnCancel);
         return await routeCompleteSource.Task;
     }
 
-    public void OnCancel() {
+    private void OnCancel() {
         routeCompleteSource?.TrySetCanceled();
     }
 
-    public void OnRoute(int selectedIndex)
+    private void OnRoute(Place target)
     {
-
-        Place target = nearbyPlaces[selectedIndex];
         CurrentLife.Place = target;
         CurrentLife.Next.Place = target;
         RouteTrigger.Instance.Trigger().Coroutine();
@@ -45,11 +44,5 @@ public class RouteCommand : CommandResolver
         routeCompleteSource?.TrySetResult(target.ID);
     }
 
-    public LifeNode CurrentLife
-    {
-        get
-        {
-            return LifeEngine.Instance?.lifeData.current;
-        }
-    }
+    protected LifeNode CurrentLife => LifeEngine.Instance?.lifeData.current;
 }

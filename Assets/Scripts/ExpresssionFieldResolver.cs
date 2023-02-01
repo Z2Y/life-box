@@ -17,7 +17,7 @@ public static class ExpressionFieldResolver {
 
     public static object Resolve(string name) {
         if (!resolvers.ContainsKey(name)) {
-            UnityEngine.Debug.LogWarning($"Resolver Not Found {name} {resolvers.Count}");
+            Debug.LogWarning($"Resolver Not Found {name} {resolvers.Count}");
             return null;
         } else {
             return resolvers[name].Invoke();
@@ -25,8 +25,8 @@ public static class ExpressionFieldResolver {
     }
 
     static void RegisterPropertyField() {
-        Array subProperties = Enum.GetValues(typeof(SubPropertyType));
-        foreach (SubPropertyType propertyType in Enum.GetValues(typeof(SubPropertyType))) {
+        var subProperties = Enum.GetValues(typeof(SubPropertyType));
+        foreach (SubPropertyType propertyType in subProperties) {
             Regist(propertyType.ToString(), () => {
                 if (LifeEngine.Instance?.lifeData == null) { return 0; }
                 return LifeEngine.Instance.lifeData.property.GetProperty(propertyType).value;
@@ -39,8 +39,7 @@ public static class ExpressionFieldResolver {
         Type[] types = asm.GetExportedTypes().Where((Type type) => type.IsDefined(typeof(FieldResolverHandler), false)).ToArray();
         foreach(Type type in types) {
             string fieldName = ((FieldResolverHandler)type.GetCustomAttribute(typeof(FieldResolverHandler), false))?.FieldName;
-            IFieldResolver resolver = Activator.CreateInstance(type) as IFieldResolver;
-            if (resolver != null) {
+            if (Activator.CreateInstance(type) is IFieldResolver resolver) {
                 Regist(fieldName, resolver.Resolve);
             }
         }        
