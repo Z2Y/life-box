@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
+using Model;
 
 namespace Model
 {
@@ -61,34 +62,14 @@ namespace ModelContainer
 
         public Model.ShopConfig GetShopConfig(long id)
         {
-            Model.ShopConfig value;
-            if (lookup.TryGetValue(id, out value))
-            {
-                return value;
-            }
-            return null;
+            return lookup.TryGetValue(id, out var value) ? value : null;
         }
 
-        public List<Model.ShopConfig> GetShopConfigsByCharacter(long characterID) {
-            List<Model.ShopConfig> configs;
-            if (lookupByCharacter.TryGetValue(characterID, out configs))
-            {
-                return configs;
-            }
-            return null;            
-        }
-
-        public static ShopConfigCollection Instance
+        public List<Model.ShopConfig> GetShopConfigsByCharacter(long characterID)
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new ShopConfigCollection();
-                }
-                return _instance;
-            }
+            return lookupByCharacter.TryGetValue(characterID, out var shopConfigs) ? shopConfigs : null;
         }
 
+        public static ShopConfigCollection Instance => _instance ?? (_instance = new ShopConfigCollection());
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
+using Model;
 
 namespace Model
 {
@@ -39,26 +40,11 @@ namespace ModelContainer
             }
         }
 
-        public static TalkTriggerContainer Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new TalkTriggerContainer();
-                }
-                return _instance;
-            }
-        }
+        public static TalkTriggerContainer Instance => _instance ?? (_instance = new TalkTriggerContainer());
 
         public Model.TalkTrigger GetTrigger(long characterID)
         {
-            Model.TalkTrigger value;
-            if (lookup.TryGetValue(characterID, out value))
-            {
-                return value;
-            }
-            return null;
+            return lookup.TryGetValue(characterID, out var value) ? value : null;
         }
     }
 }

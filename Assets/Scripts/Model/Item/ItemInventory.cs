@@ -14,13 +14,7 @@ public class ItemInventory
 
     protected InventoryChangeEvent onInventoryChange = new InventoryChangeEvent();
 
-    public InventoryChangeEvent OnInventoryChange
-    {
-        get
-        {
-            return onInventoryChange;
-        }
-    }
+    public InventoryChangeEvent OnInventoryChange => onInventoryChange;
 
     protected bool isStoring = false;
 

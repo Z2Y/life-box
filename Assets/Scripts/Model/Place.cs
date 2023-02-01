@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
+using Model;
 
 namespace Model
 {
@@ -45,38 +46,19 @@ namespace ModelContainer
 
         private void OnLoad() {
             lookup.Clear();
-            foreach(Model.Place place in places) {
+            foreach(var place in places) {
                 lookup.Add(place.ID, place);
             }
         }
 
-        public static PlaceCollection Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new PlaceCollection();
-                }
-                return _instance;
-            }
-        }
+        public static PlaceCollection Instance => _instance ?? (_instance = new PlaceCollection());
 
         public Model.Place GetPlace(long id)
         {
-            Model.Place value;
-            if (lookup.TryGetValue(id, out value))
-            {
-                return value;
-            }
-            return null;
+            return lookup.TryGetValue(id, out var value) ? value : null;
         }
 
-        public List<Model.Place> Places {
-            get {
-                return places;
-            }
-        }
+        public List<Model.Place> Places => places;
 
         public Model.Place RamdomPlace(Model.PlaceType placeType) {
             List<Model.Place> valids = places.Where((Model.Place place) => place.PlaceType == placeType).ToList();

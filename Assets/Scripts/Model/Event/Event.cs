@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
+using Model;
+
 public abstract class GameEvent
 {
     public long id;
@@ -38,29 +40,24 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Model.Event), "events")]
+    [ModelContainerOf(typeof(Event), "events")]
     public class EventCollection
     {
-        private Dictionary<long, Model.Event> lookup = new Dictionary<long, Model.Event>();
-        private List<Model.Event> events = new List<Model.Event>();
+        private Dictionary<long, Event> lookup = new Dictionary<long, Event>();
+        private List<Event> events = new List<Event>();
         private static EventCollection _instance;
         private EventCollection() { }
 
         private void OnLoad() {
             lookup.Clear();
-            foreach(Model.Event evt in events) {
+            foreach(Event evt in events) {
                 lookup.Add(evt.ID, evt);
             }
         }
 
-        public Model.Event GetEvent(long id)
+        public Event GetEvent(long id)
         {
-            Model.Event value;
-            if (lookup.TryGetValue(id, out value))
-            {
-                return value;
-            }
-            return null;
+            return lookup.TryGetValue(id, out var value) ? value : null;
         }
 
         public IEnumerable<Model.Event> GetEventByType(Model.EventType eventType)
@@ -68,17 +65,7 @@ namespace ModelContainer
             return events.Where((evt) => evt.EventType == eventType);
         }
 
-        public static EventCollection Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new EventCollection();
-                }
-                return _instance;
-            }
-        }
+        public static EventCollection Instance => _instance ?? (_instance = new EventCollection());
 
         public static IEnumerable<int> GetValidEventIndex(IEnumerable<long> events) {
             return events.Select((long id, int idx) =>
@@ -98,8 +85,7 @@ namespace ModelContainer
         }
 
         public static IEnumerable<Model.Event> GetValidEvents(long[] events) {
-            List<int> indexs = GetValidEventIndex(events).ToList();
-            return indexs.Select((idx) => Instance.GetEvent(events[idx]));
+            return GetValidEventIndex(events).Select((idx) => Instance.GetEvent(events[idx]));
         }
 
         public static int RandomEventIndex(long[] events, float[] weights) {
@@ -113,7 +99,7 @@ namespace ModelContainer
             });
         }
 
-        public static Model.Event RandomEvent(long[] events, float[] weights) {
+        public static Event RandomEvent(long[] events, float[] weights) {
             int index = RandomEventIndex(events, weights);
             if (index < 0) return null;
             return Instance.GetEvent(events[index]);

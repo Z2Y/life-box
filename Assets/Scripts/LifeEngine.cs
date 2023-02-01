@@ -13,7 +13,7 @@ public class LifeEngine : MonoBehaviour {
     public Action OnLifeEnd;
     public Action OnLifeStart;
 
-    void Awake() {
+    private void Awake() {
         if (Instance == null) {
             Instance = this;
         }

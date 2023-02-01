@@ -27,10 +27,7 @@ public class EquipmentItemStack : UniqueItemStack
     {
         if (other.ItemType == ItemType.Equipment && (EquipmentType)other.SubItemType == equipmentType)
         {
-            if(base.StoreItem(other, num)) {
-                return true;
-            }
-            return false;
+            return base.StoreItem(other, num);
         }
         else
         {

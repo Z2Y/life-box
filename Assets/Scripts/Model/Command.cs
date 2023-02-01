@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
+using Model;
 
 namespace Model
 {
@@ -39,37 +40,21 @@ namespace ModelContainer
 
         public Model.Command GetCommand(long id)
         {
-            Model.Command value;
-            if (lookup.TryGetValue(id, out value))
-            {
-                return value;
-            }
-            return null;
+            return lookup.TryGetValue(id, out var value) ? value : null;
         }
 
-        public static CommandCollection Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new CommandCollection();
-                }
-                return _instance;
-            }
-        }
+        public static CommandCollection Instance => _instance ?? (_instance = new CommandCollection());
 
         public static IEnumerable<int> GetValidCommandIndex(IEnumerable<long> ids)
         {
             return ids.Select((long id, int idx) =>
             {
-                Model.Command command = Instance.GetCommand(id);
+                var command = Instance.GetCommand(id);
                 if (command == null) return -1;
-                var isValid = command.Condition.ExecuteExpression() as bool?;
-                if (isValid != null)
+                if (command.Condition.ExecuteExpression() is bool isValid)
                 {
-                    UnityEngine.Debug.Log($"isValid {isValid}");
-                    return (bool)isValid ? idx : -1;
+                    UnityEngine.Debug.Log($"isValid {(bool?)isValid}");
+                    return isValid ? idx : -1;
                 }
                 return idx;
             }).Where((int v) => v >= 0);
@@ -78,10 +63,9 @@ namespace ModelContainer
         public static IEnumerable<Model.Command> GetValidGlobalCommands()
         {
             return Instance.commands.Where((command) => command.Global > 0).Where((command) => {
-                var isValid = command.Condition.ExecuteExpression() as bool?;
-                if (isValid != null)
+                if (command.Condition.ExecuteExpression() is bool isValid)
                 {
-                    return (bool)isValid;
+                    return isValid;
                 }
                 return true;
             });
@@ -89,8 +73,7 @@ namespace ModelContainer
 
         public static IEnumerable<Model.Command> GetValidCommands(long[] ids)
         {
-            List<int> indexs = GetValidCommandIndex(ids).ToList();
-            return indexs.Select((idx) => Instance.GetCommand(ids[idx]));
+            return GetValidCommandIndex(ids).Select((idx) => Instance.GetCommand(ids[idx]));
         }
 
     }

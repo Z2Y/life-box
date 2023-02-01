@@ -13,9 +13,7 @@ public class LifeProperty
 
     public PropertyValue GetProperty(SubPropertyType pType)
     {
-        PropertyValue value;
-        propertys.TryGetValue(pType, out value);
-        return value;
+        return propertys.TryGetValue(pType, out var value) ? value : null;
     }
 
     public bool AddProperty(SubPropertyType type, int value)

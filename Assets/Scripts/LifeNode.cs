@@ -78,17 +78,7 @@ public class LifeNode
 
     public string Description
     {
-        get
-        {
-            if (Events.Count <= 0)
-            {
-                return "无事发生";
-            }
-            else
-            {
-                return String.Join(" ", Events.Select(e => e.Description));
-            }
-        }
+        get { return Events.Count <= 0 ? "无事发生" : string.Join(" ", Events.Select(e => e.Description)); }
     }
 
     public bool IsDeath

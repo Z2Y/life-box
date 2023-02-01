@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
+using Model;
 
 namespace Model
 {
@@ -40,27 +41,16 @@ namespace ModelContainer
             }
         }
 
-        public static TimeTriggerContainer Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new TimeTriggerContainer();
-                }
-                return _instance;
-            }
-        }
+        public static TimeTriggerContainer Instance => _instance ?? (_instance = new TimeTriggerContainer());
 
         public Model.TimeTrigger GetTrigger(TimeSpan timeSpan)
         {
-            Model.TimeTrigger value;
-            if (lookup.TryGetValue(timeSpan, out value))
+            if (lookup.TryGetValue(timeSpan, out var value))
             {
                 return value;
             }
-            Model.TimeTrigger monthly;
-            if (lookup.TryGetValue(new TimeSpan(-1, timeSpan.Month), out monthly))
+
+            if (lookup.TryGetValue(new TimeSpan(-1, timeSpan.Month), out var monthly))
             {
                 return monthly;
             }

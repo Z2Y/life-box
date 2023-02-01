@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -41,7 +40,7 @@ public static class ExcelExporter
             string[] fieldHead = sheet.Cells[headRow, col].Text.Split('$');
             string fieldName = fieldHead.Length == 2 ? fieldHead[0] : fieldHead[1];
             string fieldType = fieldHead.Length == 2 ? fieldHead[1] : fieldHead[2];
-            FieldInfo fieldInfo = classType.GetField(fieldName);
+            FieldInfo fieldInfo = classType?.GetField(fieldName);
             if (fieldInfo != null) {
                 ClassField previous = fields.Find((ClassField field) => (field.FieldName == fieldName && field.FieldType == fieldType));
                 if (previous != null) {

@@ -11,21 +11,9 @@ public class LifeCardManager : MonoBehaviour
     private ScrollRect scroll;
     private GameObject cardPrefab;
     private static LifeCardManager _instance;
-    public static LifeCardManager Instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
+    public static LifeCardManager Instance => _instance;
 
-    public LifeNode CurrentLife
-    {
-        get
-        {
-            return LifeEngine.Instance?.lifeData.current;
-        }
-    }
+    public LifeNode CurrentLife => LifeEngine.Instance?.lifeData.current;
 
     private void Awake()
     {

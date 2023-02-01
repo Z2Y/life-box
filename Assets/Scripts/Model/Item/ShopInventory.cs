@@ -87,26 +87,19 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
         return (bool)result;
     }
 
-    public Item Currency
-    {
-        get
-        {
-            return ItemCollection.Instance.GetItem(Config.Currency);
-        }
-    }
+    public Item Currency => ItemCollection.Instance.GetItem(Config.Currency);
 }
 
 public class ShopInventoryCollection : Singleton<ShopInventoryCollection> {
     private Dictionary<long, ShopInventory> shops = new Dictionary<long, ShopInventory>();
 
     public ShopInventory GetInventory(ShopConfig config) {
-        ShopInventory inventory;
-        if (shops.TryGetValue(config.ID, out inventory)) {
+        if (shops.TryGetValue(config.ID, out var inventory)) {
             return inventory;
-        } else {
-            inventory = new ShopInventory(config);
-            shops.Add(config.ID, inventory);
         }
+
+        inventory = new ShopInventory(config);
+        shops.Add(config.ID, inventory);
         return inventory;
     }
 

@@ -15,11 +15,9 @@ public class GameLoader : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
-            {
-                GameObject loadPrefab = Resources.Load<GameObject>("Prefabs/LoadingPanel");
-                _instance = GameObject.Instantiate(loadPrefab).GetComponent<GameLoader>();
-            }
+            if (_instance != null) return _instance;
+            
+            _instance = Instantiate(Resources.Load<GameObject>("Prefabs/LoadingPanel")).GetComponent<GameLoader>();
             return _instance;
         }
     }
@@ -36,14 +34,14 @@ public class GameLoader : MonoBehaviour
 
     public async Task LoadSceneWithAnimation(string name, LoadSceneMode mode = LoadSceneMode.Single)
     {
-        Sequence animation = crossFase();
+        Sequence animation = crossFade();
         await LoadSceneAsync(name, mode);
         await YieldCoroutine.WaitForInstruction(animation.WaitForCompletion());
     }
 
     public async Task SwitchSceneWithAnimation(Scene origin, Scene current)
     {
-        Sequence animation = crossFase();
+        Sequence animation = crossFade();
         await YieldCoroutine.WaitForSeconds(0.5f);
         UnityEngine.Debug.Log(origin.name);
         UnityEngine.Debug.Log(current.name);
@@ -71,7 +69,7 @@ public class GameLoader : MonoBehaviour
         LifeEngine.Instance.CreateNewGame();
     }
 
-    private Sequence crossFase()
+    private Sequence crossFade()
     {
         Sequence sequence = DOTween.Sequence();
         sequence.Append(loadingCanvas.DOFade(1f, 0.5f));

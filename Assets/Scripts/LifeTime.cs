@@ -43,19 +43,11 @@ public struct TimeSpan {
 
 public class LifeTime : MonoBehaviour {
     private TimeSpan _time;
-    public TimeSpan Time {
-        get {
-            return _time;
-        }
-    }
+    public TimeSpan Time => _time;
 
     public Action OnNextMonth;
     
-    public string timeStr {
-        get {
-            return string.Format("{0}年 {1}月", Time.Year + 1, Time.Month + 1);
-        }
-    }
+    public string timeStr => string.Format("{0}年 {1}月", Time.Year + 1, Time.Month + 1);
 
     public void NextMonth() {
         _time = _time.Next();

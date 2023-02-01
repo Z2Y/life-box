@@ -18,17 +18,13 @@ namespace Utils {
                 {
                     n--;
                     int k = random.Next(n + 1);
-                    T value = list[k];
-                    list[k] = list[n];
-                    list[n] = value;
+                    (list[k], list[n]) = (list[n], list[k]);
                 }
                 return list;             
             }
 
             public static void Swap<T>(this IList<T> list, int i, int j) {
-                T value = list[i];
-                list[i] = list[j];
-                list[j] = value;
+                (list[i], list[j]) = (list[j], list[i]);
             }
 
         }
