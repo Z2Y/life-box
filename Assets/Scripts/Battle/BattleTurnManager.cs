@@ -42,12 +42,12 @@ public class BattleTurnManager
 
     public BattleCharacter GetNextCharacter()
     {
-        return AllRoles.Where(role => role.isAlive && role.ActedTurn < CurrentTurn).FirstOrDefault();
+        return AllRoles.FirstOrDefault(role => role.isAlive && role.ActedTurn < CurrentTurn);
     }
 
     public BattleCharacter GetCharacterByPosition(Vector3Int pos)
     {
-        return AllRoles.Where(role => role.isAlive && role.Position == pos).FirstOrDefault();
+        return AllRoles.FirstOrDefault(role => role.isAlive && role.Position == pos);
     }
 
     public void AddBattleCharacter(BattleCharacter character)
@@ -108,9 +108,6 @@ public class BattleTurnManager
 
     private void Sort()
     {
-        AllRoles.Sort((characterA, characterB) =>
-        {
-            return characterA.Speed.CompareTo(characterB.Speed);
-        });
+        AllRoles.Sort((characterA, characterB) => characterA.Speed.CompareTo(characterB.Speed));
     }
 }

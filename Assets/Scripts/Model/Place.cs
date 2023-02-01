@@ -1,8 +1,7 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
-using Model;
+using Utils.Shuffle;
 
 namespace Model
 {
@@ -61,9 +60,7 @@ namespace ModelContainer
         public List<Model.Place> Places => places;
 
         public Model.Place RamdomPlace(Model.PlaceType placeType) {
-            List<Model.Place> valids = places.Where((Model.Place place) => place.PlaceType == placeType).ToList();
-            if (valids.Count <= 0) { return null; }
-            return valids.FirstOrDefault();
+            return places.Where((place) => place.PlaceType == placeType).ToList().Shuffle().FirstOrDefault();
             // return valids[UnityEngine.Random.Range(0, valids.Count)];
         }
     }

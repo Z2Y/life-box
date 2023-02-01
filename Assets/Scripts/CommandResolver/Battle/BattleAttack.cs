@@ -39,9 +39,9 @@ public class BattleAttackDamage
 
 public class BattleNormalAttackEffect : IBattleEffect
 {
-    public Skill skill;
-    public BattleCharacter self;
-    public BattleCharacter target;
+    private readonly Skill skill;
+    private readonly BattleCharacter self;
+    private readonly BattleCharacter target;
 
     public BattleNormalAttackEffect(Skill skill, BattleCharacter self, BattleCharacter target)
     {

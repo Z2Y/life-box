@@ -43,33 +43,27 @@ public class ComfirmResolver : CommandResolver
         return await Confirm(arg);
     }
 
-    public Task<int> Confirm(string description)
+    private Task<int> Confirm(string description)
     {
-        TaskCompletionSource<int> tcs = new TaskCompletionSource<int>();
-        Action onConfirm = () =>
-        {
-            tcs.SetResult(0);
-        };
-        Action onCancel = () =>
-        {
-            tcs.SetResult(1);
-        };
+        var tcs = new TaskCompletionSource<int>();
+        var onConfirm = new Action(() => tcs.SetResult(0));
+        var onCancel = new Action(() => tcs.SetResult(1));
+
         ModalPanel.Show(description, onConfirm, onCancel);
         return tcs.Task;
     }
 }
 
 [CommandResolverHandler("Confirmed")]
-public class ComfirmedResolver : CommandResolver
+public class ConfirmedResolver : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         if (args.Count < 2) return args.LastOrDefault();
-        object comfirmed;
-        env.TryGetValue("$Effect", out comfirmed);
-        if (comfirmed == null) return args.LastOrDefault();
+        env.TryGetValue("$Effect", out var confirmed);
+        if (confirmed == null) return args.LastOrDefault();
         await this.Done();
-        return Convert.ToInt32(comfirmed) == 0 ? args[0] : args[1];
+        return Convert.ToInt32(confirmed) == 0 ? args[0] : args[1];
     }    
 }
 
@@ -78,10 +72,10 @@ public class RandomEventResolver : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        long[] events = args.Where((o, idx) => (idx % 2 == 0)).Select((o) => Convert.ToInt64(o)).ToArray();
-        float[] weights = args.Where((o, idx) => (idx % 2 == 1)).Select((o) => Convert.ToSingle(o)).ToArray();
+        var events = args.Where((o, idx) => (idx % 2 == 0)).Select(Convert.ToInt64).ToArray();
+        var weights = args.Where((o, idx) => (idx % 2 == 1)).Select(Convert.ToSingle).ToArray();
         await this.Done();
-        return ModelContainer.EventCollection.RandomEventIndex(events, weights);
+        return EventCollection.RandomEventIndex(events, weights);
     }
 }
 
@@ -90,20 +84,18 @@ public class SelectEventResolver : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        string description = args[0] as string;
-        long[] events = args.Skip(1).Select((o) => Convert.ToInt64(o)).ToArray();
+        var description = args[0] as string;
+        var events = args.Skip(1).Select(Convert.ToInt64).ToArray();
         env["$Effect"] = "";
-        List<string> options = ModelContainer.EventCollection.GetValidEvents(events).Select((evt) => evt.Description.InjectedExpression(env)).ToList();
+        var options = EventCollection.GetValidEvents(events).Select((evt) => evt.Description.InjectedExpression(env)).ToList();
         return await Select(description, options);
     }
 
-    public Task<int> Select(string description, List<string> options)
+    private Task<int> Select(string description, List<string> options)
     {
-        TaskCompletionSource<int> tcs = new TaskCompletionSource<int>();
-        Action<int> onSelect = (idx) =>
-        {
-            tcs.SetResult(idx);
-        };
+        var tcs = new TaskCompletionSource<int>();
+        var onSelect = new Action<int>((idx) => tcs.SetResult(idx));
+
         SelectPanel.Show(description, options, onSelect);
         return tcs.Task;
     }

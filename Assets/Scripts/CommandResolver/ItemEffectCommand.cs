@@ -27,9 +27,8 @@ public class ChangePropertyEffectResolver : CommandResolver
         ItemChangePropertyEffect result = new ItemChangePropertyEffect();
         for (int i = 0; i < args.Count; i += 2)
         {
-            SubPropertyType propertyType;
             int propertyChangeValue = Convert.ToInt32(args[i + 1]);
-            if (Enum.TryParse<SubPropertyType>(args[i] as string, true, out propertyType)) {
+            if (Enum.TryParse<SubPropertyType>(args[i] as string, true, out var propertyType)) {
                 if (result.changes.ContainsKey(propertyType)) {
                     result.changes[propertyType] += propertyChangeValue;
                 } else {

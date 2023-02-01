@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
@@ -64,7 +63,7 @@ public class BattleEffectResult
 
 public class BattleMoveEffect : IBattleEffect
 {
-    public BattleCharacter character;
+    private readonly BattleCharacter character;
     public Vector3Int position;
     private TaskCompletionSource<bool> moveTcs;
 

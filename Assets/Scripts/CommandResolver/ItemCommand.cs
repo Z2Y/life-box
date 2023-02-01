@@ -20,7 +20,7 @@ public abstract class ItemCommandResolver : CommandResolver {
 }
 
 public class ItemCommandResult {
-    public List<ItemStack> Items = new List<ItemStack>();
+    public readonly List<ItemStack> Items = new List<ItemStack>();
 
     public override string ToString()
     {
@@ -67,10 +67,10 @@ public class LostItemCommand : ItemCommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        ItemCommandResult lost = new ItemCommandResult();
-        for (int i = 0; i < args.Count; i += 2)
+        var lost = new ItemCommandResult();
+        for (var i = 0; i < args.Count; i += 2)
         {
-            ItemStack stack = LostItem(Convert.ToInt64(args[i]), Convert.ToInt32(args[i + 1]));
+            var stack = LostItem(Convert.ToInt64(args[i]), Convert.ToInt32(args[i + 1]));
             if (stack != null && !stack.Empty) {
                 lost.Items.Add(stack);
             }
@@ -81,16 +81,11 @@ public class LostItemCommand : ItemCommandResolver
 
     private ItemStack LostItem(long itemId, int count)
     {
-        Item item = ItemCollection.Instance.GetItem(itemId);
+        var item = ItemCollection.Instance.GetItem(itemId);
         if (item == null) return null;
         ItemStack lost = new InfiniteItemStack();
-        bool success = false;
         lost.StoreItem(item, count);
-        if (item.ItemType == ItemType.Money) {
-            success = Wallet.DiscardItem(item, count);
-        } else {
-            success = Knapsack.DiscardItem(item, count);
-        }
+        var success = item.ItemType == ItemType.Money ? Wallet.DiscardItem(item, count) : Knapsack.DiscardItem(item, count);
         return success ? lost : null;
     }
 }
@@ -104,14 +99,10 @@ public class CountItemCommand : ItemCommandResolver
         return CountItem(Convert.ToInt64(args[0]));
     }
 
-    public int CountItem(long itemId) {
-        Item item = ItemCollection.Instance.GetItem(itemId);
+    private int CountItem(long itemId) {
+        var item = ItemCollection.Instance.GetItem(itemId);
         if (item == null) return 0;
-        if (item.ItemType == ItemType.Money) {
-            return Wallet.CountItem(item);
-        } else {
-            return Knapsack.CountItem(item);
-        }        
+        return item.ItemType == ItemType.Money ? Wallet.CountItem(item) : Knapsack.CountItem(item);        
     }
 }
 

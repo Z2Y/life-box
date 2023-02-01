@@ -170,8 +170,7 @@ public class BattleSkillAction {
 
     public bool isExecuteable()
     {
-        if (skill == null || selectResult == null) return false;
-        return true;
+        return skill != null && selectResult != null;
     }
 
     public void Reset() {

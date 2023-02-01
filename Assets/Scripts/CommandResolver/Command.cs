@@ -30,7 +30,7 @@ public abstract class CommandResolver : ICommandResolver {
 }
 
 public static class CommandHelper {
-    public static TaskCompletionSource<object> doneSource;
+    private static readonly TaskCompletionSource<object> doneSource;
 
     static CommandHelper() {
         doneSource = new TaskCompletionSource<object>();

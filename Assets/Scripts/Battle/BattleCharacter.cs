@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using System.Collections.Generic;
 using Model;
@@ -22,32 +21,20 @@ public class BattleCharacter {
 
     public Vector3Int Position {get; set;}
 
-    public BattleCharacter(long characterID, int team = 0, bool AI = true) {
+    public BattleCharacter(long characterID, int team = 0, bool ai = true) {
         character = CharacterCollection.Instance.GetCharacter(characterID);
         Property = LifePropertyFactory.Ramdom(40);
         ActedTurn = -1;
         TeamID = team;
-        isAI = AI;
-        Property.onPropertyChange?.AddListener(ListenHpChange);
+        isAI = ai;
+        Property.onPropertyChange?.AddListener(onHpChange);
     }
 
-    public bool isAlive {
-        get {
-            return Hp.value > 0;
-        }
-    }
+    public bool isAlive => Hp.value > 0;
 
-    public int Speed {
-        get {
-            return Property.GetProperty(SubPropertyType.Agile).value;
-        }
-    }
+    public int Speed => Property.GetProperty(SubPropertyType.Agile).value;
 
-    public PropertyValue Hp {
-        get {
-            return Property.GetProperty(SubPropertyType.HitPoint);
-        }
-    }
+    public PropertyValue Hp => Property.GetProperty(SubPropertyType.HitPoint);
 
     public void UpdateHpSlider()
     {
@@ -61,9 +48,9 @@ public class BattleCharacter {
 
     }
 
-    private void ListenHpChange()
+    private void onHpChange()
     {
-        UnityEngine.Debug.Log($"{character.ID} {isAlive}");
+        Debug.Log($"{character.ID} {isAlive}");
         if (!isAlive) {
             View.Hide();
         }

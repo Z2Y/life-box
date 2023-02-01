@@ -10,9 +10,8 @@ public class BattlePropertyCostResolver : CommandResolver
     {
         BattleSkillAction skillAction = env["Skill"] as BattleSkillAction;
         if (skillAction == null) return null;
-        SubPropertyType propertyType;
 
-        if (Enum.TryParse<SubPropertyType>(args[0] as string, true, out propertyType))
+        if (Enum.TryParse<SubPropertyType>(args[0] as string, true, out var propertyType))
         {
             int costValue = Convert.ToInt32(args[1]);
             BattlePropertyCost cost = new BattlePropertyCost(skillAction.self, propertyType, costValue);
@@ -28,8 +27,10 @@ public class BattleCostResolver : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        BattleCostResult result = new BattleCostResult();
-        result.costs = env.Values.Where(value => value is IBattleCost).Select(value => value as IBattleCost).ToList();
+        var result = new BattleCostResult
+        {
+            costs = env.Values.OfType<IBattleCost>().ToList()
+        };
         await this.Done();
         return result;
     }
@@ -41,8 +42,7 @@ public class BattleCostResult
 
     public bool CouldCost()
     {
-        if (costs.Count <= 0) return true;
-        return costs.All(cost => cost.CouldCost());
+        return costs.Count <= 0 || costs.All(cost => cost.CouldCost());
     }
 
     public void Cost()
@@ -67,9 +67,9 @@ public interface IBattleCost
 
 public class BattlePropertyCost : IBattleCost
 {
-    private BattleCharacter character;
-    private SubPropertyType propertyType;
-    private int value;
+    private readonly BattleCharacter character;
+    private readonly SubPropertyType propertyType;
+    private readonly int value;
 
     public BattlePropertyCost(BattleCharacter character, SubPropertyType propertyType, int value)
     {
@@ -85,7 +85,7 @@ public class BattlePropertyCost : IBattleCost
 
     public void Cost()
     {
-        PropertyValue propertyValue = character?.Property.GetProperty(propertyType);
+        var propertyValue = character?.Property.GetProperty(propertyType);
         if (propertyValue == null) return;
         propertyValue.value -= value;
     }
