@@ -9,8 +9,6 @@ public class ItemChangePropertyEffect : ItemUsageEffect
 
     public override void TackEffect(Character player)
     {
-        ICommandResolver resolver =  ExpressionCommandResolver.GetResolver("ChangeProperty");
-
         List<object> args = new List<object>();
 
         foreach(var change in changes) {
@@ -18,7 +16,7 @@ public class ItemChangePropertyEffect : ItemUsageEffect
             args.Add(change.Value);
         }
 
-        resolver.Resolve("", args, null);
+        ExpressionCommandResolver.Resolve("ChangeProperty", "", args, null).Coroutine();
     }
 
     public override string UsageDescription()

@@ -12,7 +12,7 @@ public class RouteCommand : CommandResolver
     {
         routeCompleteSource = new TaskCompletionSource<long>();
         var nearbyPlaces = new List<Place>();
-        var currentPlace = await ExpressionCommandResolver.GetResolver("CurrentPlace").Resolve(arg, args, env) as Place;
+        var currentPlace = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
         if (currentPlace.Parent > 0)
         {

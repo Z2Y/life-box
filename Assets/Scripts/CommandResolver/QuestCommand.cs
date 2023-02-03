@@ -13,7 +13,7 @@ public class StartQuestCommand : CommandResolver
         if (quest == null) return null;
         // todo check if quest is in progress
         // todo add to player's quest list
-        return await ExpressionCommandResolver.GetResolver("DoEvent").Resolve(quest.startEventID.ToString(),
+        return await ExpressionCommandResolver.Resolve("DoEvent",quest.startEventID.ToString(),
             new List<object> { quest.startEventID }, env);
     }
 }

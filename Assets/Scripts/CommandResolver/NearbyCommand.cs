@@ -11,7 +11,7 @@ public class NearbyNPCCommand : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        Place place = await ExpressionCommandResolver.GetResolver("CurrentPlace").Resolve(arg, args, env) as Place;
+        Place place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
         if (place == null) return 0;
         string state = args[0] as string;
@@ -52,7 +52,7 @@ public class SelectTalkToNearBy : CommandResolver
     protected List<Character> nearbyCharacters = new List<Character>();
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        Place place = await ExpressionCommandResolver.GetResolver("CurrentPlace").Resolve(arg, args, env) as Place;
+        Place place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
         if (place == null) return null;
         talkCompleteSource = new TaskCompletionSource<long>();
@@ -85,7 +85,7 @@ public class SelectShopToNearby : CommandResolver
     protected List<Character> nearbyCharacters = new List<Character>();
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        Place place = await ExpressionCommandResolver.GetResolver("CurrentPlace").Resolve(arg, args, env) as Place;
+        Place place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
         if (place == null) return null;
         shopCompleteSource = new TaskCompletionSource<ShopResult>();

@@ -7,7 +7,7 @@ using ModelContainer;
 public class RouteBackCommand : RouteCommand {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var place = await ExpressionCommandResolver.GetResolver("CurrentPlace").Resolve(arg, args, env) as Place;
+        var place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
         if (place != null && place.Parent > 0)
         {

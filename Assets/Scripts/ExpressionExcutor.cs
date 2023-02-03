@@ -18,12 +18,7 @@ public class ExpressionExcutor : MonoBehaviour
 
     public static async Task<object> Execute(string command, string data, List<object> listData, Dictionary<string, object> env)
     {
-        ICommandResolver resolver = ExpressionCommandResolver.GetResolver(command);
-        if (resolver != null)
-        {
-            return await resolver.Resolve(data, listData, env);
-        }
-        return null;
+        return await ExpressionCommandResolver.Resolve(command, data, listData, env);
     }
 
     public static bool Compare(string field, string op, int value)
