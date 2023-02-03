@@ -9,10 +9,10 @@ public interface ICharacterState {
 public class Talkable : Singleton<Talkable>, ICharacterState {
     public bool IsState(Character character) {
         if (character == null) return false;
-        TalkTrigger trigger = TalkTriggerContainer.Instance.GetTrigger(character.ID);
-        long relation = 0;
+        var trigger = TalkTriggerContainer.Instance.GetTrigger(character.ID);
+
+        character.Relations.TryGetValue(0, out var relation); // 0 for player
         UnityEngine.Debug.Log($"{character.ID} {relation}");
-        character.Relations.TryGetValue(0, out relation); // 0 for player
         return trigger != null && trigger.Event.Length > 0 && relation >= trigger.RelationLimit;
     }
 }

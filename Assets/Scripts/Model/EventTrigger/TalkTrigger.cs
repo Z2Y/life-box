@@ -23,7 +23,7 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Model.TalkTrigger), "triggers")]
+    [ModelContainerOf(typeof(TalkTrigger), "triggers")]
     public class TalkTriggerContainer
     {
         private Dictionary<long, Model.TalkTrigger> lookup = new Dictionary<long, Model.TalkTrigger>();

@@ -7,7 +7,7 @@ public class ModalPanel : UIBase {
     private Button okButton;
     private Button cancelButton;
 
-    void Awake() {
+    private void Awake() {
         description = transform.Find("Panel/Description").GetComponent<Text>();
         okButton = transform.Find("Panel/Buttons/OkButton").GetComponent<Button>();
         cancelButton = transform.Find("Panel/Buttons/CancelButton").GetComponent<Button>();
