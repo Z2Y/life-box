@@ -262,11 +262,11 @@ public class ExpressionNode
                     subNode.environments.Clear();
                     if (op == "|")
                     {
-                        excuteResult = excuteResult | new ExecuteResult(value);
+                        excuteResult |= new ExecuteResult(value);
                     }
                     else
                     {
-                        excuteResult = excuteResult & new ExecuteResult(value);
+                        excuteResult &= new ExecuteResult(value);
                     }
                     SetEnv($"${resultIndex++}", value);
                     break;
@@ -309,11 +309,11 @@ public class ExpressionNode
                     subNode.environments.Clear();
                     if (op == "|")
                     {
-                        excuteResult = excuteResult | reuslt;
+                        excuteResult |= reuslt;
                     }
                     else
                     {
-                        excuteResult = excuteResult & reuslt;
+                        excuteResult &= reuslt;
                     }
                     SetEnv($"${resultIndex++}", reuslt.value);
                     break;

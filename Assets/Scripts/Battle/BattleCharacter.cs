@@ -23,7 +23,7 @@ public class BattleCharacter {
 
     public BattleCharacter(long characterID, int team = 0, bool ai = true) {
         character = CharacterCollection.Instance.GetCharacter(characterID);
-        Property = LifePropertyFactory.Ramdom(40);
+        Property = LifePropertyFactory.Random(40);
         ActedTurn = -1;
         TeamID = team;
         isAI = ai;

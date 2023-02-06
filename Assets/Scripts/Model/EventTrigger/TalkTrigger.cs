@@ -26,15 +26,15 @@ namespace ModelContainer
     [ModelContainerOf(typeof(TalkTrigger), "triggers")]
     public class TalkTriggerContainer
     {
-        private Dictionary<long, Model.TalkTrigger> lookup = new Dictionary<long, Model.TalkTrigger>();
-        private List<Model.TalkTrigger> triggers = new List<Model.TalkTrigger>();
+        private Dictionary<long, TalkTrigger> lookup = new Dictionary<long, TalkTrigger>();
+        private List<TalkTrigger> triggers = new List<TalkTrigger>();
         private static TalkTriggerContainer _instance;
         private TalkTriggerContainer() { }
 
         private void OnLoad()
         {
             lookup.Clear();
-            foreach (Model.TalkTrigger trigger in triggers)
+            foreach (var trigger in triggers)
             {
                 lookup.Add(trigger.ID, trigger);
             }
@@ -42,7 +42,7 @@ namespace ModelContainer
 
         public static TalkTriggerContainer Instance => _instance ?? (_instance = new TalkTriggerContainer());
 
-        public Model.TalkTrigger GetTrigger(long characterID)
+        public TalkTrigger GetTrigger(long characterID)
         {
             return lookup.TryGetValue(characterID, out var value) ? value : null;
         }

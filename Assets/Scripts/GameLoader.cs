@@ -59,7 +59,7 @@ public class GameLoader : MonoBehaviour
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(name));
     }
 
-    public async Task LoadGameAsync()
+    private async Task LoadGameAsync()
     {
         await LoadSceneAsync("LifeScene");
         await loadModelData();

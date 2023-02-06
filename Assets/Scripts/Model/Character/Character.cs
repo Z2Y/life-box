@@ -17,6 +17,7 @@ namespace Model
         public long[] Skills;
         public long PlaceID;
         public Dictionary<long, long> Relations = new Dictionary<long, long>();
+        public long ModelID;
     }
 }
 

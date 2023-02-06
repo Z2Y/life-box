@@ -29,7 +29,7 @@ public class LifePropertyFactory
 
     public class RandomPropertyConfig
     {
-        public SubPropertyType propertyType;
+        public readonly SubPropertyType propertyType;
         public RangeInt propertyRange;
 
         public RandomPropertyConfig(SubPropertyType type, RangeInt range)
@@ -41,14 +41,14 @@ public class LifePropertyFactory
 
     public static RangeInt DefaultRange = new RangeInt(0, 20);
 
-    public static List<RandomPropertyConfig> DefaultRandomConfig = new List<RandomPropertyConfig>() {
+    public static readonly List<RandomPropertyConfig> DefaultRandomConfig = new List<RandomPropertyConfig>() {
         new RandomPropertyConfig(SubPropertyType.Fortune, DefaultRange),
         new RandomPropertyConfig(SubPropertyType.Literary, DefaultRange),
         new RandomPropertyConfig(SubPropertyType.Wealth, DefaultRange),
         new RandomPropertyConfig(SubPropertyType.Agile, DefaultRange),
         new RandomPropertyConfig(SubPropertyType.Strength, DefaultRange)
     };
-    public static LifeProperty Ramdom(int total, List<RandomPropertyConfig> configs = null)
+    public static LifeProperty Random(int total, List<RandomPropertyConfig> configs = null)
     {
         if (configs == null)
         {

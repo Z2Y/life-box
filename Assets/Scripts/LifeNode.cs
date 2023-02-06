@@ -60,8 +60,8 @@ public class LifeNode
             int branch = await e.DoBranch();
             if (branch >= 0 && branch < e.Event.Branch.Length)
             {
-                UnityEngine.Debug.Log($"EventBranch {branch} {e.Event.Branch[branch]} {ModelContainer.EventCollection.Instance.GetEvent(e.Event.Branch[branch])}");
-                Model.Event branchEvent = ModelContainer.EventCollection.Instance.GetEvent(e.Event.Branch[branch]);
+                UnityEngine.Debug.Log($"EventBranch {branch} {e.Event.Branch[branch]} {EventCollection.Instance.GetEvent(e.Event.Branch[branch])}");
+                Model.Event branchEvent = EventCollection.Instance.GetEvent(e.Event.Branch[branch]);
                 if (branchEvent != null)
                 {
                     Events.Insert(i + 1, new EventNode(this, branchEvent));

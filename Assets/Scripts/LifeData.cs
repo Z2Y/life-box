@@ -27,7 +27,7 @@ public class LifeData
         var life = new LifeData
         {
             current = LifeNode.CreateBornNode(),
-            property = LifePropertyFactory.Ramdom(40)
+            property = LifePropertyFactory.Random(40)
         };
         life.moneyInventory.BindToWealth(life.property.GetProperty(SubPropertyType.Wealth));
         return life;
