@@ -48,8 +48,8 @@ public class CurrentCityResolver : CommandResolver
 [CommandResolverHandler("SelectTalkToNearby")]
 public class SelectTalkToNearBy : CommandResolver
 {
-    protected TaskCompletionSource<long> talkCompleteSource;
-    protected List<Character> nearbyCharacters = new List<Character>();
+    private TaskCompletionSource<long> talkCompleteSource;
+    private List<Character> nearbyCharacters = new();
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         Place place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
@@ -81,8 +81,8 @@ public class SelectTalkToNearBy : CommandResolver
 [CommandResolverHandler("SelectShopToNearby")]
 public class SelectShopToNearby : CommandResolver
 {
-    protected TaskCompletionSource<ShopResult> shopCompleteSource;
-    protected List<Character> nearbyCharacters = new List<Character>();
+    private TaskCompletionSource<ShopResult> shopCompleteSource;
+    private List<Character> nearbyCharacters = new();
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         Place place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
@@ -127,16 +127,19 @@ public class SelectShopToNearby : CommandResolver
 
     private void OpenShop(ShopConfig config)
     {
-        ShopPanel.Show(config, async (ShopResult result) =>
+        async void onShop(ShopResult result)
         {
-            EventNode node = await ShopTrigger.Instance.WithConfig(config).Trigger();
+            var node = await ShopTrigger.Instance.WithConfig(config).Trigger();
             if (node != null && node.Event.EventType == EventType.Shop)
             {
                 result.Merge(node.EffectResult as ShopResult);
                 node.SetEffectResult(result);
             }
+
             shopCompleteSource.TrySetResult(result);
-        });
+        }
+
+        ShopPanel.Show(config, onShop);
     }
 
     private void OnCancel()

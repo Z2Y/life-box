@@ -31,10 +31,10 @@ public class GameLoader : MonoBehaviour
         LoadGameAsync().Coroutine();
     }
 
-    public async Task LoadSceneWithAnimation(string name, LoadSceneMode mode = LoadSceneMode.Single)
+    public async Task LoadSceneWithAnimation(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
     {
         var anim = crossFade();
-        await LoadSceneAsync(name, mode);
+        await LoadSceneAsync(sceneName, mode);
         await YieldCoroutine.WaitForInstruction(anim.WaitForCompletion());
     }
 
@@ -47,16 +47,16 @@ public class GameLoader : MonoBehaviour
         await YieldCoroutine.WaitForInstruction(anim.WaitForCompletion());
     }
 
-    public async Task LoadSceneAsync(string name, LoadSceneMode mode = LoadSceneMode.Single)
+    public async Task LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
     {
-        var loadOp = SceneManager.LoadSceneAsync(name, mode);
+        var loadOp = SceneManager.LoadSceneAsync(sceneName, mode);
         while (!loadOp.isDone)
         {
             loadingText.text = $"载入中。。。 {(int)(loadOp.progress * 100)}%";
             await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
         }
         loadingText.text = "载入中。。。 100%";
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(name));
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
     }
 
     private async Task LoadGameAsync()

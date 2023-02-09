@@ -21,7 +21,7 @@ public class ModelContainerOf : Attribute {
 }
 
 public class ModelLoader : MonoBehaviour {
-    private static readonly string dir = "Models/";
+    private const string dir = "Models/";
 
     public static ModelLoader Instance {get; private set;}
 
@@ -33,28 +33,26 @@ public class ModelLoader : MonoBehaviour {
         }
         Load().Coroutine();
     }
-    
-    public async Task Load() {
+
+    private async Task Load() {
         if (loaded) {
             return ;
         }
-        Assembly asm = Assembly.GetAssembly(typeof(ModelContainerOf));
-        Type[] types = asm.GetExportedTypes().Where((Type type) => type.IsDefined(typeof(ModelContainerOf), false)).OrderBy((type) => {
-            return ((ModelContainerOf)type.GetCustomAttribute(typeof(ModelContainerOf), false)).LoadOrder;
-        }).ToArray();
+        var asm = Assembly.GetAssembly(typeof(ModelContainerOf));
+        var types = asm.GetExportedTypes().Where((Type type) => type.IsDefined(typeof(ModelContainerOf), false)).OrderBy((type) => 
+            ((ModelContainerOf)type.GetCustomAttribute(typeof(ModelContainerOf), false)).LoadOrder).ToArray();
 
-        foreach(Type type in types) {
-            ModelContainerOf modelAttr = (ModelContainerOf)type.GetCustomAttribute(typeof(ModelContainerOf), false);
-            Type modelType = modelAttr.ModelType;
-            ResourceRequest loader = Resources.LoadAsync($"{dir}{modelType.Name}");
+        foreach(var type in types) {
+            var modelAttr = (ModelContainerOf)type.GetCustomAttribute(typeof(ModelContainerOf), false);
+            var modelType = modelAttr.ModelType;
+            var loader = Resources.LoadAsync($"{dir}{modelType.Name}");
             while (!loader.isDone) {
                 await YieldCoroutine.WaitForSeconds(0.005f);
             }
-            TextAsset asset = loader.asset as TextAsset;
-            Type modelListType = typeof(List<>).MakeGenericType(modelType);
-            object modelList = MessagePackSerializer.Deserialize(modelListType, asset.bytes);
-            object modelContainer = type.GetProperty("Instance").GetMethod.Invoke(null, null);
-            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
+            var asset = loader.asset as TextAsset;
+            var modelList = MessagePackSerializer.Deserialize(typeof(List<>).MakeGenericType(modelType), asset.bytes);
+            var modelContainer = type.GetProperty("Instance").GetMethod.Invoke(null, null);
+            var flags = BindingFlags.NonPublic | BindingFlags.Instance;
             type.GetField(modelAttr.ListField, flags)?.SetValue(modelContainer, modelList);
             type.GetMethod("OnLoad", flags)?.Invoke(modelContainer, null);
         }

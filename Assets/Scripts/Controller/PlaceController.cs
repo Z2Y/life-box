@@ -9,13 +9,15 @@ namespace Controller
 {
     public class PlaceController : MonoBehaviour
     {
-        private static readonly Dictionary<long, PlaceController> lookup = new Dictionary<long, PlaceController>();
+        private static readonly Dictionary<long, PlaceController> lookup = new();
         
         [SerializeField] private long placeID;
 
         [SerializeField] private Vector3 offset;
 
         [SerializeField] private Bounds bounds;
+
+        [SerializeField] public List<long> nearbyPlaceIDs;
 
         private Place place;
 
@@ -44,7 +46,7 @@ namespace Controller
             }
             var loader = Resources.LoadAsync<GameObject>($"Places/{placeID}");
             while (!loader.isDone) {
-                await YieldCoroutine.WaitForSeconds(0.005f);
+                await YieldCoroutine.WaitForSeconds(0.01f);
             }
 
             if (loader.asset == null)

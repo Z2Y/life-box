@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -11,6 +12,22 @@ namespace Controller
         [SerializeField] private long toPlaceID;
 
         [SerializeField] private string rule;
+
+        // private Collider2D collider2D;
+
+        private void Awake()
+        {
+            // collider2D = GetComponentInChildren<Collider2D>();
+        }
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            var npc = col.gameObject.GetComponentInChildren<NPCController>();
+            if (npc != null) // npc entering
+            {
+                
+            }
+        }
 
         public async Task Jump()
         {

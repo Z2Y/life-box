@@ -42,3 +42,12 @@ public class CompleteQuest : CommandResolver
         return await this.Done();
     } 
 }
+
+[CommandResolverHandler("ListQuest")]
+public class ListQuest : CommandResolver
+{
+    public override Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    {
+        throw new NotImplementedException();
+    }
+}
