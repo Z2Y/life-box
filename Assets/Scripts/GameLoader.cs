@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -33,18 +34,19 @@ public class GameLoader : MonoBehaviour
 
     public async Task LoadSceneWithAnimation(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
     {
-        var anim = crossFade();
-        await LoadSceneAsync(sceneName, mode);
-        await YieldCoroutine.WaitForInstruction(anim.WaitForCompletion());
+        await crossFade(async () =>
+        {
+            await LoadSceneAsync(sceneName, mode);
+        });
     }
 
     public async Task SwitchSceneWithAnimation(Scene origin, Scene current)
     {
-        var anim = crossFade();
-        await YieldCoroutine.WaitForSeconds(0.5f);
-        SceneManager.UnloadSceneAsync(origin);
-        SceneManager.SetActiveScene(current);
-        await YieldCoroutine.WaitForInstruction(anim.WaitForCompletion());
+        await crossFade(async () =>
+        {
+            SceneManager.SetActiveScene(current);
+            await YieldCoroutine.WaitForInstruction(SceneManager.UnloadSceneAsync(origin));
+        });
     }
 
     public async Task LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
@@ -67,12 +69,11 @@ public class GameLoader : MonoBehaviour
         await fadeOut(0f);
     }
 
-    private Sequence crossFade()
+    private async Task crossFade(Func<Task> action)
     {
-        var sequence = DOTween.Sequence();
-        sequence.Append(loadingCanvas.DOFade(1f, 0.5f));
-        sequence.Append(loadingCanvas.DOFade(0f, 0.5f));
-        return sequence;
+        await fadeIn(0.5f);
+        await action();
+        await fadeOut(0.5f);
     }
 
     private async Task fadeOut(float duration)
