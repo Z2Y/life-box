@@ -1,15 +1,16 @@
 using System.Threading.Tasks;
-using Model;
 using ModelContainer;
 using System.Collections.Generic;
+using UnityEngine;
+using Event = Model.Event;
 
 public class LifeData
 {
     public LifeNode current;
     public LifeProperty property;
-    public ItemInventory knapsackInventory = new ItemInventory(40);
-    public MoneyInventory moneyInventory = new MoneyInventory();
-    public Dictionary<long, long> Events = new Dictionary<long, long>(); // 所有经历过的事件
+    public ItemInventory knapsackInventory = new (40);
+    public MoneyInventory moneyInventory = new ();
+    public Dictionary<long, long> Events = new (); // 所有经历过的事件
 
     public void DoForcast(LifeTime time)
     {

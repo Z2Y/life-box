@@ -37,7 +37,7 @@ namespace Controller
             var targetGate = nextPlace.GetComponents<PlaceGateController>()?.FirstOrDefault((gate) => gate.fromPlaceID == toPlaceID);
             if (targetGate == null) return;
 
-            nextPlace.Activate();
+            await nextPlace.Activate();
             // todo Move Camera to target place.
         }
     }

@@ -63,7 +63,8 @@ public class GameLoader : MonoBehaviour
     {
         await LoadSceneAsync("LifeScene");
         await loadModelData();
-        LifeEngine.Instance.CreateNewGame();
+        await LifeEngine.Instance.CreateNewGame();
+        await fadeOut(0f);
     }
 
     private Sequence crossFade()
@@ -72,6 +73,16 @@ public class GameLoader : MonoBehaviour
         sequence.Append(loadingCanvas.DOFade(1f, 0.5f));
         sequence.Append(loadingCanvas.DOFade(0f, 0.5f));
         return sequence;
+    }
+
+    private async Task fadeOut(float duration)
+    {
+        await YieldCoroutine.WaitForInstruction(loadingCanvas.DOFade(0f, duration).WaitForCompletion());
+    }
+
+    private async Task fadeIn(float duration)
+    {
+        await YieldCoroutine.WaitForInstruction(loadingCanvas.DOFade(1f, duration).WaitForCompletion());
     }
 
     private async Task loadModelData()

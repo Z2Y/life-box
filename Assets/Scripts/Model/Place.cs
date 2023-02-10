@@ -19,11 +19,11 @@ namespace Model
         public long ID;
         public PlaceType PlaceType;
         public string Name;
-        public string Scene;
+        public long MapID;
         public long[] Commands;
         public long[] Child;
         public long Parent;
-        public Dictionary<long, Character> Characters = new Dictionary<long, Character>();
+        public Dictionary<long, Character> Characters = new ();
 
         public override string ToString()
         {
@@ -38,8 +38,8 @@ namespace ModelContainer
     [ModelContainerOf(typeof(Model.Place), "places")]
     public class PlaceCollection
     {
-        private Dictionary<long, Model.Place> lookup = new Dictionary<long, Model.Place>();
-        private List<Model.Place> places = new List<Model.Place>();
+        private readonly Dictionary<long, Model.Place> lookup = new ();
+        private readonly List<Model.Place> places = new ();
         private static PlaceCollection _instance;
         private PlaceCollection() { }
 
@@ -50,7 +50,7 @@ namespace ModelContainer
             }
         }
 
-        public static PlaceCollection Instance => _instance ?? (_instance = new PlaceCollection());
+        public static PlaceCollection Instance => _instance ??= new PlaceCollection();
 
         public Model.Place GetPlace(long id)
         {
@@ -59,9 +59,8 @@ namespace ModelContainer
 
         public List<Model.Place> Places => places;
 
-        public Model.Place RamdomPlace(Model.PlaceType placeType) {
+        public Model.Place RandomPlace(Model.PlaceType placeType) {
             return places.Where((place) => place.PlaceType == placeType).ToList().Shuffle().FirstOrDefault();
-            // return valids[UnityEngine.Random.Range(0, valids.Count)];
         }
     }
 }

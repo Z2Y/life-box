@@ -19,11 +19,11 @@ namespace Controller
 
         [SerializeField] public List<long> nearbyPlaceIDs;
 
-        private Place place;
+        public Place Place { get; private set; }
 
         private void Awake()
         {
-            place = PlaceCollection.Instance.GetPlace(placeID);
+            Place = PlaceCollection.Instance.GetPlace(placeID);
             lookup.Add(placeID, this);
         }
 
@@ -32,9 +32,24 @@ namespace Controller
             lookup.Remove(placeID);
         }
 
-        public void Activate()
+        public async Task Activate()
         {
-            
+            throw new NotImplementedException();
+        }
+
+        public async Task DeActivate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static async Task UnloadPlaceAsync(long placeID)
+        {
+            var place = GetPlaceController(placeID);
+            if (place != null)
+            {
+                await place.DeActivate();
+                Destroy(place.gameObject);
+            }
         }
 
         public static async Task<PlaceController> LoadPlaceAsync(long placeID)

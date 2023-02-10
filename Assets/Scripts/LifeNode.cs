@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine.Events;
 using ModelContainer;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class LifeNode
 {
@@ -11,6 +12,7 @@ public class LifeNode
     public List<EventNode> Events = new List<EventNode>();
     public LifeNode Next;
     public LifeNode Prev;
+    public Location Location;
     private Dictionary<string, object> enviroments = new Dictionary<string, object>();
 
     public LifeNodeEvent OnLifeNodeChange = new LifeNodeEvent();
@@ -60,7 +62,7 @@ public class LifeNode
             int branch = await e.DoBranch();
             if (branch >= 0 && branch < e.Event.Branch.Length)
             {
-                UnityEngine.Debug.Log($"EventBranch {branch} {e.Event.Branch[branch]} {EventCollection.Instance.GetEvent(e.Event.Branch[branch])}");
+                Debug.Log($"EventBranch {branch} {e.Event.Branch[branch]} {EventCollection.Instance.GetEvent(e.Event.Branch[branch])}");
                 Model.Event branchEvent = EventCollection.Instance.GetEvent(e.Event.Branch[branch]);
                 if (branchEvent != null)
                 {
@@ -68,7 +70,7 @@ public class LifeNode
                 }
 
             }
-            UnityEngine.Debug.Log($"EventBranch {branch}");
+            Debug.Log($"EventBranch {branch}");
             ProcessedCount = i + 1;
             LifeEngine.Instance.lifeData.AddNodeEvent(e.Event);
         }
@@ -97,13 +99,20 @@ public class LifeNode
 
     public static LifeNode CreateBornNode()
     {
-        LifeNode node = new LifeNode();
-        Model.Place bornPlace = PlaceCollection.Instance.RamdomPlace(Model.PlaceType.City);
-        Model.Event bornEvent = TimeTriggerContainer.Instance.GetTrigger(new TimeSpan(0, 0)).GetEvent();
+        var node = new LifeNode();
+        var bornPlace = PlaceCollection.Instance.RandomPlace(Model.PlaceType.City);
+        var bornEvent = TimeTriggerContainer.Instance.GetTrigger(new TimeSpan(0, 0)).GetEvent();
+        node.Location = new Location();
         node.Place = bornPlace;
         node.Events.Add(new EventNode(node, bornEvent));
         return node;
     }
+}
+
+public struct Location
+{
+    public long mapID;
+    public Vector3 position;
 }
 
 public class LifeNodeEvent : UnityEvent { }
