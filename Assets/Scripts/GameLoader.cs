@@ -34,7 +34,7 @@ public class GameLoader : MonoBehaviour
 
     public async Task LoadSceneWithAnimation(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
     {
-        await crossFade(async () =>
+        await CrossFade(async () =>
         {
             await LoadSceneAsync(sceneName, mode);
         });
@@ -42,7 +42,7 @@ public class GameLoader : MonoBehaviour
 
     public async Task SwitchSceneWithAnimation(Scene origin, Scene current)
     {
-        await crossFade(async () =>
+        await CrossFade(async () =>
         {
             SceneManager.SetActiveScene(current);
             await YieldCoroutine.WaitForInstruction(SceneManager.UnloadSceneAsync(origin));
@@ -63,30 +63,37 @@ public class GameLoader : MonoBehaviour
 
     private async Task LoadGameAsync()
     {
-        await LoadSceneAsync("LifeScene");
-        await loadModelData();
-        await LifeEngine.Instance.CreateNewGame();
-        await fadeOut(0f);
+        try
+        {
+            await LoadSceneAsync("LifeScene");
+            await LoadModelData();
+            await LifeEngine.Instance.CreateNewGame();
+            await FadeOut(0f);
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"Load Game Failed! ${e.StackTrace} ");
+        }
     }
 
-    private async Task crossFade(Func<Task> action)
+    private async Task CrossFade(Func<Task> action)
     {
-        await fadeIn(0.5f);
+        await FadeIn(0.5f);
         await action();
-        await fadeOut(0.5f);
+        await FadeOut(0.5f);
     }
 
-    private async Task fadeOut(float duration)
+    private async Task FadeOut(float duration)
     {
         await YieldCoroutine.WaitForInstruction(loadingCanvas.DOFade(0f, duration).WaitForCompletion());
     }
 
-    private async Task fadeIn(float duration)
+    private async Task FadeIn(float duration)
     {
         await YieldCoroutine.WaitForInstruction(loadingCanvas.DOFade(1f, duration).WaitForCompletion());
     }
 
-    private async Task loadModelData()
+    private async Task LoadModelData()
     {
         while (!(ModelLoader.Instance?.loaded ?? false))
         {

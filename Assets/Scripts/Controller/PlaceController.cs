@@ -10,12 +10,12 @@ namespace Controller
     public class PlaceController : MonoBehaviour
     {
         private static readonly Dictionary<long, PlaceController> lookup = new();
-        
-        [SerializeField] private long placeID;
+
+        [SerializeField] public long placeID;
 
         [SerializeField] private Vector3 offset;
 
-        [SerializeField] private Bounds bounds;
+        [SerializeField] public Bounds bounds;
 
         [SerializeField] public List<long> nearbyPlaceIDs;
 
@@ -59,6 +59,7 @@ namespace Controller
             {
                 return place;
             }
+            Debug.Log($"Loading place {placeID}..");
             var loader = Resources.LoadAsync<GameObject>($"Places/{placeID}");
             while (!loader.isDone) {
                 await YieldCoroutine.WaitForSeconds(0.01f);
@@ -66,6 +67,7 @@ namespace Controller
 
             if (loader.asset == null)
             {
+                Debug.LogWarning($"Loading place {placeID} failed, Reason: no asset.");
                 return null;
             }
 

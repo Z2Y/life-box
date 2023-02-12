@@ -50,9 +50,11 @@ public class ModelLoader : MonoBehaviour {
                 await YieldCoroutine.WaitForSeconds(0.005f);
             }
             var asset = loader.asset as TextAsset;
-            var modelList = MessagePackSerializer.Deserialize(typeof(List<>).MakeGenericType(modelType), asset.bytes);
-            var modelContainer = type.GetProperty("Instance").GetMethod.Invoke(null, null);
+            var modelListType = typeof(List<>).MakeGenericType(modelType);
             var flags = BindingFlags.NonPublic | BindingFlags.Instance;
+            if (asset == null) continue;
+            object modelList = MessagePackSerializer.Deserialize(modelListType, asset.bytes);
+            object modelContainer = type.GetProperty("Instance").GetMethod.Invoke(null, null);
             type.GetField(modelAttr.ListField, flags)?.SetValue(modelContainer, modelList);
             type.GetMethod("OnLoad", flags)?.Invoke(modelContainer, null);
         }

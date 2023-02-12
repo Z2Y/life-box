@@ -102,8 +102,8 @@ public class LifeNode
         var node = new LifeNode();
         var bornPlace = PlaceCollection.Instance.RandomPlace(Model.PlaceType.City);
         var bornEvent = TimeTriggerContainer.Instance.GetTrigger(new TimeSpan(0, 0)).GetEvent();
-        node.Location = new Location();
         node.Place = bornPlace;
+        node.Location = new Location() {MapID = bornPlace.MapID, PlaceID = bornPlace.ID};
         node.Events.Add(new EventNode(node, bornEvent));
         return node;
     }
@@ -111,8 +111,9 @@ public class LifeNode
 
 public struct Location
 {
-    public long mapID;
-    public Vector3 position;
+    public long MapID;
+    public long PlaceID;
+    public Vector3 Position;
 }
 
 public class LifeNodeEvent : UnityEvent { }

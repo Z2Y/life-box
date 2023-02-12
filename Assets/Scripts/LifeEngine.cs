@@ -25,8 +25,9 @@ public class LifeEngine : MonoBehaviour {
 
     public async Task CreateNewGame() {
         lifeData = LifeData.CreateNew();
-        var map = await WorldMapController.LoadMapAsync(lifeData.current.Location.mapID);
-        await map.InitMapWithPosition(lifeData.current.Location.position);
+        var map = await WorldMapController.LoadMapAsync(lifeData.current.Location.MapID);
+        Debug.Log(map);
+        await map.InitMapWithPosition(lifeData.current.Location.Position);
         
         lifeData.DoForcast(lifeTime);
         lifeData.current.ProcessEvent().Coroutine();
