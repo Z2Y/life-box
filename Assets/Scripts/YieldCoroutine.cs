@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
 public class YieldCoroutine : MonoBehaviour
 {
-    protected static readonly List<YieldTask> Tasks = new List<YieldTask>();
+    protected static readonly List<YieldTask> Tasks = new ();
 
     private void Awake()
     {
@@ -26,7 +27,14 @@ public class YieldCoroutine : MonoBehaviour
         await yieldTask.Wait();
     }
 
-    public static async Task WaitForInstruction(YieldInstruction instruction)
+    public static async Task WaitForInstruction(YieldInstruction instruction, CancellationTokenSource cancel = null)
+    {
+        var yieldTask = new YieldTask(instruction, cancel);
+        Tasks.Add(yieldTask);
+        await yieldTask.Wait();
+    }
+
+    public static async Task WaitForInstruction(CustomYieldInstruction instruction)
     {
         var yieldTask = new YieldTask(instruction);
         Tasks.Add(yieldTask);
@@ -50,13 +58,26 @@ public class YieldCoroutine : MonoBehaviour
 
     protected class YieldTask
     {
-        public readonly YieldInstruction instruction;
+        public readonly object instruction;
         public readonly TaskCompletionSource<bool> source;
 
-        public YieldTask(YieldInstruction instruction)
+        public YieldTask(YieldInstruction instruction, CancellationTokenSource cancel = null)
         {
             this.instruction = instruction;
-            this.source = new TaskCompletionSource<bool>();
+            source = new TaskCompletionSource<bool>();
+            cancel?.Token.Register(Cancel);
+        }
+        
+        public YieldTask(CustomYieldInstruction instruction, CancellationTokenSource cancel = null)
+        {
+            this.instruction = instruction;
+            source = new TaskCompletionSource<bool>();
+            cancel?.Token.Register(Cancel);
+        }
+
+        private void Cancel()
+        {
+            source.TrySetCanceled();
         }
 
         public async Task Wait()

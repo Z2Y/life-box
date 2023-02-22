@@ -1,4 +1,5 @@
 using System;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,9 +30,9 @@ public class ModalPanel : UIBase {
     }
 
     public static void Show(string description, Action onOk, Action onCancel) {
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/ModalPanel");
-        ModalPanel panel = GameObject.Instantiate(prefab).GetComponent<ModalPanel>();
+        var panel = UIFactory<ModalPanel>.Create();
         panel.SetDescription(description);
         panel.SetCallback(onOk, onCancel);
+        UIManager.Instance.PushUI(panel);
     }
 }

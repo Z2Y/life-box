@@ -1,17 +1,20 @@
 using System;
+using UI;
 using UnityEngine;
 
 public abstract class UIBase : MonoBehaviour {
-    
+
     public void Show() {
-        this.gameObject.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     public void Hide() {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
-    public void Destroy() {
-        GameObject.Destroy(this.gameObject);
+    public void Destroy()
+    {
+        UIManager.Instance.Remove(GetInstanceID());
+        GameObject.Destroy(gameObject);
     }
 }

@@ -9,16 +9,15 @@ namespace Controller
     public class NPCMovementController : MonoBehaviour
     {
         [SerializeField] private Vector3 speed;
-        [SerializeField] private Animator animator;
+        [SerializeField] private NPCAnimationController animator;
         [SerializeField] private bool isPlayer;
         [SerializeField] private bool fromJoystick;
-        private static readonly int Speed = Animator.StringToHash("speed");
 
         private readonly NPCMoveTask moveTask = new NPCMoveTask();
 
         private void Awake()
         {
-            animator = GetComponentInChildren<Animator>();
+            animator = GetComponent<NPCAnimationController>();
             moveTask.npcTransform = transform;
             moveTask.animator = animator;
         }
@@ -56,7 +55,7 @@ namespace Controller
             {
                 speed.Set(input.x, input.y, input.z);
                 speed *= 2;
-                animator.SetFloat(Speed, speed.magnitude);
+                animator.SetSpeed(speed.magnitude);
             }
         }
 
@@ -78,7 +77,7 @@ namespace Controller
     internal class NPCMoveTask
     {
         public Transform npcTransform;
-        public Animator animator;
+        public NPCAnimationController animator;
 
         private Vector3 targetPos;
         private Vector3 startPos;
@@ -107,7 +106,7 @@ namespace Controller
 
             moveTime = (long)(distance / speed.magnitude * 1000);
             
-            animator.SetFloat("Speed", moveSpeed.magnitude);
+            animator.SetSpeed(moveSpeed.magnitude);
 
             if (expectTime > 0 && moveTime > expectTime)
             {
@@ -139,7 +138,7 @@ namespace Controller
         public void Cancel()
         {
             tcs.TrySetCanceled();
-            animator.SetFloat("Speed", 0f);
+            animator.SetSpeed(0f);
             isComplete = true;
         }
     }

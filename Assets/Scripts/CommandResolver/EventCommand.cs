@@ -36,7 +36,7 @@ public class LastEffectResult : CommandResolver
 }
 
 [CommandResolverHandler("Confirm")]
-public class ComfirmResolver : CommandResolver
+public class ConformResolver : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {

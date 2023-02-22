@@ -25,7 +25,7 @@ public class UICurrencyText : UIBase {
     {
         if (currency == null) return;
         var currencyStack = LifeEngine.Instance?.lifeData?.moneyInventory.GetStack(currency.ID);
-        int currencyCount = currencyStack == null ? 0 : currencyStack.Count;
+        var currencyCount = currencyStack?.Count ?? 0;
         currencyText.text = $"{currency.Name} {currencyCount}";
     }
 }

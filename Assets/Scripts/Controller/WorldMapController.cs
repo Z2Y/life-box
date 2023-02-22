@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ModelContainer;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Controller
 {
@@ -18,6 +20,7 @@ namespace Controller
 
         private List<PlaceController> places;
         private List<PlaceController> activePlaces = new();
+        private bool mapUpdating;
         private Bounds bounds;
         private GridLayout ground;
 
@@ -27,17 +30,19 @@ namespace Controller
             ground = placeRoot.GetComponentInChildren<GridLayout>();
         }
 
-        private void LateUpdate()
+        private void Update()
         {
-            followCamera();
+            updateMap();
         }
-        
 
-        private void followCamera()
+
+        private async void updateMap()
         {
-            // todo
+            if (mapUpdating) return;
             updateWorldBounds();
-            updateWorldPlaces();
+            await updateWorldPlaces();
+            await YieldCoroutine.WaitForSeconds(0.05f);
+            mapUpdating = false;
         }
 
         private void updateWorldBounds()
@@ -49,17 +54,19 @@ namespace Controller
             bounds = new Bounds(position, size);
         }
 
-        private List<long> getPlacesInBounds()
+        private List<PlaceController> getPlacesInBounds()
         {
-            return places.Where((place) => bounds.Intersects(place.bounds))
-                .Select((place) => place.placeID)
-                .ToList();
+            return places.Where((place) => bounds.Intersects(place.bounds)).ToList();
         }
 
 
-        private void updateWorldPlaces()
+        private async Task updateWorldPlaces()
         {
-            // todo
+            var placesInBounds = getPlacesInBounds();
+
+            await Task.WhenAll(placesInBounds.Select((place) => place.Activate()));
+
+            await Task.WhenAll(activePlaces.Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
         }
         
         public async Task InitMapWithPosition(Vector3 worldPosition)
@@ -68,25 +75,13 @@ namespace Controller
 
             bounds = new Bounds(position, bounds.size);
 
-            var placeIDs = getPlacesInBounds();
+            var placesInBounds = getPlacesInBounds();
 
-            var loadTasks = placeIDs.Select(PlaceController.LoadPlaceAsync).ToList();
+            await Task.WhenAll(placesInBounds.Select((place) => place.Activate()));
 
-            var loadedPlaces = new List<PlaceController>();
-
-            while (loadTasks.Any())
-            {
-                var completed = await Task.WhenAny(loadTasks);
-                if (completed.Result != null)
-                {
-                    loadedPlaces.Add(completed.Result);
-                }
-                loadTasks.Remove(completed);
-            }
-
-            await Task.WhenAll(activePlaces.Where((place) => !placeIDs.Contains(place.Place.ID)).Select((place) => place.DeActivate()));
+            await Task.WhenAll(activePlaces.Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
             
-            activePlaces = loadedPlaces;
+            activePlaces = placesInBounds;
         }
         
         public static async Task<WorldMapController> LoadMapAsync(long mapID)

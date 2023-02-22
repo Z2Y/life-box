@@ -8,7 +8,7 @@ namespace Controller
 {
     public class NPCController : MonoBehaviour
     {
-        private static readonly Dictionary<long, NPCController> lookup = new Dictionary<long, NPCController>();
+        private static readonly Dictionary<long, NPCController> lookup = new ();
         
         [SerializeField] private long characterID;
 
