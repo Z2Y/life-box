@@ -20,7 +20,7 @@ namespace Controller
 
         [SerializeField] private float zoom;
 
-        private List<PlaceController> places;
+        private List<PlaceController> places = new();
         private List<PlaceController> activePlaces = new();
         private bool mapUpdating;
         private Bounds bounds;

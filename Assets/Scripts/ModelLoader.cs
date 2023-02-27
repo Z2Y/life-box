@@ -46,9 +46,8 @@ public class ModelLoader : MonoBehaviour {
             var modelAttr = (ModelContainerOf)type.GetCustomAttribute(typeof(ModelContainerOf), false);
             var modelType = modelAttr.ModelType;
             var loader = Resources.LoadAsync($"{dir}{modelType.Name}");
-            while (!loader.isDone) {
-                await YieldCoroutine.WaitForSeconds(0.005f);
-            }
+            await YieldCoroutine.WaitForInstruction(loader);
+            
             var asset = loader.asset as TextAsset;
             var modelListType = typeof(List<>).MakeGenericType(modelType);
             var flags = BindingFlags.NonPublic | BindingFlags.Instance;

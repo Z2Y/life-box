@@ -17,6 +17,7 @@
 /Unity/Library/
 /Unity/[Oo]bj/
 /Release/
+/assets/plugins/HeroEditor/
 /Logs/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored

@@ -35,15 +35,19 @@ namespace Controller
             }
 
             var character = CharacterCollection.Instance.GetCharacter(characterID);
+            
+            
 
             if (character == null)
             {
                 return null;
             }
-            var loader = Resources.LoadAsync<GameObject>($"Character/{character.ModelID}");
-            while (!loader.isDone) {
-                await YieldCoroutine.WaitForSeconds(0.005f);
-            }
+            var loader = Resources.LoadAsync<GameObject>($"Prefabs/character/{character.ModelID}");
+
+            await YieldCoroutine.WaitForInstruction(loader);
+            
+            Debug.Log(character.ModelID);
+            Debug.Log(loader.asset);
 
             if (loader.asset == null)
             {

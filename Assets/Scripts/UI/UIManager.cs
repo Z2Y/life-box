@@ -20,7 +20,7 @@ namespace UI
             for (var i = 0; i < transform.childCount; i++)
             {
                 var ui = transform.GetChild(i).GetComponent<UIBase>();
-                if (ui != null)
+                if (ui != null && ui.gameObject.activeSelf)
                 {
                     PushUI(ui);
                 }

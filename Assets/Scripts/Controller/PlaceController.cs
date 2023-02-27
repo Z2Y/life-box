@@ -34,12 +34,12 @@ namespace Controller
 
         public async Task Activate()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public async Task DeActivate()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public static async Task UnloadPlaceAsync(long placeID)

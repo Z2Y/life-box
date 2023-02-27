@@ -16,7 +16,7 @@ namespace Model
         public long[] RelationValue;
         public long[] Skills;
         public long PlaceID;
-        public Dictionary<long, long> Relations = new Dictionary<long, long>();
+        public Dictionary<long, long> Relations = new ();
         public long ModelID;
     }
 }
@@ -33,6 +33,8 @@ namespace ModelContainer
 
         private void OnLoad() {
             lookup.Clear();
+            // load Main Character
+            LoadPlayerCharacter();
             foreach(Character character in characters) {
                 lookup.Add(character.ID, character);
                 Place initialPlace = PlaceCollection.Instance.GetPlace(character.PlaceID);
@@ -42,6 +44,19 @@ namespace ModelContainer
                     character.Relations.Add(character.RelationID[i], character.RelationValue[i]);
                 }
             }
+        }
+
+        private void LoadPlayerCharacter()
+        {
+            var player = new Character()
+            {
+                ID = 0,
+                Name = "xxx",
+                RelationID = new long[] {},
+                RelationValue = new long[] {},
+                ModelID = 0
+            };
+            lookup.Add(player.ID, player);
         }
 
         public static CharacterCollection Instance => _instance ??= new CharacterCollection();
