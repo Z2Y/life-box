@@ -8,27 +8,33 @@ public class LifeEngine : MonoBehaviour {
     public static LifeEngine Instance { get; private set;}
 
     public LifeTime lifeTime {get; private set;}
-
     public LifeData lifeData {get; private set;}
 
+    public WorldMapController Map => WorldMapController.GetWorldMapController(lifeData.current.Location.MapID);
+
+    public PlaceController Place => PlaceController.GetPlaceController(lifeData.current.Location.PlaceID);
+
+    public NPCController MainCharacter => NPCController.GetCharacterController(0); 
+
     public Action AfterLifeChange;
-    public Action OnLifeEnd;
     public Action OnLifeStart;
 
     private void Awake() {
         if (Instance == null) {
             Instance = this;
         }
-        lifeTime = this.gameObject.AddComponent<LifeTime>();
+        lifeTime = gameObject.AddComponent<LifeTime>();
         lifeTime.OnNextMonth += OnNextMonth;
     }
 
     public async Task CreateNewGame() {
         lifeData = LifeData.CreateNew();
         var map = await WorldMapController.LoadMapAsync(lifeData.current.Location.MapID);
-        Debug.Log(map);
+        var mainCharacter = await NPCController.LoadCharacterAsync(0);
+
         await map.InitMapWithPosition(lifeData.current.Location.Position);
-        
+        mainCharacter.SetLocation(lifeData.current.Location);
+
         lifeData.DoForcast(lifeTime);
         lifeData.current.ProcessEvent().Coroutine();
         LifeCardManager.Instance.UpdateCardActions();
@@ -38,7 +44,6 @@ public class LifeEngine : MonoBehaviour {
 
     private async void OnNextMonth() {
         if (lifeData.current.IsDeath) {
-            OnLifeEnd?.Invoke();
             GameRoot.Instance.EndGame();
             return;
         }

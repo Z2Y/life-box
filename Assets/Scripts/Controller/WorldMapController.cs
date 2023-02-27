@@ -10,6 +10,8 @@ namespace Controller
 {
     public class WorldMapController : MonoBehaviour
     {
+        private static readonly Dictionary<long, WorldMapController> lookup = new();
+        
         [SerializeField] private long mapID;
         
         [SerializeField] private GameObject placeRoot;
@@ -86,6 +88,11 @@ namespace Controller
         
         public static async Task<WorldMapController> LoadMapAsync(long mapID)
         {
+            var worldMap = GetWorldMapController(mapID);
+            if (worldMap != null)
+            {
+                return worldMap;
+            }
             var worldRoot = GameObject.Find("WorldRoot");
 
             var maps = worldRoot.GetComponentsInChildren<WorldMapController>();
@@ -109,15 +116,21 @@ namespace Controller
                 return null;
             }
 
-            var worldMap = Instantiate(loader.asset as GameObject, worldRoot.transform).GetComponent<WorldMapController>();
+            worldMap = Instantiate(loader.asset as GameObject, worldRoot.transform).GetComponent<WorldMapController>();
             worldMap.places = (await Task.WhenAll(PlaceCollection.Instance.Places.
                 Where((place) => place.MapID == mapID).
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID)))).
                 Where((p) => p != null).ToList();
 
+            lookup.TryAdd(worldMap.mapID, worldMap);
+
             return worldMap;
         }
 
+        public static WorldMapController GetWorldMapController(long mapId)
+        {
+            return lookup.TryGetValue(mapId, out var worldMap) ? worldMap : null;
+        }
         
     }
 }

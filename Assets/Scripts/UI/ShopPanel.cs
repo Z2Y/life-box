@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Model;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -76,21 +77,25 @@ public class ShopPanel : UIBase
             {
                 uIShopItem = Instantiate(itemPrefab, shopItemScroll.content).GetComponent<UIShopItem>();
             }
+
             uIShopItem.gameObject.SetActive(true);
             ShopItemStack itemStack = stacks[i] as ShopItemStack;
             uIShopItem.SetItem(new ShopConfirmData(itemStack, shop.Currency, itemStack.Price));
             uIShopItem.OnItemClick(onConfirmSell);
         }
+
         for (int i = stacks.Count; i < shopItemScroll.content.childCount; i++)
         {
             shopItemScroll.content.GetChild(i).gameObject.SetActive(false);
         }
+
         shopItemScroll.transform.Find("EmptyText")?.gameObject.SetActive(shopItemScroll.content.childCount == 0);
     }
 
     public void UpdateBagView()
     {
-        List<ItemStack> stacks = bag.Stacks.Where(itemStack => !itemStack.Empty && shop.GetResycle(itemStack.item.ID) > 0).ToList();
+        List<ItemStack> stacks = bag.Stacks
+            .Where(itemStack => !itemStack.Empty && shop.GetResycle(itemStack.item.ID) > 0).ToList();
 
         for (int i = 0; i < stacks.Count; i++)
         {
@@ -103,22 +108,25 @@ public class ShopPanel : UIBase
             {
                 uIShopItem = Instantiate(itemPrefab, bagItemScroll.content).GetComponent<UIShopItem>();
             }
+
             int resycle = shop.GetResycle(stacks[i].item.ID);
             uIShopItem.SetItem(new ShopConfirmData(stacks[i], shop.Currency, resycle));
-            uIShopItem.OnItemClick(onConfirmResycle);
+            uIShopItem.OnItemClick(onConfirmRecycle);
             uIShopItem.gameObject.SetActive(true);
         }
+
         for (int i = stacks.Count; i < bagItemScroll.content.childCount; i++)
         {
             bagItemScroll.content.GetChild(i).gameObject.SetActive(false);
         }
+
         bagItemScroll.transform.Find("EmptyText")?.gameObject.SetActive(bagItemScroll.content.childCount == 0);
     }
 
     private void onConfirmSell(ShopConfirmData data)
     {
         var currencyStack = LifeEngine.Instance?.lifeData?.moneyInventory.GetStack(data.Currency.ID);
-        int currencyCount = currencyStack == null ? 0 : currencyStack.Count;
+        int currencyCount = currencyStack?.Count ?? 0;
         if (data.Price <= 0)
         {
             confirmPopup.ShowItem("确认购买物品", data, data.ItemStack.Count, onSell);
@@ -154,12 +162,12 @@ public class ShopPanel : UIBase
         }
     }
 
-    private void onConfirmResycle(ShopConfirmData data)
+    private void onConfirmRecycle(ShopConfirmData data)
     {
-        confirmPopup.ShowItem("确认出售物品", data, data.ItemStack.Count, onResycle);
+        confirmPopup.ShowItem("确认出售物品", data, data.ItemStack.Count, onRecycle);
     }
 
-    private void onResycle(ShopConfirmData data, int count)
+    private void onRecycle(ShopConfirmData data, int count)
     {
 
         int currencyCount = data.Price * count;
@@ -168,7 +176,7 @@ public class ShopPanel : UIBase
         if (shop.StoreItem(data.ItemStack.item, count))
         {
             currencyInventory.StoreItem(data.Currency, currencyCount);
-            Result.AddResycle(data, count);
+            Result.AddRecycle(data, count);
             data.ItemStack.DiscardItem(count);
         }
         else
@@ -198,8 +206,7 @@ public class ShopPanel : UIBase
 
     public static ShopPanel Show(ShopConfig config, Action<ShopResult> onShop)
     {
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/ShopPanel");
-        ShopPanel panel = GameObject.Instantiate(prefab).GetComponent<ShopPanel>();
+        var panel = UIFactory<ShopPanel>.Create();
         panel.SetConfig(config, onShop);
         return panel;
     }
@@ -207,19 +214,19 @@ public class ShopPanel : UIBase
 
 public class ShopResult
 {
-    public ShopInventory Sells;
+    public readonly ShopInventory Sells;
 
-    public ShopInventory Resycles;
+    public readonly ShopInventory Recycles;
 
     public ShopResult(ShopConfig config)
     {
         Sells = new ShopInventory(config);
-        Resycles = new ShopInventory(config);
+        Recycles = new ShopInventory(config);
     }
 
-    public void AddResycle(ShopConfirmData data, int count)
+    public void AddRecycle(ShopConfirmData data, int count)
     {
-        Resycles.StoreItem(data.ItemStack.item, count, data.Price, 0);
+        Recycles.StoreItem(data.ItemStack.item, count, data.Price, 0);
     }
 
     public void AddSell(ShopConfirmData data, int count)
@@ -235,10 +242,10 @@ public class ShopResult
             ShopItemStack shopStack = stack as ShopItemStack;
             Sells.StoreItem(shopStack.item, shopStack.Count, shopStack.Price, 0);
         }
-        foreach (var stack in other.Resycles.Stacks)
+        foreach (var stack in other.Recycles.Stacks)
         {
             ShopItemStack shopStack = stack as ShopItemStack;
-            Resycles.StoreItem(shopStack.item, shopStack.Count, shopStack.Price, 0);
+            Recycles.StoreItem(shopStack.item, shopStack.Count, shopStack.Price, 0);
         }
         return true;
     }
@@ -247,25 +254,19 @@ public class ShopResult
     {
         get
         {
-            int payed = Sells.Stacks.Sum((stack) => (stack as ShopItemStack).Price * stack.Count);
-            int resycled = Resycles.Stacks.Sum((stack) => (stack as ShopItemStack).Price * stack.Count);
-            return payed - resycled;
+            var payed = Sells.Stacks.Sum((stack) => (stack as ShopItemStack).Price * stack.Count);
+            var recycled = Recycles.Stacks.Sum((stack) => (stack as ShopItemStack).Price * stack.Count);
+            return payed - recycled;
         }
     }
 
-    public bool Empty
-    {
-        get
-        {
-            return Sells.Empty && Resycles.Empty;
-        }
-    }
+    public bool Empty => Sells.Empty && Recycles.Empty;
 
     public override string ToString()
     {
-        string sells = string.Join(" ", Sells.Stacks.Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
-        string resycles = string.Join(" ", Resycles.Stacks.Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
-        int count = CurrencyCount;
-        return $"{(Sells.Empty ? "" : "购买")} {sells} {(Resycles.Empty ? "" : "卖出")} {resycles} {(count > 0 ? "失去" : "获得")} 【{Sells.Currency.Name}】 x {Math.Abs(count)}";
+        var sells = string.Join(" ", Sells.Stacks.Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
+        var recycles = string.Join(" ", Recycles.Stacks.Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
+        var count = CurrencyCount;
+        return $"{(Sells.Empty ? "" : "购买")} {sells} {(Recycles.Empty ? "" : "卖出")} {recycles} {(count > 0 ? "失去" : "获得")} 【{Sells.Currency.Name}】 x {Math.Abs(count)}";
     }
 }

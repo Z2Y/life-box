@@ -72,22 +72,18 @@ public class UIItemDiscardPopup : UIBase
 
     private void onSliderValueChange(float raw)
     {
-        int value = Mathf.FloorToInt(raw + 0.5f);
-        if (discardCount != value)
-        {
-            discardCount = value;
-            inputField.text = value.ToString();
-        }
+        var value = Mathf.FloorToInt(raw + 0.5f);
+        if (discardCount == value) return;
+        discardCount = value;
+        inputField.text = value.ToString();
     }
 
     private void onInputValueChange(string raw)
     {
-        int value = int.Parse(raw);
-        if (discardCount != value)
-        {
-            discardCount = value;
-            slider.value = value;
-        }
+        var value = int.Parse(raw);
+        if (discardCount == value) return;
+        discardCount = value;
+        slider.value = value;
     }
 
     public void ShowItem(ItemStack data, Action callback)

@@ -19,6 +19,12 @@ namespace Controller
             character = CharacterCollection.Instance.GetCharacter(characterID);
             lookup.Add(characterID, this);
         }
+
+        public void SetLocation(Location location)
+        {
+            // do map position translate
+            transform.position = location.Position;
+        }
         
         public static async Task<NPCController> LoadCharacterAsync(long characterID)
         {
@@ -48,7 +54,7 @@ namespace Controller
             return obj.GetComponent<NPCController>();
         }
         
-        private static NPCController GetCharacterController(long characterID)
+        public static NPCController GetCharacterController(long characterID)
         {
             return lookup.TryGetValue(characterID, out var controller) ? controller : null;
         }

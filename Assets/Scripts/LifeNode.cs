@@ -9,13 +9,13 @@ using UnityEngine;
 public class LifeNode
 {
     public Model.Place Place;
-    public List<EventNode> Events = new List<EventNode>();
+    public List<EventNode> Events = new ();
     public LifeNode Next;
     public LifeNode Prev;
     public Location Location;
-    private Dictionary<string, object> enviroments = new Dictionary<string, object>();
+    private Dictionary<string, object> enviroments = new ();
 
-    public LifeNodeEvent OnLifeNodeChange = new LifeNodeEvent();
+    public LifeNodeEvent OnLifeNodeChange = new ();
 
     public int ProcessedCount;
 

@@ -26,8 +26,8 @@ namespace ModelContainer
     [ModelContainerOf(typeof(Model.Character), "characters", 1)]
     public class CharacterCollection
     {
-        private readonly Dictionary<long, Model.Character> lookup = new Dictionary<long, Model.Character>();
-        private readonly List<Model.Character> characters = new List<Model.Character>();
+        private readonly Dictionary<long, Character> lookup = new ();
+        private readonly List<Character> characters = new ();
         private static CharacterCollection _instance;
         private CharacterCollection() { }
 
@@ -44,7 +44,7 @@ namespace ModelContainer
             }
         }
 
-        public static CharacterCollection Instance => _instance ?? (_instance = new CharacterCollection());
+        public static CharacterCollection Instance => _instance ??= new CharacterCollection();
 
         public Character GetCharacter(long id)
         {

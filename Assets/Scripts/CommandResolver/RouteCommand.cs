@@ -40,9 +40,9 @@ public class RouteCommand : CommandResolver
         CurrentLife.Place = target;
         CurrentLife.Next.Place = target;
         RouteTrigger.Instance.Trigger().Coroutine();
-        LifeEngine.Instance?.AfterLifeChange?.Invoke();
+        LifeEngine.Instance.AfterLifeChange?.Invoke();
         routeCompleteSource?.TrySetResult(target.ID);
     }
 
-    protected LifeNode CurrentLife => LifeEngine.Instance?.lifeData.current;
+    protected LifeNode CurrentLife => LifeEngine.Instance.lifeData.current;
 }

@@ -75,7 +75,7 @@ namespace Controller
             return obj.GetComponent<PlaceController>();
         }
 
-        private static PlaceController GetPlaceController(long placeID)
+        public static PlaceController GetPlaceController(long placeID)
         {
             return lookup.TryGetValue(placeID, out var placeController) ? placeController : null;
         }

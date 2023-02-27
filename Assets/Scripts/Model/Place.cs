@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
@@ -14,6 +15,7 @@ namespace Model
     }
 
     [MessagePackObject(true)]
+    [Serializable]
     public class Place
     {
         public long ID;

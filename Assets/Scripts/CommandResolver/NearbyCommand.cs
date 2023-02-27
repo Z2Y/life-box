@@ -4,6 +4,7 @@ using Model;
 using ModelContainer;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Controller;
 
 
 [CommandResolverHandler("NearbyNPC")]
@@ -11,12 +12,11 @@ public class NearbyNPCCommand : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        Place place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
+        var place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
         if (place == null) return 0;
-        string state = args[0] as string;
         await this.Done();
-        return place.Characters.Values.Count((character) => character.IsState(state));
+        return place.Characters.Values.Count((character) => character.IsState(args[0] as string));
     }
 }
 
@@ -26,7 +26,7 @@ public class CurrentPlaceResolver : CommandResolver
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         await this.Done();
-        return LifeEngine.Instance?.lifeData?.current?.Place;
+        return LifeEngine.Instance.lifeData?.current?.Place;
     }
 }
 
@@ -35,7 +35,7 @@ public class CurrentCityResolver : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        Place current = LifeEngine.Instance?.lifeData?.current?.Place;
+        Place current = LifeEngine.Instance.lifeData?.current?.Place;
         while (current != null && current.Parent > 0)
         {
             current = PlaceCollection.Instance.GetPlace(current.Parent);

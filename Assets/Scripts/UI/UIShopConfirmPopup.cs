@@ -88,9 +88,8 @@ public class UIShopConfirmPopup : UIBase
 
     private void onInputValueChange(string raw)
     {
-        int value;
-        int.TryParse(raw, out value);
-        int count = Mathf.Clamp(value, (int)slider.minValue, (int)slider.maxValue);
+        int.TryParse(raw, out var value);
+        var count = Mathf.Clamp(value, (int)slider.minValue, (int)slider.maxValue);
         if (count != value) {
             UnityEngine.Debug.Log($"{value} {count} {slider.minValue} {slider.maxValue}");
             inputField.text = count.ToString();
