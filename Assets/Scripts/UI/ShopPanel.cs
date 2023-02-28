@@ -5,7 +5,9 @@ using Model;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
+[PrefabResource("Prefabs/ui/ShopPanel")]
 public class ShopPanel : UIBase
 {
     private Text description;

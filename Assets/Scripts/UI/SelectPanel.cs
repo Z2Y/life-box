@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
+[PrefabResource("Prefabs/ui/SelectPanel")]
 public class SelectPanel : UIBase {
     private Text description;
     private ScrollRect scroll;
@@ -45,8 +48,7 @@ public class SelectPanel : UIBase {
     }
 
     public static SelectPanel Show(string description, List<string> options, Action<int> onSelect) {
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/SelectPanel");
-        SelectPanel panel = GameObject.Instantiate(prefab).GetComponent<SelectPanel>();
+        var panel = UIFactory<SelectPanel>.Create();
         panel.SetDescription(description);
         panel.SetOptions(options, onSelect);
         return panel;

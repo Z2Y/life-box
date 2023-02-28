@@ -1,4 +1,6 @@
+using System.Threading.Tasks;
 using UnityEngine;
+using Utils;
 
 namespace UI
 {
@@ -6,22 +8,14 @@ namespace UI
     {
         public static T Create()
         {
-            var prefab = Resources.Load<GameObject>($"Prefabs/ui/{typeof(T).Name}");
+            var ui = PrefabLoader<T>.Create(UIManager.Instance.transform);
+            UIManager.Instance.PushUI(ui);
+            return ui;
+        }
 
-            if (prefab == null)
-            {
-                Debug.LogWarning($"Cant Find UI Prefab {typeof(T).Name}");
-                return null;
-            }
-
-            var uiObj = GameObject.Instantiate(prefab, UIManager.Instance.transform);
-            var ui = uiObj.GetComponent<T>();
-            if (ui == null)
-            {
-                Debug.LogWarning($"Cant Find UI Component in prefab {typeof(T).Name}");
-                return null;
-            }
-
+        public static async Task<T> CreateAsync()
+        {
+            var ui = await PrefabLoader<T>.CreateAsync(UIManager.Instance.transform);
             UIManager.Instance.PushUI(ui);
             return ui;
         }

@@ -2,7 +2,9 @@ using System;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
+[PrefabResource("Prefabs/ui/ModalPanel")]
 public class ModalPanel : UIBase {
     private Text description;
     private Button okButton;
