@@ -37,7 +37,7 @@ public class LifeEngine : MonoBehaviour {
         // setup main character for player
         mainCharacter.SetLocation(lifeData.current.Location);
         mainCharacter.gameObject.AddComponent<NPCAnimationController>();
-        mainCharacter.gameObject.AddComponent<NPCMovementController>();
+        mainCharacter.gameObject.AddComponent<NPCMovementController>().SetAsPlayer();
 
         lifeData.DoForcast(lifeTime);
         lifeData.current.ProcessEvent().Coroutine();

@@ -13,7 +13,7 @@ namespace Controller
         [SerializeField] private long characterID;
 
         private Character character;
-        
+
         private void Awake()
         {
             character = CharacterCollection.Instance.GetCharacter(characterID);

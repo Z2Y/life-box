@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Utils;
@@ -18,6 +17,7 @@ namespace Controller
         private void Awake()
         {
             animator = GetComponent<NPCAnimationController>();
+            
             moveTask.npcTransform = transform;
             moveTask.animator = animator;
         }
@@ -33,6 +33,11 @@ namespace Controller
             {
                 moveTask.Update();
             }
+        }
+
+        public void SetAsPlayer(bool player = true)
+        {
+            isPlayer = player;
         }
 
         private void updatePositionBySpeed()
@@ -55,7 +60,7 @@ namespace Controller
             {
                 speed.Set(input.x, input.y, input.z);
                 speed *= 2;
-                animator.SetSpeed(speed.magnitude);
+                animator.SetSpeed(speed);
             }
         }
 
@@ -106,7 +111,7 @@ namespace Controller
 
             moveTime = (long)(distance / speed.magnitude * 1000);
             
-            animator.SetSpeed(moveSpeed.magnitude);
+            animator.SetSpeed(moveSpeed);
 
             if (expectTime > 0 && moveTime > expectTime)
             {
@@ -138,7 +143,7 @@ namespace Controller
         public void Cancel()
         {
             tcs.TrySetCanceled();
-            animator.SetSpeed(0f);
+            animator.SetSpeed(Vector3.zero);
             isComplete = true;
         }
     }

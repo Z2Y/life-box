@@ -1,22 +1,49 @@
 using System;
 using UnityEngine;
+using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
 
 namespace Controller
 {
     public class NPCAnimationController : MonoBehaviour
     {
-        [SerializeField] private Animator animator;
+        private CharacterScripts.Character character;
+        private Animator animator;
         
         private static readonly int Speed = Animator.StringToHash("speed");
+        private static readonly int Ready = Animator.StringToHash("Ready");
 
-        private void Awake()
+        private void Start()
         {
-            animator = GetComponentInChildren<Animator>();
+            if (character == null)
+            {
+                character = gameObject.GetComponent<CharacterScripts.Character>();
+                animator = character.Animator;
+            }
+            animator.SetBool(Ready, true);
         }
 
-        public void SetSpeed(float speed)
+        public void SetSpeed(Vector3 speed)
         {
-            animator.SetFloat(Speed, speed);
+            // animator.SetFloat(Speed, speed);
+
+            if (speed.x != 0)
+            {
+                Turn(speed.x);
+            }
+
+            if (speed != Vector3.zero)
+            {
+                character.SetState(CharacterScripts.CharacterState.Walk);
+            }
+            else
+            {
+                character.SetState(CharacterScripts.CharacterState.Idle);
+            }
+        }
+        
+        public void Turn(float direction)
+        {
+            character.transform.localScale = new Vector3(Mathf.Sign(direction), 1, 1);
         }
     }
 }
