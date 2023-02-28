@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Model;
 using ModelContainer;
 using UnityEngine;
+using Utils;
 
 namespace Controller
 {
+    [PrefabResourceWithArgs("Places/{0}")]
     public class PlaceController : MonoBehaviour
     {
         private static readonly Dictionary<long, PlaceController> lookup = new();
@@ -59,20 +61,16 @@ namespace Controller
             {
                 return place;
             }
-            Debug.Log($"Loading place {placeID}..");
-            var loader = Resources.LoadAsync<GameObject>($"Places/{placeID}");
-            while (!loader.isDone) {
-                await YieldCoroutine.WaitForSeconds(0.01f);
-            }
 
-            if (loader.asset == null)
+            place = await PrefabLoader<PlaceController, long>.CreateAsync(placeID,
+                GameObject.Find("PlaceRoot").transform);
+
+            if (place != null)
             {
-                Debug.LogWarning($"Loading place {placeID} failed, Reason: no asset.");
-                return null;
+                lookup.TryAdd(placeID, place);
             }
 
-            var obj = Instantiate(loader.asset as GameObject, GameObject.Find("PlaceRoot").transform);
-            return obj.GetComponent<PlaceController>();
+            return place;
         }
 
         public static PlaceController GetPlaceController(long placeID)

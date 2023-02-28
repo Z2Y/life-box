@@ -9,7 +9,6 @@ namespace UI
         private readonly LinkedList<UIBase> uiBases = new();
 
         private readonly Dictionary<int, UIBase> _lookup = new();
-
         public static UIManager Instance { get; private set; }
 
         private void Awake()

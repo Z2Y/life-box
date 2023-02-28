@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using ModelContainer;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Utils;
 
 namespace Controller
 {
+    [PrefabResourceWithArgs("Maps/{0:00}/Map")]
     public class WorldMapController : MonoBehaviour
     {
         private static readonly Dictionary<long, WorldMapController> lookup = new();
@@ -103,20 +105,15 @@ namespace Controller
             {
                 return loaded;
             }
-            var loader = Resources.LoadAsync<GameObject>($"Maps/{mapID:00}/Map");
 
-            while (!loader.isDone) {
-                await YieldCoroutine.WaitForSeconds(0.01f);
-            }
-            
-            Debug.Log(loader.asset);
+            worldMap = await PrefabLoader<WorldMapController, long>.CreateAsync(mapID, worldRoot.transform);
 
-            if (loader.asset == null)
+            if (worldMap == null)
             {
+                Debug.LogWarning($"Load Map {mapID} Failed, Resource Not Found.");
                 return null;
             }
-
-            worldMap = Instantiate(loader.asset as GameObject, worldRoot.transform).GetComponent<WorldMapController>();
+            
             worldMap.places = (await Task.WhenAll(PlaceCollection.Instance.Places.
                 Where((place) => place.MapID == mapID).
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID)))).
