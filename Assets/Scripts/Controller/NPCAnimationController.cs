@@ -50,6 +50,7 @@ namespace Controller
         public void Jump(Vector3 target)
         {
             // character.rigidbody2D.Do
+            if (character.GetState() == CharacterScripts.CharacterState.Jump) return;
             character.SetState(CharacterScripts.CharacterState.Jump);
             character.transform.DOJump(target, 1f, 1, 0.5f).OnComplete(() =>
             {

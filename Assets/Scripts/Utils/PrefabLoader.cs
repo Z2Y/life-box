@@ -78,12 +78,17 @@ namespace Utils
 
         public string Path(object args)
         {
+            Debug.Log($"{_basePath} xxx {args}");
             return string.Format(_basePath, args);
         }
-        public PrefabResourceWithArgs(string path) : base(path) {}
+
+        public PrefabResourceWithArgs(string path) : base(path)
+        {
+            _basePath = path;
+        }
     }
     
-    public static class PrefabLoader<T, T2> where T : UnityEngine.Object
+    public static class PrefabLoader<T, T2> where T : Object
     {
         public static T Create(T2 arg, Transform parent)
         {
@@ -104,7 +109,7 @@ namespace Utils
                 return null;
             }
 
-            return GameObject.Instantiate(prefab, parent).GetComponent<T>();
+            return Object.Instantiate(prefab, parent).GetComponent<T>();
         }
 
         public static async Task<T> CreateAsync(T2 arg, Transform parent)
@@ -129,7 +134,7 @@ namespace Utils
 
             var prefab = request.asset as GameObject;
                 
-            return GameObject.Instantiate(prefab, parent).GetComponent<T>();
+            return Object.Instantiate(prefab, parent).GetComponent<T>();
         }
     }
 

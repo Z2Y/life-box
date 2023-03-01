@@ -8,7 +8,7 @@ namespace Controller
     {
         [SerializeField] private NPCAnimationController animator;
         [SerializeField] private bool isPlayer;
-        [SerializeField] public KeyCode normalAtk;
+        [SerializeField] public KeyCode normalAtk = KeyCode.Mouse0;
         [SerializeField] private bool fromJoystick;
 
         // private Transform armL;

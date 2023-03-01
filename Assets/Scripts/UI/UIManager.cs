@@ -29,7 +29,7 @@ namespace UI
 
         public bool PushUI(UIBase ui)
         {
-            ui.Show();
+            ui.gameObject.SetActive(true);
             uiBases.AddFirst(ui);
             return _lookup.TryAdd(ui.GetInstanceID(), ui);
         }
@@ -66,7 +66,7 @@ namespace UI
         {
             if (!_lookup.TryGetValue(instanceID, out var ui)) return null;
             
-            ui.Hide();
+            ui.gameObject.SetActive(false);
             uiBases.Remove(ui);
             return ui;          
         }
