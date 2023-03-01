@@ -42,14 +42,14 @@ namespace ModelContainer
     [ModelContainerOf(typeof(Model.Skill), "skills")]
     public class SkillCollection
     {
-        private Dictionary<long, Model.Skill> lookup = new Dictionary<long, Model.Skill>();
-        private List<Model.Skill> skills = new List<Model.Skill>();
+        private readonly Dictionary<long, Model.Skill> lookup = new ();
+        private List<Model.Skill> skills = new ();
         private static SkillCollection _instance;
         private SkillCollection() { }
 
         private void OnLoad() {
             lookup.Clear();
-            foreach(Model.Skill skill in skills) {
+            foreach(var skill in skills) {
                 lookup.Add(skill.ID, skill);
             }
         }

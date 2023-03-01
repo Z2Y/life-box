@@ -25,8 +25,10 @@ public class BattleEffectResolver : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        BattleEffectResult result = new BattleEffectResult();
-        result.effects = env.Values.Where(value => value is IBattleEffect).Select(value => value as IBattleEffect).ToList();
+        var result = new BattleEffectResult
+        {
+            effects = env.Values.OfType<IBattleEffect>().ToList()
+        };
         await this.Done();
         return result;
     }

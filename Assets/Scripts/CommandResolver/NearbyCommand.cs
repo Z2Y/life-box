@@ -40,6 +40,7 @@ public class CurrentCityResolver : CommandResolver
         {
             current = PlaceCollection.Instance.GetPlace(current.Parent);
         }
+
         await this.Done();
         return current;
     }
@@ -48,68 +49,67 @@ public class CurrentCityResolver : CommandResolver
 [CommandResolverHandler("SelectTalkToNearby")]
 public class SelectTalkToNearBy : CommandResolver
 {
-    private TaskCompletionSource<long> talkCompleteSource;
-    private List<Character> nearbyCharacters = new();
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         Place place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
         if (place == null) return null;
-        talkCompleteSource = new TaskCompletionSource<long>();
-        nearbyCharacters = place.Characters.Values.Where((character) => character.IsTalkable()).ToList();
+        var talkCompleteSource = new TaskCompletionSource<long>();
+        var nearbyCharacters = place.Characters.Values.Where((character) => character.IsTalkable()).ToList();
         List<string> names = nearbyCharacters.Select((character) => character.Name).ToList();
-        SelectPanel.Show("选择想要交谈的人物", names, OnTalk).SetCancelable(true, OnCancel);
+        SelectPanel.Show("选择想要交谈的人物", names, (idx) =>
+        {
+            OnTalk(nearbyCharacters[idx]);
+            talkCompleteSource.TrySetResult(nearbyCharacters[idx].ID);
+        }).SetCancelable(true, () => talkCompleteSource.TrySetCanceled());
         return await talkCompleteSource.Task;
     }
 
-    private void OnTalk(int index)
+    private void OnTalk(Character character)
     {
-        Character character = nearbyCharacters[index];
-        TalkTrigger trigger = TalkTriggerContainer.Instance.GetTrigger(character.ID);
-        talkCompleteSource.SetResult(character.ID);
+        var trigger = TalkTriggerContainer.Instance.GetTrigger(character.ID);
         if (trigger == null) return;
         trigger.Trigger().Coroutine();
         UnityEngine.Debug.Log($"Talk to {character.ID}");
-    }
-
-    private void OnCancel()
-    {
-        talkCompleteSource.TrySetCanceled();
     }
 }
 
 [CommandResolverHandler("SelectShopToNearby")]
 public class SelectShopToNearby : CommandResolver
 {
-    private TaskCompletionSource<ShopResult> shopCompleteSource;
-    private List<Character> nearbyCharacters = new();
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         Place place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
         if (place == null) return null;
-        shopCompleteSource = new TaskCompletionSource<ShopResult>();
-        nearbyCharacters = place.Characters.Values.Where((character) => character.IsShopable()).ToList();
+        var shopCompleteSource = new TaskCompletionSource<ShopResult>();
+        var nearbyCharacters = place.Characters.Values.Where((character) => character.IsShopable()).ToList();
+        void OnCancel() => shopCompleteSource.TrySetCanceled();
+        void OnComplete(ShopResult result) => shopCompleteSource.TrySetResult(result);
+
         if (nearbyCharacters.Count == 0)
         {
             shopCompleteSource.SetCanceled();
         }
         else if (nearbyCharacters.Count == 1)
         {
-            OnShop(0);
+            OnShop(nearbyCharacters[0], OnComplete, OnCancel);
         }
         else
         {
             List<string> names = nearbyCharacters.Select((character) => character.Name).ToList();
-            SelectPanel.Show("选择想要交谈的人物", names, OnShop).SetCancelable(true, OnCancel);
+            SelectPanel.Show("选择想要交谈的人物", names,
+                    (idx) => OnShop(nearbyCharacters[idx], OnComplete, OnCancel))
+                .SetCancelable(true, OnCancel);
         }
+
         return await shopCompleteSource.Task;
     }
 
-    private void OnShop(int index)
+    private void OnShop(Character character, Action<ShopResult> onComplete, Action OnCancel)
     {
-        Character character = nearbyCharacters[index];
-        List<ShopConfig> configs = ShopConfigCollection.Instance.GetShopConfigsByCharacter(character.ID).Where((config) => config.isOpen).ToList();
+        List<ShopConfig> configs = ShopConfigCollection.Instance.GetShopConfigsByCharacter(character.ID)
+            .Where((config) => config.isOpen).ToList();
 
         if (configs.Count <= 0)
         {
@@ -117,15 +117,16 @@ public class SelectShopToNearby : CommandResolver
         }
         else if (configs.Count == 1)
         {
-            OpenShop(configs[0]);
+            OpenShop(configs[0], onComplete);
         }
         else
         {
-            SelectPanel.Show("选择想要购买的物品", configs.Select((config) => config.Name).ToList(), (idx) => OpenShop(configs[idx])).SetCancelable(true, OnCancel);
+            SelectPanel.Show("选择想要购买的物品", configs.Select((config) => config.Name).ToList(),
+                (idx) => OpenShop(configs[idx], onComplete)).SetCancelable(true, OnCancel);
         }
     }
 
-    private void OpenShop(ShopConfig config)
+    private void OpenShop(ShopConfig config, Action<ShopResult> onComplete)
     {
         async void onShop(ShopResult result)
         {
@@ -136,14 +137,9 @@ public class SelectShopToNearby : CommandResolver
                 node.SetEffectResult(result);
             }
 
-            shopCompleteSource.TrySetResult(result);
+            onComplete(result);
         }
 
         ShopPanel.Show(config, onShop);
-    }
-
-    private void OnCancel()
-    {
-        shopCompleteSource.TrySetCanceled();
     }
 }

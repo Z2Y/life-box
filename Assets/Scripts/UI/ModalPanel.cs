@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,8 +32,8 @@ public class ModalPanel : UIBase {
         }
     }
 
-    public static void Show(string description, Action onOk, Action onCancel) {
-        var panel = UIFactory<ModalPanel>.Create();
+    public static async Task Show(string description, Action onOk, Action onCancel) {
+        var panel = await UIManager.Instance.FindOrCreateAsync<ModalPanel>() as ModalPanel;
         panel.SetDescription(description);
         panel.SetCallback(onOk, onCancel);
         UIManager.Instance.PushUI(panel);

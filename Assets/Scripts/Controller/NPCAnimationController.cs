@@ -57,6 +57,11 @@ namespace Controller
             });
         }
 
+        public void SetBodyScale(Vector2 bodyScale)
+        {
+            character.BodyScale = bodyScale;
+        }
+
         public void AttackNormal()
         {
             character.Slash();

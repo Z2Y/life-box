@@ -28,7 +28,7 @@ public class LastEffectResult : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        LifeNode current = LifeEngine.Instance?.lifeData?.current;
+        var current = LifeEngine.Instance?.lifeData?.current;
         if (current == null) return null;
         await this.Done();
         return current.Events[current.ProcessedCount - 1].EffectResult;
@@ -43,14 +43,14 @@ public class ConformResolver : CommandResolver
         return await Confirm(arg);
     }
 
-    private Task<int> Confirm(string description)
+    private async Task<int> Confirm(string description)
     {
         var tcs = new TaskCompletionSource<int>();
         var onConfirm = new Action(() => tcs.SetResult(0));
         var onCancel = new Action(() => tcs.SetResult(1));
 
-        ModalPanel.Show(description, onConfirm, onCancel);
-        return tcs.Task;
+        await ModalPanel.Show(description, onConfirm, onCancel);
+        return await tcs.Task;
     }
 }
 

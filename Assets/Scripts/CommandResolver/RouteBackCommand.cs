@@ -11,23 +11,19 @@ public class RouteBackCommand : RouteCommand {
 
         if (place != null && place.Parent > 0)
         {
-            routeCompleteSource = new TaskCompletionSource<long>();
-            OnBack(place.Parent);
+            var routeCompleteSource = new TaskCompletionSource<long>();
+            var target = PlaceCollection.Instance.GetPlace(place.Parent);
+            if (target != null) {
+                CurrentLife.Place = target;
+                CurrentLife.Next.Place = target;
+                RouteTrigger.Instance.Trigger().Coroutine();
+                LifeEngine.Instance?.AfterLifeChange?.Invoke();
+                routeCompleteSource?.TrySetResult(target.ID);
+            } else {
+                routeCompleteSource?.TrySetResult(0);
+            }
             return await routeCompleteSource.Task; 
         }
         return null;
-    }
-
-    private void OnBack(long placeID) {
-        var target = PlaceCollection.Instance.GetPlace(placeID);
-        if (target != null) {
-            CurrentLife.Place = target;
-            CurrentLife.Next.Place = target;
-            RouteTrigger.Instance.Trigger().Coroutine();
-            LifeEngine.Instance?.AfterLifeChange?.Invoke();
-            routeCompleteSource?.TrySetResult(target.ID);
-        } else {
-            routeCompleteSource?.TrySetResult(0);
-        }
     }
 }

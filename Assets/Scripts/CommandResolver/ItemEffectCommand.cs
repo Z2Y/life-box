@@ -10,10 +10,12 @@ public class ItemUsageResolver : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        ItemUsage result = new ItemUsage();
-        result.effects = env.Values.Where((value) => value is ItemUsageEffect).Select((value) => value as ItemUsageEffect).ToList();
-        result.UseLimt = Convert.ToInt32(args[0]);
-        result.DestroyOnUseup = Convert.ToInt32(args[1]) > 0;
+        var result = new ItemUsage
+        {
+            effects = env.Values.OfType<ItemUsageEffect>().ToList(),
+            UseLimt = Convert.ToInt32(args[0]),
+            DestroyOnUseup = Convert.ToInt32(args[1]) > 0
+        };
         await this.Done();
         return result;
     }    

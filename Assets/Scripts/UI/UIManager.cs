@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace UI
@@ -48,7 +49,7 @@ namespace UI
             return _lookup.Values.FirstOrDefault((ui => ui.gameObject.name == uiName));
         }
         
-        public UIBase FindByType<T>(T uiType)
+        public UIBase FindByType<T>()
         {
             return _lookup.Values.FirstOrDefault((ui) => ui is T);
         }
@@ -68,6 +69,26 @@ namespace UI
             ui.Hide();
             uiBases.Remove(ui);
             return ui;          
+        }
+
+        public UIBase FindOrCreate<T>() where T : UIBase
+        {
+            var exist = _lookup.Values.OfType<T>().FirstOrDefault();
+            if (exist != null)
+            {
+                return exist;
+            }
+            return UIFactory<T>.Create();
+        }
+        
+        public async Task<UIBase> FindOrCreateAsync<T>(bool useActive = false) where T : UIBase
+        {
+            var exist = _lookup.Values.OfType<T>().FirstOrDefault(ui => (useActive || !ui.gameObject.activeSelf));
+            if (exist != null)
+            {
+                return exist;
+            }
+            return await UIFactory<T>.CreateAsync();
         }
         
     }

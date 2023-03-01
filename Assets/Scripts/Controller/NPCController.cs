@@ -38,6 +38,11 @@ namespace Controller
             Movement.SetAsPlayer(isPlayer);
             Attack.SetAsPlayer(isPlayer);
         }
+
+        public void SetBodyScale(Vector2 bodyScale)
+        {
+            Animator.SetBodyScale(bodyScale);
+        }
         
         public static async Task<NPCController> LoadCharacterAsync(long characterID)
         {

@@ -1,4 +1,3 @@
-using System;
 using HeroEditor.Common.Enums;
 using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
 using UnityEngine;
@@ -12,12 +11,17 @@ namespace Controller
         [SerializeField] public KeyCode normalAtk;
         [SerializeField] private bool fromJoystick;
 
+        // private Transform armL;
+        // private Transform armR;
+
         private CharacterScripts.Character character;
 
         private void Start()
         {
             character = gameObject.GetComponent<CharacterScripts.Character>();
             animator = gameObject.GetComponent<NPCAnimationController>();
+            // armL = character.BodyRenderers[0].transform;
+            // armR = character.BodyRenderers[1].transform;
         }
 
         public void SetAsPlayer(bool player)

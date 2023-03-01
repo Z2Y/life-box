@@ -10,6 +10,8 @@ public class LifeEngine : MonoBehaviour {
     public LifeTime lifeTime {get; private set;}
     public LifeData lifeData {get; private set;}
 
+    public bool isReady;
+
     public WorldMapController Map => WorldMapController.GetWorldMapController(lifeData.current.Location.MapID);
 
     public PlaceController Place => PlaceController.GetPlaceController(lifeData.current.Location.PlaceID);
@@ -37,6 +39,7 @@ public class LifeEngine : MonoBehaviour {
         // setup main character for player
         mainCharacter.SetLocation(lifeData.current.Location);
         mainCharacter.SetAsPlayer(true);
+        isReady = true;
 
         lifeData.DoForcast(lifeTime);
         lifeData.current.ProcessEvent().Coroutine();
