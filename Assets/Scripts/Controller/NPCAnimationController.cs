@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
 
@@ -31,6 +32,11 @@ namespace Controller
                 Turn(speed.x);
             }
 
+            if (character.GetState() == CharacterScripts.CharacterState.Jump)
+            {
+                return;
+            }
+
             if (speed != Vector3.zero)
             {
                 character.SetState(CharacterScripts.CharacterState.Walk);
@@ -40,8 +46,28 @@ namespace Controller
                 character.SetState(CharacterScripts.CharacterState.Idle);
             }
         }
-        
-        public void Turn(float direction)
+
+        public void Jump(Vector3 target)
+        {
+            // character.rigidbody2D.Do
+            character.SetState(CharacterScripts.CharacterState.Jump);
+            character.transform.DOJump(target, 1f, 1, 0.5f).OnComplete(() =>
+            {
+                character.SetState(CharacterScripts.CharacterState.Idle);
+            });
+        }
+
+        public void AttackNormal()
+        {
+            character.Slash();
+        }
+
+        public void GetReady()
+        {
+            character.GetReady();
+        }
+
+        private void Turn(float direction)
         {
             character.transform.localScale = new Vector3(Mathf.Sign(direction), 1, 1);
         }

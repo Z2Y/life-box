@@ -55,7 +55,15 @@ namespace Controller
         {
             var speedX = Input.GetAxisRaw("Horizontal");
             var speedY = Input.GetAxisRaw("Vertical");
+            var isJump = Input.GetKeyDown(KeyCode.Space);
             var input = new Vector3(speedX, speedY, 0).normalized;
+
+            if (isJump)
+            {
+                animator.Jump(input * Time.deltaTime);
+                return;
+            }
+            
             if (input != speed && Vector3.Distance(input, speed) > 0.001f)
             {
                 speed.Set(input.x, input.y, input.z);

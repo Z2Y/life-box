@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Model;
 using ModelContainer;
 using UnityEngine;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Controller
 {
@@ -13,10 +14,16 @@ namespace Controller
         [SerializeField] private long characterID;
 
         private Character character;
+        public NPCAnimationController Animator { get; private set; }
+        public NPCMovementController Movement { get; private set;  }
+        public NPCAttackController Attack { get; private set;  }
 
         private void Awake()
         {
             character = CharacterCollection.Instance.GetCharacter(characterID);
+            Animator = gameObject.AddComponent<NPCAnimationController>();
+            Movement = gameObject.AddComponent<NPCMovementController>();
+            Attack = gameObject.AddComponent<NPCAttackController>();
             lookup.Add(characterID, this);
         }
 
@@ -24,6 +31,12 @@ namespace Controller
         {
             // do map position translate
             transform.position = location.Position;
+        }
+
+        public void SetAsPlayer(bool isPlayer)
+        {
+            Movement.SetAsPlayer(isPlayer);
+            Attack.SetAsPlayer(isPlayer);
         }
         
         public static async Task<NPCController> LoadCharacterAsync(long characterID)
