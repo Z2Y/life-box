@@ -1,7 +1,11 @@
 using System;
+using System.Threading.Tasks;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
+[PrefabResource("Prefabs/ui/BattleResultPanel")]
 public class BattleResultPanel : UIBase {
     
     private Text description;
@@ -23,10 +27,10 @@ public class BattleResultPanel : UIBase {
         }
     }
 
-    public static void Show(string description, Action onOk) {
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/BattleResultPanel");
-        BattleResultPanel panel = GameObject.Instantiate(prefab).GetComponent<BattleResultPanel>();
-        panel.SetDescription(description);
-        panel.SetCallback(onOk);
+    public static async Task Show(string description, Action onOk)
+    {
+        var panel = await UIManager.Instance.FindOrCreateAsync<BattleResultPanel>() as BattleResultPanel;
+        panel?.SetDescription(description);
+        panel?.SetCallback(onOk);
     }
 }

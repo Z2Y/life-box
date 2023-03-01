@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Model;
 using UI;
 using UnityEngine;
@@ -61,7 +62,7 @@ public class ShopPanel : UIBase
         }
         catch (Exception e)
         {
-            UnityEngine.Debug.LogWarning(e);
+            Debug.LogWarning(e);
         }
     }
 
@@ -94,7 +95,7 @@ public class ShopPanel : UIBase
         shopItemScroll.transform.Find("EmptyText")?.gameObject.SetActive(shopItemScroll.content.childCount == 0);
     }
 
-    public void UpdateBagView()
+    private void UpdateBagView()
     {
         List<ItemStack> stacks = bag.Stacks
             .Where(itemStack => !itemStack.Empty && shop.GetResycle(itemStack.item.ID) > 0).ToList();
@@ -111,8 +112,8 @@ public class ShopPanel : UIBase
                 uIShopItem = Instantiate(itemPrefab, bagItemScroll.content).GetComponent<UIShopItem>();
             }
 
-            int resycle = shop.GetResycle(stacks[i].item.ID);
-            uIShopItem.SetItem(new ShopConfirmData(stacks[i], shop.Currency, resycle));
+            int recycle = shop.GetResycle(stacks[i].item.ID);
+            uIShopItem.SetItem(new ShopConfirmData(stacks[i], shop.Currency, recycle));
             uIShopItem.OnItemClick(onConfirmRecycle);
             uIShopItem.gameObject.SetActive(true);
         }
@@ -127,7 +128,7 @@ public class ShopPanel : UIBase
 
     private void onConfirmSell(ShopConfirmData data)
     {
-        var currencyStack = LifeEngine.Instance?.lifeData?.moneyInventory.GetStack(data.Currency.ID);
+        var currencyStack = LifeEngine.Instance.lifeData?.moneyInventory.GetStack(data.Currency.ID);
         int currencyCount = currencyStack?.Count ?? 0;
         if (data.Price <= 0)
         {
@@ -144,7 +145,7 @@ public class ShopPanel : UIBase
     {
 
         int currencyCount = data.Price * count;
-        var currencyStack = LifeEngine.Instance?.lifeData?.moneyInventory.GetStack(data.Currency.ID);
+        var currencyStack = LifeEngine.Instance.lifeData?.moneyInventory.GetStack(data.Currency.ID);
 
         if (currencyStack == null || currencyStack.Count < currencyCount)
         {
@@ -173,7 +174,7 @@ public class ShopPanel : UIBase
     {
 
         int currencyCount = data.Price * count;
-        var currencyInventory = LifeEngine.Instance?.lifeData?.moneyInventory;
+        var currencyInventory = LifeEngine.Instance.lifeData?.moneyInventory;
 
         if (shop.StoreItem(data.ItemStack.item, count))
         {
@@ -191,7 +192,7 @@ public class ShopPanel : UIBase
     {
         shop?.OnInventoryChange.RemoveListener(UpdateShopView);
         bag?.OnInventoryChange.RemoveListener(UpdateBagView);
-        if (Result != null && !Result.Empty)
+        if (Result is { Empty: false })
         {
             onShop?.Invoke(Result);
         }
@@ -206,10 +207,10 @@ public class ShopPanel : UIBase
         }
     }
 
-    public static ShopPanel Show(ShopConfig config, Action<ShopResult> onShop)
+    public static async Task<ShopPanel> Show(ShopConfig config, Action<ShopResult> onShop)
     {
-        var panel = UIFactory<ShopPanel>.Create();
-        panel.SetConfig(config, onShop);
+        var panel = await UIManager.Instance.FindOrCreateAsync<ShopPanel>() as ShopPanel;
+        panel?.SetConfig(config, onShop);
         return panel;
     }
 }

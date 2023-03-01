@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +20,7 @@ public class SelectPanel : UIBase {
         cancelButton = transform.Find("Panel/CancelButton").GetComponent<Button>();
         optionPrefab = scroll.transform.Find("Viewport/Content/OptionButton").gameObject;
         optionPrefab.SetActive(false);
-        cancelButton.onClick.AddListener(this.Destroy);
+        cancelButton.onClick.AddListener(Hide);
         SetCancelable(false);
     }
 
@@ -47,8 +48,8 @@ public class SelectPanel : UIBase {
         }
     }
 
-    public static SelectPanel Show(string description, List<string> options, Action<int> onSelect) {
-        var panel = UIFactory<SelectPanel>.Create();
+    public static async Task<SelectPanel> Show(string description, List<string> options, Action<int> onSelect) {
+        var panel = await UIManager.Instance.FindOrCreateAsync<SelectPanel>() as SelectPanel;
         panel.SetDescription(description);
         panel.SetOptions(options, onSelect);
         return panel;

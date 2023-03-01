@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Model;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
+
+[PrefabResource("Prefabs/ui/KnapsackPanel")]
 public class KnapsackPanel : UIBase
 {
     private Button closeBtn;
@@ -29,7 +34,7 @@ public class KnapsackPanel : UIBase
         itemGridView.OnPointerEnterCell(OnPointerEnterCell);
         itemGridView.OnPointerExitCell(OnPointerExitCell);
 
-        closeBtn?.onClick.AddListener(Destroy);
+        closeBtn?.onClick.AddListener(Hide);
     }
 
     private void Start() {
@@ -45,10 +50,10 @@ public class KnapsackPanel : UIBase
         knapsack = inventory;
         currencyView?.SetCurrency(LifeEngine.Instance?.lifeData?.moneyInventory?.DefaultMoneyItem);
         knapsack?.OnInventoryChange?.AddListener(UpdateByCurrentFilter);
-        InitalizeStackData();
+        InitStackData();
     }
 
-    private void InitalizeStackData()
+    private void InitStackData()
     {
         if (knapsack == null)
         {
@@ -152,10 +157,13 @@ public class KnapsackPanel : UIBase
         }
     }
 
-    public static void Show(ItemInventory inventory)
+    public static async Task Show(ItemInventory inventory)
     {
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/KnapsackPanel");
-        KnapsackPanel panel = GameObject.Instantiate(prefab).GetComponent<KnapsackPanel>();
-        panel.BindInventory(inventory);
+        var panel = await UIManager.Instance.FindOrCreateAsync<KnapsackPanel>() as KnapsackPanel;
+
+        if (panel != null)
+        {
+            panel.BindInventory(inventory);
+        }
     }
 }

@@ -23,14 +23,16 @@ public class RouteCommand : CommandResolver
             var child = PlaceCollection.Instance.GetPlace(place);
             if (child != null) nearbyPlaces.Add(child);
         }
-        SelectPanel.Show(
-            "选择想要去的地点", 
-            nearbyPlaces.Select((place) => place.Name).ToList(), 
+
+        var selector = await SelectPanel.Show(
+            "选择想要去的地点",
+            nearbyPlaces.Select((place) => place.Name).ToList(),
             (idx) =>
             {
                 OnRoute(nearbyPlaces[idx]);
                 routeCompleteSource?.TrySetResult(nearbyPlaces[idx].ID);
-            }).SetCancelable(true, () => routeCompleteSource.TrySetCanceled());
+            });
+        selector.SetCancelable(true, () => routeCompleteSource.TrySetCanceled());
         return await routeCompleteSource.Task;
     }
 

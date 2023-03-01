@@ -12,7 +12,7 @@ public abstract class ItemCommandResolver : CommandResolver {
 }
 
 public class ItemCommandResult {
-    public readonly List<ItemStack> Items = new List<ItemStack>();
+    public readonly List<ItemStack> Items = new ();
 
     public override string ToString()
     {
@@ -103,9 +103,8 @@ public class OpenKnapsackCommand : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        ItemInventory knapsack = LifeEngine.Instance?.lifeData?.knapsackInventory;
-        KnapsackPanel.Show(knapsack);
-        await this.Done();
+        var knapsack = LifeEngine.Instance.lifeData?.knapsackInventory;
+        await KnapsackPanel.Show(knapsack);
         return null;
     }
 }
