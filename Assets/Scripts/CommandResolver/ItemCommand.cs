@@ -6,17 +6,9 @@ using Model;
 using ModelContainer;
 
 public abstract class ItemCommandResolver : CommandResolver {
-    protected ItemInventory Knapsack {
-        get {
-            return LifeEngine.Instance?.lifeData?.knapsackInventory;
-        }
-    }
+    protected ItemInventory Knapsack => LifeEngine.Instance.lifeData?.knapsackInventory;
 
-    protected MoneyInventory Wallet {
-        get {
-            return LifeEngine.Instance?.lifeData?.moneyInventory;
-        }
-    }
+    protected MoneyInventory Wallet => LifeEngine.Instance.lifeData?.moneyInventory;
 }
 
 public class ItemCommandResult {

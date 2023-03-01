@@ -10,7 +10,7 @@ namespace DefaultNamespace
     {
         public static InputCommandResolver Instance { get; private set;}
         
-        private static readonly Dictionary<KeyCode, ICommandResolver> Resolvers = new ();
+        private static readonly Dictionary<KeyCode, IInputCommandResolver> Resolvers = new ();
         private void Awake()
         {
             Instance = this;
@@ -22,12 +22,12 @@ namespace DefaultNamespace
             if (Input.anyKeyDown)
             {
                 var handlers = Resolvers.Where((pair) => Input.GetKeyDown(pair.Key)).ToList();
-                handlers.ForEach(pair => pair.Value.Resolve("keydown", null, null));
+                handlers.ForEach(pair => pair.Value.Resolve(pair.Key));
             }
 
         }
 
-        private void Register(KeyCode code, ICommandResolver resolver) {
+        private void Register(KeyCode code, IInputCommandResolver resolver) {
             if (Resolvers.ContainsKey(code)) {
                 Resolvers[code] = resolver;
             } else {
@@ -40,9 +40,9 @@ namespace DefaultNamespace
             var types = asm.GetExportedTypes().Where((type) => type.IsDefined(typeof(InputCommandResolverHandler), false)).ToArray();
             foreach(var type in types) {
                 var keyCode = ((InputCommandResolverHandler)type.GetCustomAttribute(typeof(InputCommandResolverHandler), false))?.Code;
-                if (keyCode != null && type.GetInterface(nameof(ICommandResolver)) != null)
+                if (keyCode != null && type.GetInterface(nameof(IInputCommandResolver)) != null)
                 {
-                    Register((KeyCode)keyCode, Activator.CreateInstance(type) as ICommandResolver);
+                    Register((KeyCode)keyCode, Activator.CreateInstance(type) as IInputCommandResolver);
                 }
             }        
         }

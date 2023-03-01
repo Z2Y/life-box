@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.Events;
 
 [AttributeUsage(AttributeTargets.Class)]
@@ -13,6 +14,11 @@ public class CommandResolverHandler : Attribute {
 
 public interface ICommandResolver {
     Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env);
+}
+
+public interface IInputCommandResolver
+{
+    void Resolve(KeyCode code);
 }
 
 public abstract class CommandResolver : ICommandResolver {
