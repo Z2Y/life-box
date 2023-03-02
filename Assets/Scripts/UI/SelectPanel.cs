@@ -33,7 +33,7 @@ public class SelectPanel : UIBase {
         {
             string option = options[i];
             int index = i;
-            Button optionBtn = GameObject.Instantiate(optionPrefab, scroll.content).GetComponent<Button>();
+            Button optionBtn = Instantiate(optionPrefab, scroll.content).GetComponent<Button>();
             optionBtn.GetComponentInChildren<Text>().text = option;
             optionBtn.onClick.AddListener(() => onSelect(index));
             optionBtn.onClick.AddListener(this.Destroy);

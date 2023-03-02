@@ -36,18 +36,18 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Model.Item), "items")]
+    [ModelContainerOf(typeof(Item), "items")]
     public class ItemCollection
     {
-        private readonly Dictionary<long, Model.Item> lookup = new ();
-        private Dictionary<Model.ItemType, List<Model.Item>> lookupByType = new ();
-        private List<Model.Item> items = new ();
+        private readonly Dictionary<long, Item> lookup = new ();
+        private Dictionary<ItemType, List<Item>> lookupByType = new ();
+        private List<Item> items = new ();
         private static ItemCollection _instance;
         private ItemCollection() { }
 
         private void OnLoad() {
             lookup.Clear();
-            foreach(Model.Item evt in items) {
+            foreach(var evt in items) {
                 lookup.Add(evt.ID, evt);
             }
             lookupByType = items.GroupBy((item) => item.ItemType).ToDictionary((group) => group.Key, (group) => group.ToList());
@@ -60,30 +60,30 @@ namespace ModelContainer
 
         public List<Item> GetItemsByType(ItemType itemType)
         {
-            return lookupByType.TryGetValue(itemType, out var items) ? items : null;
+            return lookupByType.TryGetValue(itemType, out var byType) ? byType : null;
         }
 
         public static ItemCollection Instance => _instance ??= new ItemCollection();
 
         public static IEnumerable<int> GetValidItemIndex(IEnumerable<long> events) {
-            return events.Select((long id, int idx) =>
+            return events.Select((id, idx) =>
             {
                 var e = Instance.GetItem(id);
                 if (e == null) return -1;
                 return idx;
-            }).Where((int v) => v >= 0);            
+            }).Where((v) => v >= 0);            
         }
 
-        public static IEnumerable<Model.Item> GetValidItems(long[] ids) {
+        public static IEnumerable<Item> GetValidItems(long[] ids) {
             return GetValidItemIndex(ids).Select((idx) => Instance.GetItem(ids[idx]));
         }
 
         public static int RandomItemIndex(long[] ids, float[] weights) {
             var validItems = GetValidItemIndex(ids).ToList();
             if (!validItems.Any()) { return -1; }
-            float targetW = UnityEngine.Random.Range(0, validItems.Select((int idx) => weights[idx]).Sum());
+            float targetW = UnityEngine.Random.Range(0, validItems.Select((idx) => weights[idx]).Sum());
             float currentW = 0;
-            return validItems.FirstOrDefault((int idx) => {
+            return validItems.FirstOrDefault((idx) => {
                 currentW += weights[idx];
                 return currentW > targetW;
             });

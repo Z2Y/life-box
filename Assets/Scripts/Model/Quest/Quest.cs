@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MessagePack;
 using Model;
@@ -5,6 +6,7 @@ using Model;
 namespace Model
 {
     [MessagePackObject(true)]
+    [Serializable]
     public class Quest
     {
         public long ID;
@@ -21,8 +23,8 @@ namespace ModelContainer
     [ModelContainerOf(typeof(Quest), "quests")]
     public class QuestCollection: Singleton<QuestCollection>
     {
-        private Dictionary<long, Model.Quest> lookup = new Dictionary<long, Model.Quest>();
-        private List<Model.Quest> quests = new List<Model.Quest>();
+        private readonly Dictionary<long, Quest> lookup = new ();
+        private List<Quest> quests = new ();
 
         private void OnLoad() {
             lookup.Clear();

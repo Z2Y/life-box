@@ -92,7 +92,7 @@ public class BattleActionManager : MonoBehaviour, IDropHandler
     public async void OnDrop(PointerEventData data)
     {
         BattleSkillCard skillCard = data.pointerDrag.GetComponent<BattleSkillCard>();
-        if (skillCard != null && skillCard.isExecuteable())
+        if (skillCard != null && skillCard.isExecutable())
         {
             await skillCard.ExecuteSkillEffect();
         }

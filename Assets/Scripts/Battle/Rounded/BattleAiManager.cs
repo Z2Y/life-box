@@ -86,7 +86,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
             skillAction.target = GetSelectTarget(skillAction);
             var skillEffect = await skillAction.skill.Effect.ExecuteExpressionAsync(env) as BattleEffectResult;
 
-            bool castable = skillAction.isExecuteable() && (skillAction.battleCostResult == null || skillAction.battleCostResult.CouldCost());
+            bool castable = skillAction.isExecutable() && (skillAction.battleCostResult == null || skillAction.battleCostResult.CouldCost());
 
             if (castable && skillEffect != null)
             {
@@ -277,7 +277,7 @@ public class BattleAIResult
     public async Task DoAIAction()
     {
         if (action == null) return;
-        bool castable = action.isExecuteable() && (action.battleCostResult == null || action.battleCostResult.CouldCost());
+        bool castable = action.isExecutable() && (action.battleCostResult == null || action.battleCostResult.CouldCost());
         if (castable)
         {
             UnityEngine.Debug.Log($"AI Action {action.skill.ID} {action.selectResult.Position}");

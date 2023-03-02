@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
+using Model;
 
 namespace Model
 {
@@ -20,6 +21,7 @@ namespace Model
     }
 
     [MessagePackObject(true)]
+    [Serializable]
     public class Skill
     {
         public long ID;
@@ -28,7 +30,7 @@ namespace Model
         public string Name;
         public string Effect;
         public string Cost;
-        public long Suilt;
+        public long Suit;
         public int Attack;
         public int SelectRange;
         public int AttackRange;
@@ -43,7 +45,7 @@ namespace ModelContainer
     public class SkillCollection
     {
         private readonly Dictionary<long, Model.Skill> lookup = new ();
-        private List<Model.Skill> skills = new ();
+        private readonly List<Model.Skill> skills = new ();
         private static SkillCollection _instance;
         private SkillCollection() { }
 
@@ -66,20 +68,11 @@ namespace ModelContainer
             }
         }
 
-        public Model.Skill GetSkill(long id)
+        public Skill GetSkill(long id)
         {
-            Model.Skill value;
-            if (lookup.TryGetValue(id, out value))
-            {
-                return value;
-            }
-            return null;
+            return lookup.TryGetValue(id, out var value) ? value : null;
         }
 
-        public List<Model.Skill> Skills {
-            get {
-                return skills;
-            }
-        }
+        public List<Skill> Skills => skills;
     }
 }

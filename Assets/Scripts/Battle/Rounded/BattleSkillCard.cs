@@ -40,9 +40,9 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
         skillAction.Reset();
     }
 
-    public bool isExecuteable()
+    public bool isExecutable()
     {
-        return skillAction.isExecuteable();
+        return skillAction.isExecutable();
     }
 
     public void OnBeginDrag(PointerEventData data)
@@ -107,9 +107,9 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
         if (skillAction.battleCostResult == null) {
             skillAction.battleCostResult = await Skill.Cost.ExecuteExpressionAsync(new Dictionary<string, object>() { {"Skill" , skillAction}}) as BattleCostResult;
         }
-        bool costable = skillAction.battleCostResult == null || skillAction.battleCostResult.CouldCost();
-        cardImage?.DOFade(costable ? 1f : 0.5f, 0.5f);
-        return costable;
+        var available = skillAction.battleCostResult == null || skillAction.battleCostResult.CouldCost();
+        cardImage?.DOFade(available ? 1f : 0.5f, 0.5f);
+        return available;
     }
 
     public void SelectBlock()
@@ -123,7 +123,7 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
 
         List<BattlePositonBlock> blocks = BattleBlockManager.Instance.GetBlocksByRange(cellPos);
 
-        if (blocks.Count <= 0 || skillAction.selectRange.Intersect(blocks).Count() <= 0 )
+        if (blocks.Count <= 0 || !skillAction.selectRange.Intersect(blocks).Any() )
         {
             skillAction.selectResult = null;
             ShowSkillIndicator();
@@ -132,12 +132,12 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
 
         BattleCharacter blockCharacter = BattleManager.Instance.TurnManager.GetCharacterByPosition(blocks.First().Position);
 
-        bool isEnemy = blockCharacter != null && blockCharacter.TeamID != this.Character.TeamID;
-        bool isFriend = blockCharacter != null && blockCharacter.TeamID == this.Character.TeamID;
+        bool isEnemy = blockCharacter != null && blockCharacter.TeamID != Character.TeamID;
+        bool isFriend = blockCharacter != null && blockCharacter.TeamID == Character.TeamID;
         bool isEmpty = blockCharacter == null; 
 
         skillAction.target = blockCharacter;
-        skillAction.self = this.Character;
+        skillAction.self = Character;
 
         switch (Skill.SelectType) {
             case SelectType.EmptyBlock:
@@ -168,7 +168,7 @@ public class BattleSkillAction {
     public BattleCharacter target;
     public BattleCostResult battleCostResult;
 
-    public bool isExecuteable()
+    public bool isExecutable()
     {
         return skill != null && selectResult != null;
     }

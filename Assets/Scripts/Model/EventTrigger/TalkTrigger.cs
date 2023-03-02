@@ -7,6 +7,7 @@ using Model;
 namespace Model
 {
     [MessagePackObject(true)]
+    [Serializable]
     public class TalkTrigger : IEventTrigger
     {
         public long ID;
@@ -26,8 +27,8 @@ namespace ModelContainer
     [ModelContainerOf(typeof(TalkTrigger), "triggers")]
     public class TalkTriggerContainer
     {
-        private Dictionary<long, TalkTrigger> lookup = new Dictionary<long, TalkTrigger>();
-        private List<TalkTrigger> triggers = new List<TalkTrigger>();
+        private readonly Dictionary<long, TalkTrigger> lookup = new ();
+        private List<TalkTrigger> triggers = new ();
         private static TalkTriggerContainer _instance;
         private TalkTriggerContainer() { }
 
@@ -40,7 +41,7 @@ namespace ModelContainer
             }
         }
 
-        public static TalkTriggerContainer Instance => _instance ?? (_instance = new TalkTriggerContainer());
+        public static TalkTriggerContainer Instance => _instance ??= new TalkTriggerContainer();
 
         public TalkTrigger GetTrigger(long characterID)
         {
