@@ -4,6 +4,8 @@ using Model;
 using ModelContainer;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Controller;
+using Utils.Collision;
 
 
 [CommandResolverHandler("NearbyNPC")]
@@ -11,11 +13,14 @@ public class NearbyNPCCommand : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
-
-        if (place == null) return 0;
+        if (!LifeEngine.Instance.isReady) return 0;
         await this.Done();
-        return place.Characters.Values.Count((character) => character.IsState(args[0] as string));
+
+        var character = LifeEngine.Instance.MainCharacter;
+
+        var nearByCharacters = character.gameObject.GetNearbyObjects<NPCController>();
+        
+        return nearByCharacters.Count((npc) => npc.character.IsState(args[0] as string));
     }
 }
 
@@ -50,16 +55,17 @@ public class SelectTalkToNearBy : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
-
-        if (place == null) return null;
+        if (!LifeEngine.Instance.isReady) return null;
         var talkCompleteSource = new TaskCompletionSource<long>();
-        var nearbyCharacters = place.Characters.Values.Where((character) => character.IsTalkable()).ToList();
-        var names = nearbyCharacters.Select((character) => character.Name).ToList();
+        
+        var character = LifeEngine.Instance.MainCharacter;
+
+        var nearbyCharacters = character.gameObject.GetNearbyObjects<NPCController>().Where((npc) => npc.character.IsTalkable()).ToList();
+        var names = nearbyCharacters.Select((npc) => npc.character.Name).ToList();
         var selector = await SelectPanel.Show("选择想要交谈的人物", names, (idx) =>
         {
-            OnTalk(nearbyCharacters[idx]);
-            talkCompleteSource.TrySetResult(nearbyCharacters[idx].ID);
+            OnTalk(nearbyCharacters[idx].character);
+            talkCompleteSource.TrySetResult(nearbyCharacters[idx].character.ID);
         });
         selector.SetCancelable(true, () => talkCompleteSource.TrySetCanceled());
         return await talkCompleteSource.Task;
@@ -79,11 +85,14 @@ public class SelectShopToNearby : CommandResolver
 {
     public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
-        if (place == null) return null;
+        if (!LifeEngine.Instance.isReady) return null;
         var shopCompleteSource = new TaskCompletionSource<ShopResult>();
-        var nearbyCharacters = place.Characters.Values.Where((character) => character.IsShopable()).ToList();
+        
+        var character = LifeEngine.Instance.MainCharacter;
+
+        var nearbyCharacters = character.gameObject.GetNearbyObjects<NPCController>().Where((npc) => npc.character.IsShopable()).ToList();
+
         void OnCancel() => shopCompleteSource.TrySetCanceled();
         void OnComplete(ShopResult result) => shopCompleteSource.TrySetResult(result);
 
@@ -93,13 +102,13 @@ public class SelectShopToNearby : CommandResolver
         }
         else if (nearbyCharacters.Count == 1)
         {
-            OnShop(nearbyCharacters[0], OnComplete, OnCancel);
+            OnShop(nearbyCharacters[0].character, OnComplete, OnCancel);
         }
         else
         {
-            var names = nearbyCharacters.Select((character) => character.Name).ToList();
+            var names = nearbyCharacters.Select((npc) => npc.character.Name).ToList();
             var selector = await SelectPanel.Show("选择想要交谈的人物", names,
-                (idx) => OnShop(nearbyCharacters[idx], OnComplete, OnCancel));
+                (idx) => OnShop(nearbyCharacters[idx].character, OnComplete, OnCancel));
             selector.SetCancelable(true, OnCancel);
         }
 

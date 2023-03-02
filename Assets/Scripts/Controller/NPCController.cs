@@ -13,7 +13,8 @@ namespace Controller
         
         [SerializeField] private long characterID;
 
-        private Character character;
+        public Character character { get; private set; }
+        private CollisionDetector collisionDetector;
         public NPCAnimationController Animator { get; private set; }
         public NPCMovementController Movement { get; private set;  }
         public NPCAttackController Attack { get; private set;  }
@@ -24,6 +25,8 @@ namespace Controller
             Animator = gameObject.AddComponent<NPCAnimationController>();
             Movement = gameObject.AddComponent<NPCMovementController>();
             Attack = gameObject.AddComponent<NPCAttackController>();
+            collisionDetector = gameObject.AddComponent<CollisionDetector>();
+            collisionDetector.enabled = false;
             lookup.Add(characterID, this);
         }
 
@@ -37,6 +40,7 @@ namespace Controller
         {
             Movement.SetAsPlayer(isPlayer);
             Attack.SetAsPlayer(isPlayer);
+            collisionDetector.enabled = isPlayer;
         }
 
         public void SetBodyScale(Vector2 bodyScale)
