@@ -53,10 +53,12 @@ public static class ExcelExporter
         return fields;
     }
 
-    static void ExportClassJSON(ExcelWorksheet sheet) {
+    static void ExportClassJSON(ExcelWorksheet sheet)
+    {
         Type classType = Type.GetType($"Model.{sheet.Name}, Assembly-CSharp");
 
-        if (classType == null) {
+        if (classType == null)
+        {
             UnityEngine.Debug.LogWarning($"Model.{sheet.Name} Not Exist!");
             return;
         }
@@ -64,18 +66,23 @@ public static class ExcelExporter
         IList list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(classType));
         List<ClassField> fields = ExportClassField(sheet);
 
-        for (int row = 2; row <= sheet.Dimension.End.Row; ++row) {
+        for (int row = 2; row <= sheet.Dimension.End.Row; ++row)
+        {
             var obj = Activator.CreateInstance(classType);
-            foreach(ClassField field in fields) {
+            foreach (ClassField field in fields)
+            {
                 field.FieldInfo.SetValue(obj, GetRowFieldValue(sheet, field, row));
             }
+
             list.Add(obj);
         }
 
         string outputPath = $"{outputDir}{sheet.Name}.bytes";
-        if (Directory.Exists(outputPath)) {
+        if (Directory.Exists(outputPath))
+        {
             Directory.Delete(outputPath);
         }
+
         using(FileStream fs = new FileStream(outputPath, FileMode.OpenOrCreate)) {
             MessagePackSerializer.Serialize(list.GetType(), fs, list);
         }

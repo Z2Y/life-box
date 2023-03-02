@@ -6,37 +6,51 @@ namespace Battle.Realtime
 {
     public class BattleSkill : MonoBehaviour
     {
-        [SerializeField] public Skill skill;
 
         [SerializeField] public KeyCode keycode;
 
         [SerializeField] public BattleSkillAction action;
 
-        private float lastAttackTime = -1;
-
-        private float attackInterval = 0.25f;
+        private void Awake()
+        {
+            action.Init();
+        }
 
         private void Update()
         {
             if (Input.GetKeyDown(keycode))
             {
+                DoPrepareSkill();
+            }
+
+            if (Input.GetKeyUp(keycode))
+            {
                 DoSkill();
             }
         }
 
-        private void DoSkill()
+        private void DoPrepareSkill()
         {
-            if (Time.time - lastAttackTime < attackInterval)
+            if (!action.isIdle())
             {
                 return;
             }
 
-            if (skill.SkillType == SkillType.Attack)
+            action.prepare();
+        }
+
+        private void DoSkill()
+        {
+            if (action.isPreparing())
             {
-                
+                action.endPrepare();
+            }
+            if (!action.isReady())
+            {
+                return;
             }
 
-            lastAttackTime = Time.time;
+            action.DoSkill();
         }
 
     }

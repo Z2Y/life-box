@@ -73,6 +73,11 @@ namespace Controller
             character.GetReady();
         }
 
+        public void BowCharge(int chargeState)
+        {
+            animator.SetInteger("Charge", 1);
+        }
+
         private void Turn(float direction)
         {
             character.transform.localScale = new Vector3(Mathf.Sign(direction), 1, 1);

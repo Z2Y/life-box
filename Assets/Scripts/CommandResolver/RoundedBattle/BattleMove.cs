@@ -43,7 +43,7 @@ public interface IBattleEffect
 
 public class BattleEffectResult
 {
-    public List<IBattleEffect> effects = new List<IBattleEffect>();
+    public List<IBattleEffect> effects = new ();
 
     public async Task DoEffect()
     {

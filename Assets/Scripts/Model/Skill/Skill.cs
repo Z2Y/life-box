@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using HeroEditor.Common.Enums;
 using MessagePack;
 using Model;
 
@@ -27,9 +28,11 @@ namespace Model
         public long ID;
         public SkillType SkillType;
         public SelectType SelectType;
+        public WeaponType WeaponType;
         public string Name;
         public string Effect;
         public string Cost;
+        public float CoolDown;
         public long Suit;
         public int Attack;
         public int SelectRange;
