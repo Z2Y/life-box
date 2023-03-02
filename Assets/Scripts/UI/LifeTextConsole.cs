@@ -8,15 +8,11 @@ public class LifeTextConsole : UIBase {
     private ScrollRect scroller;
     private LifeNode current;
     private GameObject nodePrefab;
-    private List<LifeNodeText> lifeNodes = new List<LifeNodeText>();
+    private readonly List<LifeNodeText> lifeNodes = new ();
 
     private static LifeTextConsole _instance;
 
-    public static LifeTextConsole Instance {
-        get {
-            return _instance;
-        }
-    }
+    public static LifeTextConsole Instance => _instance;
 
     private void Awake() {
         _instance = this;
@@ -39,15 +35,14 @@ public class LifeTextConsole : UIBase {
     }
 
     private void UpdateLifeText() {
-        LifeNode next = LifeEngine.Instance.lifeData.current;
+        var next = LifeEngine.Instance.lifeData.current;
 
         if (next == null) {
             return;
         }
 
-        LifeNodeText uiLifeNode;
-        if (lifeNodes.Count == 0 || lifeNodes[lifeNodes.Count - 1].node != next) {
-            uiLifeNode = Instantiate(nodePrefab, scroller.content).GetComponent<LifeNodeText>();
+        if (lifeNodes.Count == 0 || lifeNodes[^1].node != next) {
+            var uiLifeNode = Instantiate(nodePrefab, scroller.content).GetComponent<LifeNodeText>();
             uiLifeNode.BindNode(next);
             lifeNodes.Add(uiLifeNode);
             uiLifeNode.UpdateLifeText();

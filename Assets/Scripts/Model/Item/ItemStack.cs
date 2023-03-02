@@ -9,16 +9,13 @@ public class ItemStack
 
     protected int count;
 
-    protected readonly ItemStackChangeEvent onStackChange = new ItemStackChangeEvent();
+    protected readonly ItemStackChangeEvent onStackChange = new ();
 
     public ItemStackChangeEvent OnStackChange => onStackChange;
 
     public int Count
     {
-        get
-        {
-            return count;
-        }
+        get => count;
         protected set
         {
             count = value;

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
+using Model;
 
 namespace Model
 {
@@ -38,9 +39,9 @@ namespace ModelContainer
     [ModelContainerOf(typeof(Model.Item), "items")]
     public class ItemCollection
     {
-        private Dictionary<long, Model.Item> lookup = new Dictionary<long, Model.Item>();
-        private Dictionary<Model.ItemType, List<Model.Item>> lookupByType = new Dictionary<Model.ItemType, List<Model.Item>>();
-        private List<Model.Item> items = new List<Model.Item>();
+        private readonly Dictionary<long, Model.Item> lookup = new ();
+        private Dictionary<Model.ItemType, List<Model.Item>> lookupByType = new ();
+        private List<Model.Item> items = new ();
         private static ItemCollection _instance;
         private ItemCollection() { }
 
@@ -52,41 +53,22 @@ namespace ModelContainer
             lookupByType = items.GroupBy((item) => item.ItemType).ToDictionary((group) => group.Key, (group) => group.ToList());
         }
 
-        public Model.Item GetItem(long id)
+        public Item GetItem(long id)
         {
-            Model.Item value;
-            if (lookup.TryGetValue(id, out value))
-            {
-                return value;
-            }
-            return null;
+            return lookup.TryGetValue(id, out var value) ? value : null;
         }
 
-        public List<Model.Item> GetItemsByType(Model.ItemType itemType) {
-            List<Model.Item> items;
-            if (lookupByType.TryGetValue(itemType, out items))
-            {
-                return items;
-            }
-            return null;            
+        public List<Item> GetItemsByType(ItemType itemType)
+        {
+            return lookupByType.TryGetValue(itemType, out var items) ? items : null;
         }
 
-        public static ItemCollection Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new ItemCollection();
-                }
-                return _instance;
-            }
-        }
+        public static ItemCollection Instance => _instance ??= new ItemCollection();
 
         public static IEnumerable<int> GetValidItemIndex(IEnumerable<long> events) {
             return events.Select((long id, int idx) =>
             {
-                Model.Item e = Instance.GetItem(id);
+                var e = Instance.GetItem(id);
                 if (e == null) return -1;
                 return idx;
             }).Where((int v) => v >= 0);            
@@ -97,8 +79,8 @@ namespace ModelContainer
         }
 
         public static int RandomItemIndex(long[] ids, float[] weights) {
-            IEnumerable<int> validItems = GetValidItemIndex(ids);
-            if (validItems.Count() == 0) { return -1; }
+            var validItems = GetValidItemIndex(ids).ToList();
+            if (!validItems.Any()) { return -1; }
             float targetW = UnityEngine.Random.Range(0, validItems.Select((int idx) => weights[idx]).Sum());
             float currentW = 0;
             return validItems.FirstOrDefault((int idx) => {
@@ -107,7 +89,7 @@ namespace ModelContainer
             });
         }
 
-        public static Model.Item RandomItem(long[] ids, float[] weights) {
+        public static Item RandomItem(long[] ids, float[] weights) {
             int index = RandomItemIndex(ids, weights);
             if (index < 0) return null;
             return Instance.GetItem(ids[index]);

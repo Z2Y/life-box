@@ -30,7 +30,7 @@ public class MoneyInventory : ItemInventory<Item, MoneyStack>
     public void BindToWealth(PropertyValue property) {
         if (DefaultMoneyItem == null) { return; }
 
-        StoreItem(DefaultMoneyItem, (int)((float)property.value / DefaultMoneyItem.Wealth));
+        StoreItem(DefaultMoneyItem, (int)(property.value / DefaultMoneyItem.Wealth));
         property.Type.SetFrozen(true);
         onInventoryChange.AddListener(() => {
             property.value = (int)Stacks.Sum((stack) => stack.item.Wealth * stack.Count);
