@@ -12,7 +12,7 @@ public class ItemInventory
 
     public int Capacity = default;
 
-    protected InventoryChangeEvent onInventoryChange = new InventoryChangeEvent();
+    protected readonly InventoryChangeEvent onInventoryChange = new ();
 
     public InventoryChangeEvent OnInventoryChange => onInventoryChange;
 
@@ -85,8 +85,8 @@ public class ItemInventory
         isStoring = true;
 
         int capacity = 0;
-        List<ItemStack> avaliableStacks = FindAvaliableItemStacks(item);
-        foreach (ItemStack stack in avaliableStacks)
+        List<ItemStack> availableStacks = FindItemStacks(item);
+        foreach (ItemStack stack in availableStacks)
         {
             if (stack.Empty)
             {
@@ -104,16 +104,16 @@ public class ItemInventory
         }
         while (capacity < num && Stacks.Count < this.Capacity)
         {
-            ItemStack stack = InitalizeNewStack();
+            ItemStack stack = InitializeNewStack();
             stack.SetItem(item);
-            avaliableStacks.Add(stack);
+            availableStacks.Add(stack);
             capacity += stack.Capacity;
         }
         if (capacity < num)
         {
             return false;
         }
-        foreach (ItemStack stack in avaliableStacks)
+        foreach (ItemStack stack in availableStacks)
         {
             int stacked = 0;
             if (stack.Empty)
@@ -170,14 +170,14 @@ public class ItemInventory
         }
     }
 
-    protected List<ItemStack> FindAvaliableItemStacks(Item item)
+    protected List<ItemStack> FindItemStacks(Item item)
     {
         return Stacks.Where(s => (s.Empty || (!s.Full && s.item.ID == item.ID))).ToList();
     }
 
     protected ItemStack FindItemStack(Item item)
     {
-        ItemStack stack = Stacks.Where(s => (s.Empty || (!s.Full && s.item.ID == item.ID))).FirstOrDefault();
+        ItemStack stack = Stacks.FirstOrDefault(s => (s.Empty || (!s.Full && s.item.ID == item.ID)));
         if (stack == null)
         {
             stack = FindEmptyStack();
@@ -187,15 +187,15 @@ public class ItemInventory
 
     protected ItemStack FindEmptyStack()
     {
-        ItemStack stack = Stacks.Where(s => s.Empty).FirstOrDefault();
+        ItemStack stack = Stacks.FirstOrDefault(s => s.Empty);
         if (stack == null)
         {
-            stack = InitalizeNewStack();
+            stack = InitializeNewStack();
         }
         return stack;
     }
 
-    protected virtual ItemStack InitalizeNewStack()
+    protected virtual ItemStack InitializeNewStack()
     {
         if (Stacks.Count >= Capacity)
         {
@@ -247,7 +247,7 @@ public class ItemInventory<T1, T2> : ItemInventory<T1> where T1 : Item where T2 
     public ItemInventory(int capacity) : base(capacity) {
     }
 
-    protected override ItemStack InitalizeNewStack()
+    protected override ItemStack InitializeNewStack()
     {
         if (Stacks.Count >= Capacity)
         {

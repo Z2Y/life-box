@@ -37,7 +37,7 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
         if (stack != null && stack.Recycle == resycle && stack.Price == price) {
             return stack.StoreItem(other, num);
         } else {
-            stack = InitalizeNewStack() as ShopItemStack;
+            stack = InitializeNewStack() as ShopItemStack;
             stack.Price = price;
             stack.Recycle = resycle;
             return stack.StoreItem(other, num);
@@ -68,7 +68,7 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
                 stack = Stacks[i] as ShopItemStack;
                 stack.DiscardItem(stack.Count);
             } else {
-                stack = InitalizeNewStack() as ShopItemStack;
+                stack = InitializeNewStack() as ShopItemStack;
             }
             stack.StoreItem(item, RefreshCount);
             stack.Price = (int)(Price * SellRate);

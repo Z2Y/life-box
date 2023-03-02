@@ -87,7 +87,7 @@ public class EquipmentInventory : ItemInventory<Item, EquipmentItemStack>
         }
     }
 
-    protected override ItemStack InitalizeNewStack()
+    protected override ItemStack InitializeNewStack()
     {
         return null;
     }

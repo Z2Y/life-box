@@ -9,15 +9,9 @@ public class ItemStack
 
     protected int count;
 
-    protected ItemStackChangeEvent onStackChange = new ItemStackChangeEvent();
+    protected readonly ItemStackChangeEvent onStackChange = new ItemStackChangeEvent();
 
-    public ItemStackChangeEvent OnStackChange
-    {
-        get
-        {
-            return onStackChange;
-        }
-    }
+    public ItemStackChangeEvent OnStackChange => onStackChange;
 
     public int Count
     {
@@ -58,21 +52,9 @@ public class ItemStack
         return false;
     }
 
-    public bool Empty
-    {
-        get
-        {
-            return Count <= 0;
-        }
-    }
+    public bool Empty => Count <= 0;
 
-    public bool Full
-    {
-        get
-        {
-            return Count >= Capacity;
-        }
-    }
+    public bool Full => Count >= Capacity;
 
     public bool DiscardItem(int num)
     {
@@ -133,24 +115,12 @@ public class ItemStack
 
 public class UniqueItemStack : ItemStack
 {
-    public override int Capacity
-    {
-        get
-        {
-            return 1;
-        }
-    }
+    public override int Capacity => 1;
 }
 
 public class InfiniteItemStack : ItemStack
 {
-    public override int Capacity
-    {
-        get
-        {
-            return int.MaxValue;
-        }
-    }
+    public override int Capacity => int.MaxValue;
 
     public override bool StoreItem(Item other, int num)
     {

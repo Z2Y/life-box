@@ -17,6 +17,7 @@ namespace Model
     }
 
     [MessagePackObject(true)]
+    [Serializable]
     public class Item
     {
         public long ID;

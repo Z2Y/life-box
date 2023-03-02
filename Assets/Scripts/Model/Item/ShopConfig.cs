@@ -8,6 +8,7 @@ namespace Model
 {
 
     [MessagePackObject(true)]
+    [Serializable]
     public class ShopConfig
     {
         public long ID;
@@ -34,12 +35,12 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Model.ShopConfig), "configs")]
+    [ModelContainerOf(typeof(ShopConfig), "configs")]
     public class ShopConfigCollection
     {
-        private Dictionary<long, Model.ShopConfig> lookup = new Dictionary<long, Model.ShopConfig>();
-        private Dictionary<long, List<Model.ShopConfig>> lookupByCharacter = new Dictionary<long, List<Model.ShopConfig>>();
-        private List<Model.ShopConfig> configs = new List<Model.ShopConfig>();
+        private readonly Dictionary<long, ShopConfig> lookup = new ();
+        private Dictionary<long, List<ShopConfig>> lookupByCharacter = new ();
+        private List<ShopConfig> configs = new ();
         private static ShopConfigCollection _instance;
         private ShopConfigCollection() { }
 
@@ -70,6 +71,6 @@ namespace ModelContainer
             return lookupByCharacter.TryGetValue(characterID, out var shopConfigs) ? shopConfigs : null;
         }
 
-        public static ShopConfigCollection Instance => _instance ?? (_instance = new ShopConfigCollection());
+        public static ShopConfigCollection Instance => _instance ??= new ShopConfigCollection();
     }
 }
