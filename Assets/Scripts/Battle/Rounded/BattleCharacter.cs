@@ -11,7 +11,7 @@ public class BattleCharacter {
 
     public BattleCharacterView View {get; private set;}
 
-    public List<Skill> skills = new List<Skill>();
+    public readonly List<Skill> skills = new ();
 
     public int ActedTurn {get; set;}
 

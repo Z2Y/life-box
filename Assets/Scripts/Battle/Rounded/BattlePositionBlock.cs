@@ -15,7 +15,7 @@ public enum BlockRangeType {
     Circle,
 }
 
-public class BattlePositonBlock
+public class BattlePositionBlock
 {
     private List<Vector3Int> neighbors;
 
@@ -44,7 +44,7 @@ public class BattlePositonBlock
         }
     }
 
-    public BattlePositonBlock(Vector3Int pos) {
+    public BattlePositionBlock(Vector3Int pos) {
         Position = pos;
     }
 
@@ -56,7 +56,7 @@ public class BattlePositonBlock
         return offset1.Select((offset) => Position + offset).ToList();
     }
 
-    public int GetDistance(BattlePositonBlock other) {
+    public int GetDistance(BattlePositionBlock other) {
         Vector3Int vec = (other.Position - Position);
         int maxDis = Math.Abs(vec.x) + Math.Abs(vec.y);
         int dis = int.MaxValue;
@@ -68,7 +68,7 @@ public class BattlePositonBlock
     {
         Dictionary<Vector3Int, int> result = new Dictionary<Vector3Int, int>();
         if (range == 0) return result;
-        Queue<BattlePositonBlock> que = new Queue<BattlePositonBlock>();
+        Queue<BattlePositionBlock> que = new Queue<BattlePositionBlock>();
         Dictionary<Vector3Int, int> visit = new Dictionary<Vector3Int, int>();
         que.Enqueue(this);
         result.Add(this.Position, 0);
@@ -81,7 +81,7 @@ public class BattlePositonBlock
             foreach(var neighbor in neighbors) {
                 if (!result.ContainsKey(neighbor)) {
                     result[neighbor] = distance + 1;
-                    que.Enqueue(new BattlePositonBlock(neighbor));
+                    que.Enqueue(new BattlePositionBlock(neighbor));
                 }
             }
         }

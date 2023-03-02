@@ -80,7 +80,7 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
         BattleBlockManager.Instance.HideAllBlocks();
         if (selectedBlock != null) {
             selectRange.Remove(selectedBlock);
-            BattleBlockManager.Instance.ShowBlocks(new List<BattlePositonBlock>() {selectedBlock});
+            BattleBlockManager.Instance.ShowBlocks(new List<BattlePositionBlock>() {selectedBlock});
         }
         BattleBlockManager.Instance.ShowBlocks(selectRange, BattleBlockType.Normal);        
     }
@@ -121,7 +121,7 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
         skillAction.position = cellPos;
         skillAction.selectRange = BattleBlockManager.Instance.GetBlocksByRange(Character.Position, Skill.SelectRange, BlockRangeType.Circle);
 
-        List<BattlePositonBlock> blocks = BattleBlockManager.Instance.GetBlocksByRange(cellPos);
+        List<BattlePositionBlock> blocks = BattleBlockManager.Instance.GetBlocksByRange(cellPos);
 
         if (blocks.Count <= 0 || !skillAction.selectRange.Intersect(blocks).Any() )
         {
@@ -162,8 +162,8 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
 public class BattleSkillAction {
     public Skill skill;
     public Vector3Int position;
-    public BattlePositonBlock selectResult;
-    public List<BattlePositonBlock> selectRange = new List<BattlePositonBlock>();
+    public BattlePositionBlock selectResult;
+    public List<BattlePositionBlock> selectRange = new ();
     public BattleCharacter self;
     public BattleCharacter target;
     public BattleCostResult battleCostResult;

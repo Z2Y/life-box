@@ -63,7 +63,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             initalPos = config.Positions[instance.TeamID];
         }
-        BattlePositonBlock initalBlock = FindBattlePosition(initalPos);
+        BattlePositionBlock initalBlock = FindBattlePosition(initalPos);
 
         if (initalBlock == null)
         {
@@ -77,11 +77,11 @@ public class BattleManager : Singleton<BattleManager>
         m_turnManager.AddBattleCharacter(instance);
     }
 
-    BattlePositonBlock FindBattlePosition(Vector3 pos)
+    BattlePositionBlock FindBattlePosition(Vector3 pos)
     {
         var blocks = BattleBlockManager.Instance.GetBattlePositonBlocks();
         var minDist = float.MaxValue;
-        BattlePositonBlock result = null;
+        BattlePositionBlock result = null;
         foreach (var block in blocks)
         {
             var dist = (pos - block.Position).sqrMagnitude;

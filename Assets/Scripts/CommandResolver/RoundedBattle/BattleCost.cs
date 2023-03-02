@@ -38,7 +38,7 @@ public class BattleCostResolver : CommandResolver
 
 public class BattleCostResult
 {
-    public List<IBattleCost> costs = new List<IBattleCost>();
+    public List<IBattleCost> costs = new ();
 
     public bool CouldCost()
     {

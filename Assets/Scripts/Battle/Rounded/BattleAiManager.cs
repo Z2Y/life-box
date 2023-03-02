@@ -69,7 +69,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         }
 
 
-        List<BattlePositonBlock> selectableBlocks = GetAllSelectableBlock(skillAction);
+        List<BattlePositionBlock> selectableBlocks = GetAllSelectableBlock(skillAction);
 
         int frameCount = 0;
         int maxScore = 0;
@@ -147,7 +147,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         BattleMoveEffect moveEffect = result.effects.Find(effect => effect is BattleMoveEffect) as BattleMoveEffect;
         Vector3Int originPos = moveAction.position;
         Vector3Int targetPos = moveEffect.position;
-        return new BattlePositonBlock(originPos).GetDistance(new BattlePositonBlock(targetPos));
+        return new BattlePositionBlock(originPos).GetDistance(new BattlePositionBlock(targetPos));
     }
 
     private async Task<int> GetBattleMoveScore(BattleSkillAction moveAction, BattleEffectResult result)
@@ -156,8 +156,8 @@ public class BattleAIManager : Singleton<BattleAIManager>
         Vector3Int originPos = moveAction.position;
         Vector3Int targetPos = moveEffect.position;
 
-        int penality = -2;
-        int score = penality; // fixed penality for move
+        const int penalty = -2;
+        int score = penalty; // fixed penalty for move
         int minSelectRange = int.MaxValue;
 
         foreach (var skill in AiCharacter.skills)
@@ -180,7 +180,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
             score += diff;
         }
 
-        if (score <= 0) // no addtional score after move 
+        if (score <= 0) // no extra score after move 
         {
             int beforeMoveNearestEnemyDis = GetNearestEnemyDistance(originPos);
             int afterMoveNearestEnemyDis = GetNearestEnemyDistance(targetPos);
@@ -203,7 +203,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         int minDist = int.MaxValue;
         foreach (var enemy in enemies)
         {
-            int distance = new BattlePositonBlock(enemy.Position).GetDistance(new BattlePositonBlock(position));
+            int distance = new BattlePositionBlock(enemy.Position).GetDistance(new BattlePositionBlock(position));
             if (distance < minDist)
             {
                 minDist = distance;
@@ -237,7 +237,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         });
     }
 
-    private List<BattlePositonBlock> GetAllSelectableBlock(BattleSkillAction action)
+    private List<BattlePositionBlock> GetAllSelectableBlock(BattleSkillAction action)
     {
         return action.selectRange.Where(block =>
         {
@@ -263,7 +263,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
 
 public struct AISelectResult
 {
-    public BattlePositonBlock block;
+    public BattlePositionBlock block;
     public BattleCharacter target;
     public BattleEffectResult effectResult;
     public int score;

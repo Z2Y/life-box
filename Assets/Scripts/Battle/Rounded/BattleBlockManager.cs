@@ -9,7 +9,7 @@ public class BattleBlockManager : MonoBehaviour
 {
     public static BattleBlockManager Instance { get; private set; }
 
-    private List<BattlePositonBlock> battleBlocks = new List<BattlePositonBlock>();
+    private List<BattlePositionBlock> battleBlocks = new List<BattlePositionBlock>();
 
     private List<Vector3Int> circleOffsets = new List<Vector3Int>() {
         new Vector3Int(-1, 1, 0),
@@ -46,21 +46,21 @@ public class BattleBlockManager : MonoBehaviour
                 var tilePos = new Vector3Int(i, j, 0);
                 var tile = tilemap.GetTile(tilePos);
                 if (tile == null) continue;
-                battleBlocks.Add(new BattlePositonBlock(tilePos));
+                battleBlocks.Add(new BattlePositionBlock(tilePos));
                 tilemap.SetTile(tilePos, null);
             }
         }
     }
 
 
-    public List<BattlePositonBlock> GetBattlePositonBlocks()
+    public List<BattlePositionBlock> GetBattlePositonBlocks()
     {
         return battleBlocks;
     }
 
-    public List<BattlePositonBlock> GetBlocksByRange(Vector3Int center, int range = 0, BlockRangeType type = BlockRangeType.Dot)
+    public List<BattlePositionBlock> GetBlocksByRange(Vector3Int center, int range = 0, BlockRangeType type = BlockRangeType.Dot)
     {
-        List<BattlePositonBlock> blocks = new List<BattlePositonBlock>();
+        List<BattlePositionBlock> blocks = new List<BattlePositionBlock>();
         var block = battleBlocks.FirstOrDefault(b => b.Position == center);
 
         if (block == null) return blocks;
@@ -86,11 +86,11 @@ public class BattleBlockManager : MonoBehaviour
     public void HideAllBlocks()
     {
         Vector3Int[] positions = battleBlocks.Select(block => block.Position).ToArray();
-        TileBase[] tiles = battleBlocks.Select<BattlePositonBlock, TileBase>(block => null).ToArray();
+        TileBase[] tiles = battleBlocks.Select<BattlePositionBlock, TileBase>(block => null).ToArray();
         tilemap.SetTiles(positions, tiles);
     }
 
-    public void ShowBlocks(List<BattlePositonBlock> blocks, BattleBlockType type = BattleBlockType.Moveable)
+    public void ShowBlocks(List<BattlePositionBlock> blocks, BattleBlockType type = BattleBlockType.Moveable)
     {
         Vector3Int[] positions = blocks.Select(block => block.Position).ToArray();
         TileBase[] tiles = blocks.Select(block =>
