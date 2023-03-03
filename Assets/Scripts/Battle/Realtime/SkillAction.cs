@@ -48,7 +48,7 @@ namespace Battle.Realtime
         // collect target info
         public void prepare()
         {
-            
+            _controller.GetReady();
             switch (skill.WeaponType)
             {
                 case WeaponType.Bow:
@@ -61,12 +61,13 @@ namespace Battle.Realtime
                 case WeaponType.Melee2H:
                 case WeaponType.MeleePaired:
                     skillState = 2;
-                    _controller.GetReady();
+                    _controller.AttackNormal();
                     return;
                 default:
                     skillState = 2;
                     return;
             }
+            
         }
 
         public void endPrepare()

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Model;
 using ModelContainer;
 using UnityEngine;
+using BattleSkillAction = Battle.Realtime.BattleSkillAction;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Controller
@@ -12,19 +14,18 @@ namespace Controller
         private static readonly Dictionary<long, NPCController> lookup = new ();
         
         [SerializeField] private long characterID;
-
-        public Character character { get; private set; }
+        
         private CollisionDetector collisionDetector;
+        public Character character { get; private set; }
+        
         public NPCAnimationController Animator { get; private set; }
         public NPCMovementController Movement { get; private set;  }
-        public NPCAttackController Attack { get; private set;  }
 
         private void Awake()
         {
             character = CharacterCollection.Instance.GetCharacter(characterID);
             Animator = gameObject.AddComponent<NPCAnimationController>();
             Movement = gameObject.AddComponent<NPCMovementController>();
-            Attack = gameObject.AddComponent<NPCAttackController>();
             collisionDetector = gameObject.AddComponent<CollisionDetector>();
             collisionDetector.enabled = false;
             lookup.Add(characterID, this);
@@ -39,8 +40,36 @@ namespace Controller
         public void SetAsPlayer(bool isPlayer)
         {
             Movement.SetAsPlayer(isPlayer);
-            Attack.SetAsPlayer(isPlayer);
             collisionDetector.enabled = isPlayer;
+            if (isPlayer)
+            {
+                addSkillShortCuts(KeyCode.Mouse0, SkillCollection.Instance.GetSkill(3));
+            }
+            else
+            {
+                removeAllShortCuts();
+            }
+        }
+
+        public void removeAllShortCuts()
+        {
+            var shortCuts = gameObject.GetComponents<Battle.Realtime.BattleSkill>();
+            foreach (var battleSkill in shortCuts)
+            {
+                Destroy(battleSkill);
+            }
+        }
+
+        public void addSkillShortCuts(KeyCode keyCode, Skill skill)
+        {
+            var self = gameObject;
+            var skillControl = self.AddComponent<Battle.Realtime.BattleSkill>();
+            skillControl.keycode = keyCode;
+            skillControl.action = new Battle.Realtime.BattleSkillAction()
+            {
+                skill = skill,
+                self = self,
+            };
         }
 
         public void SetBodyScale(Vector2 bodyScale)

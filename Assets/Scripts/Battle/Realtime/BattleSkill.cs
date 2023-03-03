@@ -11,7 +11,7 @@ namespace Battle.Realtime
 
         [SerializeField] public BattleSkillAction action;
 
-        private void Awake()
+        private void Start()
         {
             action.Init();
         }
