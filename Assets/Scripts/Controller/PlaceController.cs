@@ -9,7 +9,7 @@ using Utils;
 namespace Controller
 {
     [PrefabResourceWithArgs("Places/{0}")]
-    public class PlaceController : MonoBehaviour
+    public class PlaceController : MonoBehaviour, IOnPrefabLoaded<long>
     {
         private static readonly Dictionary<long, PlaceController> lookup = new();
 
@@ -26,7 +26,6 @@ namespace Controller
         private void Awake()
         {
             Place = PlaceCollection.Instance.GetPlace(placeID);
-            lookup.Add(placeID, this);
         }
 
         private void OnDestroy()
@@ -76,6 +75,11 @@ namespace Controller
         public static PlaceController GetPlaceController(long placeID)
         {
             return lookup.TryGetValue(placeID, out var placeController) ? placeController : null;
+        }
+
+        public void OnLoaded(long placeID)
+        {
+            // todo
         }
     }
 }

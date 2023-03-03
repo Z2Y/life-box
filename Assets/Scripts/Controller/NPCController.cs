@@ -28,7 +28,6 @@ namespace Controller
             Movement = gameObject.AddComponent<NPCMovementController>();
             collisionDetector = gameObject.AddComponent<CollisionDetector>();
             collisionDetector.enabled = false;
-            lookup.Add(characterID, this);
         }
 
         public void SetLocation(Location location)
@@ -69,6 +68,7 @@ namespace Controller
             {
                 skill = skill,
                 self = self,
+                meleeSwordType = "Sword_1"
             };
         }
 
@@ -97,16 +97,14 @@ namespace Controller
 
             await YieldCoroutine.WaitForInstruction(loader);
             
-            Debug.Log(character.ModelID);
-            Debug.Log(loader.asset);
-
             if (loader.asset == null)
             {
                 return null;
             }
 
-            var obj = Instantiate(loader.asset as GameObject, GameObject.Find("CharacterRoot").transform);
-            return obj.GetComponent<NPCController>();
+            var obj = Instantiate(loader.asset as GameObject, GameObject.Find("CharacterRoot").transform).GetComponent<NPCController>();
+            lookup.Add(characterID, obj);
+            return obj;
         }
         
         public static NPCController GetCharacterController(long characterID)

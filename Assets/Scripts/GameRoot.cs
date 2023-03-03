@@ -10,6 +10,7 @@ public class GameRoot : MonoBehaviour
         if (Instance == null) {
             Instance = this;
         }
+        DontDestroyOnLoad(GameObject.Find("PrefabPool"));
     }
 
     public void NewGame() {

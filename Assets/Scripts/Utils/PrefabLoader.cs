@@ -28,7 +28,7 @@ namespace Utils
                 return null;
             }
 
-            return GameObject.Instantiate(prefab, parent).GetComponent<T>();
+            return Object.Instantiate(prefab, parent).GetComponent<T>();
         }
 
         public static async Task<T> CreateAsync(Transform parent)
@@ -53,7 +53,7 @@ namespace Utils
 
             var prefab = request.asset as GameObject;
                 
-            return GameObject.Instantiate(prefab, parent).GetComponent<T>();
+            return Object.Instantiate(prefab, parent).GetComponent<T>();
         }
     }
     
@@ -88,7 +88,7 @@ namespace Utils
         }
     }
     
-    public static class PrefabLoader<T, T2> where T : Object
+    public static class PrefabLoader<T, T2> where T : Object, IOnPrefabLoaded<T2>
     {
         public static T Create(T2 arg, Transform parent)
         {
@@ -136,6 +136,11 @@ namespace Utils
                 
             return Object.Instantiate(prefab, parent).GetComponent<T>();
         }
+    }
+
+    public interface IOnPrefabLoaded<T>
+    {
+        public void OnLoaded(T arg);
     }
 
 }

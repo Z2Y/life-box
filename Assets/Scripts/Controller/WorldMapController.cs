@@ -10,7 +10,7 @@ using Utils;
 namespace Controller
 {
     [PrefabResourceWithArgs("Maps/{0:00}/Map")]
-    public class WorldMapController : MonoBehaviour
+    public class WorldMapController : MonoBehaviour, IOnPrefabLoaded<long>
     {
         private static readonly Dictionary<long, WorldMapController> lookup = new();
         
@@ -127,6 +127,11 @@ namespace Controller
         public static WorldMapController GetWorldMapController(long mapId)
         {
             return lookup.TryGetValue(mapId, out var worldMap) ? worldMap : null;
+        }
+        
+        public void OnLoaded(long placeID)
+        {
+            // todo
         }
         
     }

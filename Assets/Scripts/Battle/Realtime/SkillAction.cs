@@ -14,6 +14,7 @@ namespace Battle.Realtime
         public GameObject self;
         public AnimationClip skillAnimation;
         public List<GameObject> targets = new ();
+        public string meleeSwordType;
         public BattleCostResult battleCostResult;
         public BattleEffectResult battleResult;
 
@@ -62,6 +63,7 @@ namespace Battle.Realtime
                 case WeaponType.MeleePaired:
                     skillState = 2;
                     _controller.AttackNormal();
+                    SwordSlashController.Pool.Get(meleeSwordType).Emit(self.transform, _controller.GetMeleeArm().position - self.transform.position, _controller.Speed);
                     return;
                 default:
                     skillState = 2;

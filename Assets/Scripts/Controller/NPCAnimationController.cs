@@ -10,8 +10,10 @@ namespace Controller
         private CharacterScripts.Character character;
         private Animator animator;
         
-        private static readonly int Speed = Animator.StringToHash("speed");
         private static readonly int Ready = Animator.StringToHash("Ready");
+        private static readonly int Charge = Animator.StringToHash("Charge");
+
+        public Vector3 Speed { get; private set; }
 
         private void Start()
         {
@@ -26,15 +28,16 @@ namespace Controller
         public void SetSpeed(Vector3 speed)
         {
             // animator.SetFloat(Speed, speed);
-
-            if (speed.x != 0)
-            {
-                Turn(speed.x);
-            }
-
+            
             if (character.GetState() == CharacterScripts.CharacterState.Jump)
             {
                 return;
+            }
+            
+            if (speed.x != 0)
+            {
+                Turn(speed.x);
+                Speed = speed;
             }
 
             if (speed != Vector3.zero)
@@ -75,12 +78,18 @@ namespace Controller
 
         public void BowCharge(int chargeState)
         {
-            animator.SetInteger("Charge", 1);
+            animator.SetInteger(Charge, 1);
         }
 
         private void Turn(float direction)
         {
-            character.transform.localScale = new Vector3(Mathf.Sign(direction), 1, 1);
+            var oScale = character.transform.localScale;
+            character.transform.localScale = new Vector3(Mathf.Sign(direction) * Math.Abs(oScale.x), oScale.y, 1);
+        }
+
+        public Transform GetMeleeArm()
+        {
+            return character.MeleeWeapon.transform;
         }
     }
 }
