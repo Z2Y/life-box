@@ -87,7 +87,7 @@ namespace Controller
         }
     }
 
-    internal class NPCMoveTask
+    public class NPCMoveTask
     {
         public Transform npcTransform;
         public NPCAnimationController animator;
@@ -101,12 +101,14 @@ namespace Controller
         private Vector3 moveSpeed;
 
         private bool isComplete;
+        public bool IsRunning => tcs != null && !isComplete;
 
         public Task DoMove(Vector3 target, Vector3 speed, long expectTime)
         {
             targetPos = target;
             startPos = npcTransform.position;
             startTime = TimeHelper.Now();
+            isComplete = false;
 
             var distance = (target - startPos).magnitude;
             if (distance < 0.001f)
@@ -119,7 +121,10 @@ namespace Controller
 
             moveTime = (long)(distance / speed.magnitude * 1000);
             
-            animator.SetSpeed(moveSpeed);
+            if (!ReferenceEquals(animator, null))
+            {
+                animator.SetSpeed(moveSpeed);
+            }
 
             if (expectTime > 0 && moveTime > expectTime)
             {
@@ -151,7 +156,10 @@ namespace Controller
         public void Cancel()
         {
             tcs.TrySetCanceled();
-            animator.SetSpeed(Vector3.zero);
+            if (!ReferenceEquals(animator, null))
+            {
+                animator.SetSpeed(Vector3.zero);
+            }
             isComplete = true;
         }
     }

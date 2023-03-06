@@ -58,6 +58,15 @@ namespace Controller
             bounds = new Bounds(position, size);
         }
 
+        public bool isGridPositionBlocked(Vector3Int pos)
+        {
+            // todo
+            return true;
+        }
+
+
+        public GridLayout Ground => ground;
+
         private List<PlaceController> getPlacesInBounds()
         {
             return places.Where((place) => bounds.Intersects(place.bounds)).ToList();

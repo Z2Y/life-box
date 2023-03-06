@@ -59,17 +59,7 @@ namespace ModelContainer
             }
         }
 
-        public static SkillCollection Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new SkillCollection();
-                }
-                return _instance;
-            }
-        }
+        public static SkillCollection Instance => _instance ??= new SkillCollection();
 
         public Skill GetSkill(long id)
         {
