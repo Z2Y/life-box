@@ -7,10 +7,16 @@ namespace Controller
 {
     public class WorldCameraController : MonoBehaviour
     {
-        [SerializeField] private Camera worldCamera;
 
         private GameObject _followGameObject;
         private bool isFollowing;
+        
+        public static WorldCameraController Instance { get; private set; }
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         public async Task FollowTo(GameObject other, bool moveSmoothly = true)
         {
@@ -24,20 +30,28 @@ namespace Controller
             
             if (moveSmoothly)
             {
-                await YieldCoroutine.WaitForInstruction(worldCamera.gameObject.transform.DOMove(other.transform.position, 0.5f).WaitForCompletion());
+                await YieldCoroutine.WaitForInstruction(transform.DOMove(tarGetPosition(), 0.5f).WaitForCompletion());
             }
             else
             {
-                worldCamera.gameObject.transform.position = other.transform.position;
+                transform.position = other.transform.position;
             }
 
             isFollowing = true;
         }
 
+        private Vector3 tarGetPosition()
+        {
+            var targetPosition = _followGameObject.transform.position;
+            var self = transform;
+            targetPosition.z = self.position.z;
+            return targetPosition;
+        }
+
         private void LateUpdate()
         {
             if (!isFollowing) return;
-            worldCamera.gameObject.transform.position = _followGameObject.transform.position;
+            transform.position = tarGetPosition();
         }
     }
 }

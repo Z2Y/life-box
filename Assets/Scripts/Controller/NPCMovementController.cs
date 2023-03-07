@@ -42,7 +42,7 @@ namespace Controller
 
         private void updatePositionBySpeed()
         {
-            if (speed.magnitude <= 0.001f)
+            if (speed.magnitude <= 0.001f || animator.Attacking)
             {
                 return;
             }

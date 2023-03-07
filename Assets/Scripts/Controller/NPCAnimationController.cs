@@ -14,6 +14,7 @@ namespace Controller
         private static readonly int Charge = Animator.StringToHash("Charge");
 
         public Vector3 Speed { get; private set; }
+        public bool Attacking { get; private set;  }
 
         private void Start()
         {
@@ -23,6 +24,21 @@ namespace Controller
                 animator = character.Animator;
             }
             animator.SetBool(Ready, true);
+        }
+
+        public CharacterScripts.CharacterState GetState()
+        {
+            return character.GetState();
+        }
+
+        public void SetState(CharacterScripts.CharacterState state)
+        {
+            character.SetState(state);
+        }
+
+        public void SetAttacking(bool value)
+        {
+            Attacking = value;
         }
 
         public void SetSpeed(Vector3 speed)
@@ -40,9 +56,14 @@ namespace Controller
                 Speed = speed;
             }
 
+            if (Attacking)
+            {
+                return;
+            }
+
             if (speed != Vector3.zero)
             {
-                character.SetState(CharacterScripts.CharacterState.Walk);
+                character.SetState(CharacterScripts.CharacterState.Run);
             }
             else
             {

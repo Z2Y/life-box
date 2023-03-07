@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.HeroEditor.Common.Scripts.CharacterScripts;
 using Controller;
 using HeroEditor.Common.Enums;
 using Model;
@@ -19,6 +20,7 @@ namespace Battle.Realtime
         public BattleEffectResult battleResult;
 
         private NPCAnimationController _controller;
+        private CharacterState _originState;
         private int skillState = 0;
         private float prepareStartTime = 0;
 
@@ -50,6 +52,7 @@ namespace Battle.Realtime
         public void prepare()
         {
             _controller.GetReady();
+            _originState = _controller.GetState();
             switch (skill.WeaponType)
             {
                 case WeaponType.Bow:
@@ -64,6 +67,10 @@ namespace Battle.Realtime
                     skillState = 2;
                     _controller.AttackNormal();
                     SwordSlashController.Pool.Get(meleeSwordType).Emit(self.transform, _controller.GetMeleeArm().position - self.transform.position, _controller.Speed);
+                    if (_originState == CharacterState.Run)
+                    {
+                        _controller.SetState(CharacterState.Idle);
+                    }
                     return;
                 default:
                     skillState = 2;

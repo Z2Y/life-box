@@ -39,6 +39,7 @@ public class LifeEngine : MonoBehaviour {
         // setup main character for player
         mainCharacter.SetLocation(lifeData.current.Location);
         mainCharacter.SetAsPlayer(true);
+        WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Coroutine();
         isReady = true;
 
         lifeData.DoForcast(lifeTime);

@@ -10,6 +10,7 @@ public class GameLoader : MonoBehaviour
     private static GameLoader _instance;
     public Text loadingText;
     public CanvasGroup loadingCanvas;
+    private bool isLoading = false;
 
     public static GameLoader Instance
     {
@@ -63,8 +64,10 @@ public class GameLoader : MonoBehaviour
 
     private async Task LoadGameAsync()
     {
+        if (isLoading) return;
         try
         {
+            isLoading = true;
             await LoadSceneAsync("LifeScene");
             await LoadModelData();
             await LifeEngine.Instance.CreateNewGame();
@@ -74,6 +77,8 @@ public class GameLoader : MonoBehaviour
         {
             Debug.Log($"Load Game Failed! ${e.StackTrace} ");
         }
+
+        isLoading = false;
     }
 
     private async Task CrossFade(Func<Task> action)

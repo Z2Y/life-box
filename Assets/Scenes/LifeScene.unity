@@ -662,6 +662,7 @@ GameObject:
   - component: {fileID: 527440029}
   - component: {fileID: 527440028}
   - component: {fileID: 527440027}
+  - component: {fileID: 527440030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -735,6 +736,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &527440030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527440026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e3e2e1098fc4e46819e2eda9dbadb69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &614633107
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,7 +1085,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -142.49536, y: 475}
+  m_AnchoredPosition: {x: -142.4953, y: 475}
   m_SizeDelta: {x: -484.99066, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &838666711
@@ -1745,7 +1758,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -865848457
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &1633756483
@@ -1786,6 +1799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d11ece8112dd1d448038a28be958fa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isReady: 0
 --- !u!114 &1633756485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2229,7 +2243,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1902324041}
   m_HandleRect: {fileID: 1902324040}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

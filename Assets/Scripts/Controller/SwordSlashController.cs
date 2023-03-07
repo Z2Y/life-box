@@ -24,10 +24,11 @@ namespace Controller
             Turn(speed.x);
             particles.Emit(1);
             transform.SetParent(parent);
+            offset.x *= -Mathf.Sign(speed.x);
             transform.localPosition = offset;
-           
-            var liftTime = particles.main.startLifetime;
-            await YieldCoroutine.WaitForSeconds(liftTime.constant);
+
+            var main = particles.main;
+            await YieldCoroutine.WaitForSeconds(main.startLifetime.constant + main.startDelay.constant);
             Pool.Return(this, swordType);
         }
         

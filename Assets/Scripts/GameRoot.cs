@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class GameRoot : MonoBehaviour
 {
     public static GameRoot Instance { get; private set; }
+    
 
     private void Awake()
     {
