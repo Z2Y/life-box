@@ -12,7 +12,7 @@ namespace Battle.Realtime.Ai
 
         public FindDestRD(int maxDistance, Vector3 origin)
         {
-            this.maxGridDistance = maxDistance;
+            maxGridDistance = maxDistance;
             this.origin = origin;
         }
 

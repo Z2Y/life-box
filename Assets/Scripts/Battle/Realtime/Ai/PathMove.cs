@@ -32,18 +32,7 @@ namespace Battle.Realtime.Ai
             else
             {
                 moveByRoutePath().Coroutine();
-                Clock.AddTimer(0.1f, -1, onUpdate);
             }
-        }
-
-        protected override void DoStop()
-        {
-            Clock.RemoveTimer(onUpdate);
-        }
-
-        private void onUpdate()
-        {
-            moveTask.Update();
         }
 
         private async Task moveByRoutePath()
@@ -65,12 +54,28 @@ namespace Battle.Realtime.Ai
                 }
                 catch (OperationCanceledException e)
                 {
+                    
                     Stopped(false);
-                    return;
+                    break;
                 }
-                path = path.ParentRoute;
+
+                var parentRoute = path.ParentRoute;
+                path.Dispose();
+                path = parentRoute;
             }
-            Stopped(true);
+
+            if (path == null)
+            {
+                Stopped(true);
+            }
+
+            // clean up
+            while (path != null)
+            {
+                var parentRoute = path.ParentRoute;
+                path.Dispose();
+                path = parentRoute;
+            }
         }
         
         private bool isArrived() {
