@@ -3,69 +3,9 @@ using System.Collections.Generic;
 using Controller;
 using UnityEngine;
 using Utils;
-using Debug = System.Diagnostics.Debug;
 
 namespace Battle.Realtime.Ai
 {
-    public class RoutePath : PoolObject, IDisposable {
-        public Vector3Int Point;
-        public RoutePath ParentRoute { get; private set; }
-
-        private int gWeight;
-        private int hWeight;
-        public int fWeight;
-
-        public void UpdateWeight(Vector3Int target)
-        {
-            hWeight = (Mathf.Abs(target.x - Point.x) + Mathf.Abs(target.y - Point.y)) * 10;
-            if (ParentRoute != null)
-            {
-                var deltaX = Mathf.Abs(ParentRoute.Point.x - Point.x) * 10;
-                var deltaY = Mathf.Abs(ParentRoute.Point.y - Point.y) * 10;
-                gWeight = ParentRoute.gWeight + (int)Mathf.Sqrt(deltaX * deltaX + deltaY * deltaY);
-            }
-            fWeight = hWeight + gWeight;
-        }
-
-        public void SetParent(RoutePath parent)
-        {
-            ParentRoute = parent;
-        }
-
-        public RoutePath Reverse() {
-            if (ParentRoute == null) {
-                return this;
-            }
-            var p = ParentRoute.Reverse();
-            ParentRoute.ParentRoute = this;
-            ParentRoute = null;
-            return p;
-        }
-
-        public override void Dispose()
-        {
-            ParentRoute?.Dispose();
-            hWeight = 0;
-            fWeight = 0;
-            gWeight = 0;
-            ParentRoute = null;
-            base.Dispose();
-        }
-    }
-
-    public class RoutePathComparer : IComparer<RoutePath> {
-
-        public int Compare(RoutePath a, RoutePath b) {
-            Debug.Assert(a != null, nameof(a) + " != null");
-            Debug.Assert(b != null, nameof(b) + " != null");
-            if (a.fWeight == b.fWeight) {
-                return a.GetHashCode() - b.GetHashCode();
-            }
-            return a.fWeight - b.fWeight;
-        }
-
-    }
-
     public class AstarRoute : PoolObject, IDisposable {
         private readonly SortedSet<RoutePath> openList = new (new RoutePathComparer());
         private readonly HashSet<RoutePath> used = new();
