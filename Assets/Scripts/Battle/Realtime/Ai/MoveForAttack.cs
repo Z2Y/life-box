@@ -1,6 +1,7 @@
 using Controller;
 using NPBehave;
 using UnityEngine;
+using Utils;
 
 namespace Battle.Realtime.Ai
 {
@@ -47,7 +48,7 @@ namespace Battle.Realtime.Ai
             {
                 if (IsActive)
                 {
-                    Stopped(true);
+                    DoStop();
                 }
                 return;
             }
@@ -55,7 +56,7 @@ namespace Battle.Realtime.Ai
             var source = map.Ground.WorldToCell(selfTransform.position);
             var position = enemy.transform.position;
             var dest = map.Ground.WorldToCell(position);
-            var aRoute = AstarRoute.Get();
+            var aRoute = SimplePoolManager.Get<AstarRoute>();
                 
             var path = aRoute.FindPath(map, source, dest);
 
@@ -69,13 +70,8 @@ namespace Battle.Realtime.Ai
                 destWorldPos = map.Ground.CellToWorld(path.ParentRoute.Point);
                 destWorldPos.z = 0;
             }
-
-            while (path != null)
-            {
-                var parent = path.ParentRoute;
-                path.Dispose();
-                path = parent;
-            }
+            
+            path.Dispose();
 
             moveTask.Cancel();
             moveTask.DoMove(destWorldPos, speed, -1);
@@ -90,6 +86,7 @@ namespace Battle.Realtime.Ai
             moveTask = null;
             Debug.Log("Stop Move Attack");
             Clock.RemoveTimer(update);
+            Stopped(true);
         }
     }
 }

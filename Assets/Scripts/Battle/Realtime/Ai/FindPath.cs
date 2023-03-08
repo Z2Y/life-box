@@ -1,6 +1,7 @@
 using Controller;
 using NPBehave;
 using UnityEngine;
+using Utils;
 
 namespace Battle.Realtime.Ai
 {
@@ -21,7 +22,7 @@ namespace Battle.Realtime.Ai
             
             var source = map.Ground.WorldToCell(transform.position);
             var dest = map.Ground.WorldToCell(destination);
-            var aRoute = AstarRoute.Get();
+            var aRoute = SimplePoolManager.Get<AstarRoute>();
                 
             var path = aRoute.FindPath(map, source, dest);
 
@@ -37,5 +38,9 @@ namespace Battle.Realtime.Ai
             }
         }
 
+        protected override void DoStop()
+        {
+            Stopped(true);
+        }
     }
 }

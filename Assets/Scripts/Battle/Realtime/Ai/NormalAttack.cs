@@ -39,6 +39,7 @@ namespace Battle.Realtime.Ai
         protected override void DoStop()
         {
             Clock.RemoveTimer(doAttack);
+            Stopped(true);
         }
     }
 }

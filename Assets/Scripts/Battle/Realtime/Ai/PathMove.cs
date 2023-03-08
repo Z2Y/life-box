@@ -39,12 +39,13 @@ namespace Battle.Realtime.Ai
         {
 
             moveTask.npcTransform = Blackboard.Get<Transform>("self_transform");
+            var movePath = path;
 
-            while (path != null)
+            while (movePath != null)
             {
                 var dest = destination;
-                if (path.ParentRoute != null) {
-                    dest = map.Ground.CellToWorld(path.ParentRoute.Point);
+                if (movePath.ParentRoute != null) {
+                    dest = map.Ground.CellToWorld(movePath.ParentRoute.Point);
                     dest.z = 0;
                 }
 
@@ -58,29 +59,25 @@ namespace Battle.Realtime.Ai
                     Stopped(false);
                     break;
                 }
-
-                var parentRoute = path.ParentRoute;
-                path.Dispose();
-                path = parentRoute;
+                movePath = movePath.ParentRoute;
             }
-
-            if (path == null)
-            {
-                Stopped(true);
-            }
-
+            
+            
+            Stopped(movePath == null);
             // clean up
-            while (path != null)
-            {
-                var parentRoute = path.ParentRoute;
-                path.Dispose();
-                path = parentRoute;
-            }
+            path?.Dispose();
         }
         
         private bool isArrived() {
             return path == null;
         }
 
+        protected override void DoStop()
+        {
+            moveTask?.Cancel();
+            moveTask = null;
+            map = null;
+            Stopped(true);
+        }
     }
 }

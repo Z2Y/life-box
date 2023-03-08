@@ -25,7 +25,7 @@ namespace Battle.Realtime.Ai
             ownBlackBoard.Set("move_task", moveTask = new NPCMoveTask());
             moveTask.npcTransform = transform;
             moveTask.animator = GetComponent<NPCAnimationController>();
-            
+
 #if UNITY_EDITOR
             var debugger = (Debugger)gameObject.AddComponent(typeof(Debugger));
             debugger.BehaviorTree = behaviorTree;

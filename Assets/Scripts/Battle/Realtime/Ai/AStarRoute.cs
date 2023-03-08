@@ -7,15 +7,15 @@ using Debug = System.Diagnostics.Debug;
 
 namespace Battle.Realtime.Ai
 {
-    public class RoutePath : SimplePool<RoutePath>, IDisposable {
+    public class RoutePath : PoolObject, IDisposable {
         public Vector3Int Point;
-        public RoutePath ParentRoute;
+        public RoutePath ParentRoute { get; private set; }
 
         private int gWeight;
         private int hWeight;
         public int fWeight;
 
-        public RoutePath UpdateWeight(Vector3Int target)
+        public void UpdateWeight(Vector3Int target)
         {
             hWeight = (Mathf.Abs(target.x - Point.x) + Mathf.Abs(target.y - Point.y)) * 10;
             if (ParentRoute != null)
@@ -25,7 +25,11 @@ namespace Battle.Realtime.Ai
                 gWeight = ParentRoute.gWeight + (int)Mathf.Sqrt(deltaX * deltaX + deltaY * deltaY);
             }
             fWeight = hWeight + gWeight;
-            return this;
+        }
+
+        public void SetParent(RoutePath parent)
+        {
+            ParentRoute = parent;
         }
 
         public RoutePath Reverse() {
@@ -38,13 +42,14 @@ namespace Battle.Realtime.Ai
             return p;
         }
 
-        public void Dispose() {
+        public override void Dispose()
+        {
             ParentRoute?.Dispose();
             hWeight = 0;
             fWeight = 0;
             gWeight = 0;
             ParentRoute = null;
-            // Return(this);
+            base.Dispose();
         }
     }
 
@@ -61,7 +66,7 @@ namespace Battle.Realtime.Ai
 
     }
 
-    public class AstarRoute : SimplePool<AstarRoute>, IDisposable {
+    public class AstarRoute : PoolObject, IDisposable {
         private readonly SortedSet<RoutePath> openList = new (new RoutePathComparer());
         private readonly HashSet<RoutePath> used = new();
         private readonly Dictionary<Vector3Int, RoutePath> opened = new ();
@@ -69,7 +74,7 @@ namespace Battle.Realtime.Ai
         private readonly Dictionary<Vector3Int, bool> blocked = new ();
 
         public RoutePath FindPath(WorldMapController map, Vector3Int source, Vector3Int target, int maxWalk = 100) {
-            var sourcePath = RoutePath.Get();
+            var sourcePath = SimplePoolManager.Get<RoutePath>();
             sourcePath.Point = source;
             sourcePath.UpdateWeight(target);
             openList.Add(sourcePath);
@@ -98,9 +103,9 @@ namespace Battle.Realtime.Ai
                     if (isClosed(p)) {
                         continue;
                     }
-                    var newPath = RoutePath.Get();
+                    var newPath = SimplePoolManager.Get<RoutePath>();
                     newPath.Point = p;
-                    newPath.ParentRoute = current;
+                    newPath.SetParent(current);
                     newPath.UpdateWeight(target);
                     used.Add(newPath);
 
@@ -157,19 +162,18 @@ namespace Battle.Realtime.Ai
             return adjacent;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             foreach (var path in used)
             {
                 path.Dispose();
             }
-            
             openList.Clear();
             opened.Clear();
             closed.Clear();
             blocked.Clear();
             used.Clear();
-            Return(this);
+            base.Dispose();
         }
     }
 }

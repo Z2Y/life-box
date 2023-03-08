@@ -130,10 +130,7 @@ namespace Utils
 
                 return _root;
             }
-            set
-            {
-                _root = value;
-            }
+            set => _root = value;
         }
 
         // private readonly ObjectPool<T> pool;
@@ -165,7 +162,7 @@ namespace Utils
         private T createFromLoader(T2 arg)
         {
             var obj = PrefabLoader<T, T2>.Create(arg, Root);
-            if (obj == null)
+            if (ReferenceEquals(obj, null))
             {
                 throw new Exception("Create From Prefab Failed.");
             }
@@ -185,7 +182,7 @@ namespace Utils
             obj.gameObject.SetActive(false);
         }
 
-        private void onDestroy(T obj)
+        private static void onDestroy(T obj)
         {
             Object.Destroy(obj);
         }
