@@ -36,20 +36,21 @@ namespace Battle.Realtime.Ai
         {
             return new Root(ownBlackBoard,
                 new Service(0.125f, 0.5f, updateBlackBoard,new Selector(
-                    new BlackboardCondition("enemy_target", Operator.IS_NOT_SET, Stops.IMMEDIATE_RESTART , new Sequence(
-                        new FindPathTask(destinationFinder.GetResult()),
+                    new BlackboardCondition("enemy_target", Operator.IS_NOT_SET, Stops.IMMEDIATE_RESTART , 
+                        new Sequence(
+                        new FindPathTask(destinationFinder),
                         new PathMove(),
-                        new WaitUntilStopped()
+                        new Wait(1f, 0.5f)
                     )),
                     new BlackboardCondition("enemy_target", Operator.IS_SET, Stops.IMMEDIATE_RESTART, 
                         new Selector(
-                            new BlackboardCondition("enemy_distance", Operator.IS_SMALLER, 2f, Stops.IMMEDIATE_RESTART, new NormalAttack(new BattleSkillAction 
+                            new BlackboardCondition("enemy_distance", Operator.IS_SMALLER, 0.8f, Stops.IMMEDIATE_RESTART, new NormalAttack(new BattleSkillAction 
                                          {
                                             self = gameObject,
                                             skill = SkillCollection.Instance.GetSkill(3),
                                             meleeSwordType = "Sword_1" 
                                          })),
-                            new MoveForAttack(2f, Vector3.one)
+                            new MoveForAttack(0.8f, Vector3.one)
                         ))
                 ))
             );

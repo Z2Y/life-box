@@ -145,12 +145,21 @@ namespace Controller
 
             if (TimeHelper.Now() - startTime >= moveTime)
             {
-                isComplete = true;
-                tcs.TrySetResult(true);
+                Complete();
                 return;
             }
             
             npcTransform.position += moveSpeed * Time.deltaTime;
+        }
+
+        private void Complete()
+        {
+            tcs?.TrySetResult(true);
+            if (!ReferenceEquals(animator, null))
+            {
+                animator.SetSpeed(Vector3.zero);
+            }
+            isComplete = true;
         }
 
         public void Cancel()

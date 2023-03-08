@@ -7,19 +7,19 @@ namespace Battle.Realtime.Ai
 {
     public class FindPathTask : Task
     {
-        private readonly Vector3 destination;
+        private readonly FindDestRD destFinder;
         
-        public FindPathTask(Vector3 destination) : base("FindPathTask")
+        public FindPathTask(FindDestRD destFinder) : base("FindPathTask")
         {
-            this.destination = destination;
+            this.destFinder = destFinder;
         }
 
         protected override void DoStart()
         {
-
             var transform = Blackboard.Get<Transform>("self_transform");
             var map = Blackboard.Get<WorldMapController>("word_map");
-            
+
+            var destination = destFinder.GetResult();
             var source = map.Ground.WorldToCell(transform.position);
             var dest = map.Ground.WorldToCell(destination);
             var aRoute = SimplePoolManager.Get<AstarRoute>();
