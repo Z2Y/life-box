@@ -56,7 +56,16 @@ namespace ModelContainer
                 RelationValue = new long[] {},
                 ModelID = 0
             };
+            var enemy = new Character()
+            {
+                ID = 1,
+                Name = "xxx",
+                RelationID = new long[] {},
+                RelationValue = new long[] {},
+                ModelID = 1
+            };
             lookup.Add(player.ID, player);
+            lookup.Add(enemy.ID, enemy);
         }
 
         public static CharacterCollection Instance => _instance ??= new CharacterCollection();

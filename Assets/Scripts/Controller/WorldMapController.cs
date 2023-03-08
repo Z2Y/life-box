@@ -61,7 +61,7 @@ namespace Controller
         public bool isGridPositionBlocked(Vector3Int pos)
         {
             // todo
-            return true;
+            return false;
         }
 
 

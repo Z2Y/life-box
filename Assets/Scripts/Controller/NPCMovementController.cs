@@ -155,7 +155,7 @@ namespace Controller
 
         public void Cancel()
         {
-            tcs.TrySetCanceled();
+            tcs?.TrySetCanceled();
             if (!ReferenceEquals(animator, null))
             {
                 animator.SetSpeed(Vector3.zero);

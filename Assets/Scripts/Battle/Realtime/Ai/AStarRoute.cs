@@ -44,7 +44,7 @@ namespace Battle.Realtime.Ai
             fWeight = 0;
             gWeight = 0;
             ParentRoute = null;
-            Return(this);
+            // Return(this);
         }
     }
 

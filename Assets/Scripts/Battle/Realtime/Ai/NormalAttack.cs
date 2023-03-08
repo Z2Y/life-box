@@ -36,7 +36,7 @@ namespace Battle.Realtime.Ai
             skillAction.DoSkill();
         }
 
-        protected override void Stopped(bool success)
+        protected override void DoStop()
         {
             Clock.RemoveTimer(doAttack);
         }

@@ -3678,6 +3678,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4744287895581962}
   - component: {fileID: 210551131624867136}
+  - component: {fileID: 634505356452907158}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -3715,6 +3716,22 @@ SortingGroup:
   m_SortingLayerID: 597182791
   m_SortingLayer: 1
   m_SortingOrder: 200
+--- !u!70 &634505356452907158
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549338164171444}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.04516224, y: 0.3506595}
+  m_Size: {x: 0.6103248, y: 2.1657646}
+  m_Direction: 0
 --- !u!1 &1561873368260788
 GameObject:
   m_ObjectHideFlags: 0

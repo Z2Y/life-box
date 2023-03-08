@@ -23,6 +23,8 @@ namespace Battle.Realtime.Ai
             ownBlackBoard.Set("word_map", LifeEngine.Instance.Map);
             ownBlackBoard.Set("self_transform", transform);
             ownBlackBoard.Set("move_task", moveTask = new NPCMoveTask());
+            moveTask.npcTransform = transform;
+            moveTask.animator = GetComponent<NPCAnimationController>();
             
 #if UNITY_EDITOR
             var debugger = (Debugger)gameObject.AddComponent(typeof(Debugger));
@@ -41,7 +43,7 @@ namespace Battle.Realtime.Ai
                     )),
                     new BlackboardCondition("enemy_target", Operator.IS_SET, Stops.IMMEDIATE_RESTART, 
                         new Selector(
-                            new BlackboardCondition("enemy_distance", Operator.IS_SMALLER, 2f, Stops.BOTH, new NormalAttack(new BattleSkillAction 
+                            new BlackboardCondition("enemy_distance", Operator.IS_SMALLER, 2f, Stops.IMMEDIATE_RESTART, new NormalAttack(new BattleSkillAction 
                                          {
                                             self = gameObject,
                                             skill = SkillCollection.Instance.GetSkill(3),
@@ -57,11 +59,17 @@ namespace Battle.Realtime.Ai
         {
             var previous = ownBlackBoard.Get<Collider2D>("enemy_target");
             var current = enemyFinder.GetResult(transform.position, previous);
-            ownBlackBoard.Set("enemy_target", current);
+            
 
             if (!ReferenceEquals(current, null))
             {
+                ownBlackBoard.Set("enemy_target", current);
                 ownBlackBoard.Set("enemy_distance", (current.transform.position - transform.position).magnitude);
+            }
+            else
+            {
+                ownBlackBoard.Unset("enemy_target");
+                ownBlackBoard.Set("enemy_distance", float.MaxValue);
             }
         }
 

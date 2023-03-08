@@ -33,6 +33,7 @@ public class LifeEngine : MonoBehaviour {
         lifeData = LifeData.CreateNew();
         var map = await WorldMapController.LoadMapAsync(lifeData.current.Location.MapID);
         var mainCharacter = await NPCController.LoadCharacterAsync(0);
+        var enemy = await NPCController.LoadCharacterAsync(1);
 
         await map.InitMapWithPosition(lifeData.current.Location.Position);
         

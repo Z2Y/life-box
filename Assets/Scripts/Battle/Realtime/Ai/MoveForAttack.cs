@@ -31,13 +31,13 @@ namespace Battle.Realtime.Ai
             if (ReferenceEquals(enemy, null))
             {
                 Stopped(true);
-                return;
             }
             else
             {
                 moveTask.Cancel();
                 Clock.AddTimer(0.125f, 0, -1, update);
             }
+            Debug.Log("Start Move Attack");
         }
 
         private void update()
@@ -45,17 +45,26 @@ namespace Battle.Realtime.Ai
             var distance = (enemy.transform.position - selfTransform.position).magnitude;
             if (distance < attackRange)
             {
-                Stopped(true);
+                if (IsActive)
+                {
+                    Stopped(true);
+                }
                 return;
             }
             
             var source = map.Ground.WorldToCell(selfTransform.position);
-            var dest = map.Ground.WorldToCell(enemy.transform.position);
+            var position = enemy.transform.position;
+            var dest = map.Ground.WorldToCell(position);
             var aRoute = AstarRoute.Get();
                 
             var path = aRoute.FindPath(map, source, dest);
+
+            if (path == null)
+            {
+                return;
+            }
             
-            var destWorldPos = enemy.transform.position;
+            var destWorldPos = position;
             if (path.ParentRoute != null) {
                 destWorldPos = map.Ground.CellToWorld(path.ParentRoute.Point);
                 destWorldPos.z = 0;
@@ -75,9 +84,11 @@ namespace Battle.Realtime.Ai
         protected override void DoStop()
         {
             enemy = null;
-            moveTask = null;
             map = null;
             selfTransform = null;
+            moveTask.Cancel();
+            moveTask = null;
+            Debug.Log("Stop Move Attack");
             Clock.RemoveTimer(update);
         }
     }
