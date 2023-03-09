@@ -27,12 +27,17 @@ namespace DefaultNamespace
 
         }
 
-        private void Register(KeyCode code, IInputCommandResolver resolver) {
+        public void Register(KeyCode code, IInputCommandResolver resolver) {
             if (Resolvers.ContainsKey(code)) {
                 Resolvers[code] = resolver;
             } else {
                 Resolvers.Add(code, resolver);
             }
+        }
+
+        public void UnRegister(KeyCode code)
+        {
+            Resolvers.Remove(code);
         }
         
         private void RegisterCommandResolver() {

@@ -6,7 +6,6 @@ using Model;
 
 namespace Model
 {
-
     public enum ItemType {
         Food = 0,
         Money = 1,

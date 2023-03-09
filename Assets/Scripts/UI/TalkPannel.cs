@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
 namespace UI
 {
+    [PrefabResource("Prefabs/ui/DialoguePanel")]
     public class DialoguePanel : UIBase
     {
         public Text nameText;
@@ -16,7 +18,7 @@ namespace UI
         public Button choiceButtonPrefab;
         public float typingSpeed = 0.02f;
 
-        private List<DialogueLine> currentDialogue;
+        private DialogueLine currentDialogue;
         private int currentLineIndex;
         private bool isDialogueActive;
         private bool isTyping;
@@ -30,7 +32,7 @@ namespace UI
             choicesPanel = transform.Find("ChoicesPanel").gameObject;
         }
 
-        public async Task StartDialogueAsync(List<DialogueLine> dialogue)
+        public void StartDialogue(DialogueLine dialogue)
         {
             // Reset dialogue box
             Show();
@@ -51,9 +53,9 @@ namespace UI
             dialogueText.text = "";
 
             // Load speaker image
-            if (!string.IsNullOrEmpty(currentDialogue[currentLineIndex].spritePath))
+            if (!string.IsNullOrEmpty(currentDialogue.spritePath))
             {
-                await LoadCharacterImageAsync(currentDialogue[currentLineIndex].spritePath);
+                await LoadCharacterImageAsync(currentDialogue.spritePath);
             }
             else
             {
@@ -61,8 +63,8 @@ namespace UI
             }
 
             // Start typing dialogue text
-            currentText = currentDialogue[currentLineIndex].text;
-            nameText.text = currentDialogue[currentLineIndex].speakerName;
+            currentText = currentDialogue.text;
+            nameText.text = currentDialogue.speakerName;
 
             await TypeTextAsync();
         }
@@ -85,10 +87,10 @@ namespace UI
             }
 
             isTyping = false;
-            if (currentDialogue[currentLineIndex].choices.Count > 0)
+            if (currentDialogue.choices.Count > 0)
             {
                 ShowChoices();
-                UpdateChoices(currentDialogue[currentLineIndex].choices);
+                UpdateChoices(currentDialogue.choices);
             }
         }
 
@@ -125,11 +127,14 @@ namespace UI
             HideChoices();
 
             // Go to the corresponding dialogue line
-            currentLineIndex = choice.nextLineIndex;
+            // currentLineIndex = choice.nextLineIndex;
+
+            var next = choice.onSelect();
 
             // Update dialogue
-            if (currentLineIndex < currentDialogue.Count)
+            if (next != null)
             {
+                currentDialogue = next;
                 LoadCurrentLine();
             }
             else
@@ -140,6 +145,15 @@ namespace UI
 
                 // Reset choices
                 HideChoices();
+            }
+        }
+
+        public static async void Show(DialogueLine dialogue)
+        {
+            var panel = await UIManager.Instance.FindOrCreateAsync<DialoguePanel>() as DialoguePanel;
+            if (!ReferenceEquals(panel, null))
+            {
+                panel.StartDialogue(dialogue);
             }
         }
     }
@@ -158,5 +172,6 @@ namespace UI
     {
         public string text;
         public int nextLineIndex;
+        public Func<DialogueLine> onSelect;
     }
 }

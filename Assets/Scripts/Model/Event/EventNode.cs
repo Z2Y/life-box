@@ -52,9 +52,9 @@ public class EventNode
     {
         get
         {
-            var enviroments = Life.Enviroments;
-            enviroments["$Effect"] = EffectResult;
-            return Event.Description.InjectedExpression(enviroments);
+            var environments = Life.Enviroments;
+            environments["$Effect"] = EffectResult;
+            return Event.Description.InjectedExpression(environments);
         }
     }
 }

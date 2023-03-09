@@ -23,7 +23,7 @@ public static class ExpressionCommandResolver {
     {
         if (!Resolvers.TryGetValue(command, out var resolver))
         {
-            Debug.LogWarning($"Resolver Not Found {command} {Resolvers.Count}");
+            //Debug.LogWarning($"Resolver Not Found {command} {Resolvers.Count}");
             return null;
         }
         

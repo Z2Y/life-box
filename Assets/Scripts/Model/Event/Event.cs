@@ -20,9 +20,11 @@ namespace Model
         Normal = 2,
         Route = 3,
         Shop = 4,
+        Talk = 5
     }
 
     [MessagePackObject(true)]
+    [Serializable]
     public class Event
     {
         public long ID;
@@ -72,12 +74,10 @@ namespace ModelContainer
             {
                 Model.Event e = Instance.GetEvent(id);
                 if (e == null) return -1;
-                var isExclude = e.Exclude.ExecuteExpression() as bool?;
-                if (isExclude != null && (bool)isExclude) return -1;
-                var isInclude = e.Include.ExecuteExpression() as bool?;
-                if (isInclude != null)
+                if (e.Exclude.ExecuteExpression() is true) return -1;
+                if (e.Include.ExecuteExpression() is bool isInclude)
                 {
-                    UnityEngine.Debug.Log($"isInclude {isInclude}");
+                    UnityEngine.Debug.Log($"isInclude {(bool?)isInclude}");
                     return (bool)isInclude ? idx : -1;
                 }
                 return idx;

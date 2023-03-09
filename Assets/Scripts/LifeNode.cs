@@ -31,14 +31,11 @@ public class LifeNode
 
     public EventNode AddEventByTrigger(IEventTrigger trigger)
     {
-        Model.Event evt = trigger?.GetEvent();
-        if (evt != null)
-        {
-            EventNode node = new EventNode(this, evt);
-            Events.Add(node);
-            return node;
-        }
-        return null;
+        var evt = trigger?.GetEvent();
+        if (evt == null) return null;
+        var node = new EventNode(this, evt);
+        Events.Add(node);
+        return node;
     }
 
     public Dictionary<string, object> Enviroments
