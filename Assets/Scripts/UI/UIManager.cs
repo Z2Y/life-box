@@ -7,19 +7,23 @@ namespace UI
 {
     public class UIManager : MonoBehaviour
     {
-        private readonly LinkedList<UIBase> uiBases = new();
 
         private readonly Dictionary<int, UIBase> _lookup = new();
         public static UIManager Instance { get; private set; }
+
+        public Transform worldRoot;
+        public Transform screenRoot;
 
         private void Awake()
         {
             Instance ??= this;
 
+            worldRoot = transform.Find("World");
+            screenRoot = transform.Find("Screen");
             // collect all ui in direct child
-            for (var i = 0; i < transform.childCount; i++)
+            for (var i = 0; i < screenRoot.childCount; i++)
             {
-                var ui = transform.GetChild(i).GetComponent<UIBase>();
+                var ui = screenRoot.GetChild(i).GetComponent<UIBase>();
                 if (ui != null && ui.gameObject.activeSelf)
                 {
                     PushUI(ui);
@@ -30,18 +34,12 @@ namespace UI
         public bool PushUI(UIBase ui)
         {
             ui.gameObject.SetActive(true);
-            uiBases.AddFirst(ui);
             return _lookup.TryAdd(ui.GetInstanceID(), ui);
         }
 
         public bool PopupUI()
         {
-            if (uiBases.Count <= 0) return false;
-            
-            var ui = uiBases.First();
-            ui.Destroy();
-            uiBases.RemoveFirst();
-            return _lookup.Remove(ui.GetInstanceID());
+            return false;
         }
 
         public UIBase FindByName(string uiName)
@@ -57,8 +55,8 @@ namespace UI
         public UIBase Remove(int instanceID)
         {
             if (!_lookup.TryGetValue(instanceID, out var ui)) return null;
+            _lookup.Remove(instanceID);
             
-            uiBases.Remove(ui);
             return ui;
         }
 
@@ -67,7 +65,6 @@ namespace UI
             if (!_lookup.TryGetValue(instanceID, out var ui)) return null;
             
             ui.gameObject.SetActive(false);
-            uiBases.Remove(ui);
             return ui;          
         }
 

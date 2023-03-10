@@ -57,9 +57,19 @@ namespace Interact
             return null;
         }
 
+        private void onCharacterLeave(Character character)
+        {   
+            Debug.Log("Character leave");
+            var dialoguePanel = UIManager.Instance.FindByType<DialoguePanel>();
+            if (dialoguePanel is DialoguePanel panel && panel.CurrentDialogue.speakerName == character.Name)
+            {
+                UIManager.Instance.Hide(dialoguePanel.GetInstanceID());
+            }
+            
+        }
+
         private void buildDialog(Character character, IEnumerable<IDetector> npcDetectors)
         {
-
 
             var choices = new List<DialogueChoice>();
             foreach (var detector in npcDetectors)
@@ -72,9 +82,9 @@ namespace Interact
                         onSelect = () =>
                         {
                             TalkTriggerContainer.Instance.GetTrigger(character.ID).Trigger().Coroutine();
-                            return null;
                         }
                     });
+                    detector.onEndDetect((_, __) => onCharacterLeave(character));
                 }
 
                 if (detector is ShopableNPCDetector)
@@ -82,15 +92,15 @@ namespace Interact
                     choices.Add(new DialogueChoice()
                     {
                         text = "购买",
-                        onSelect = () => null
+                        onSelect = () => {}
                     });
                 }
             }
 
-            if (choices.Count == 0)
+            if (choices.Count == 1)
             {
-                choices[0].onSelect();
-                return;
+                // choices[0].onSelect();
+                // return;
             }
             
             var dialogue = new DialogueLine()
@@ -101,6 +111,22 @@ namespace Interact
             };
             
             DialoguePanel.Show(dialogue);
+        }
+    }
+    
+
+    [CommandResolverHandler("StopInteractToNPC")]
+    public class StopNPCInteractHandler : CommandResolver
+    {
+        public override Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+        {
+            var dialogID = UIManager.Instance.FindByType<DialoguePanel>()?.GetInstanceID() ?? 0;
+            if (dialogID != 0)
+            {
+                UIManager.Instance.Hide(dialogID);
+            }
+
+            return null;
         }
     }
 }

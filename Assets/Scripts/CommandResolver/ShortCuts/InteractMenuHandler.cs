@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Controller;
-using DefaultNamespace;
 using Logic.Detector;
 using UnityEngine;
 
@@ -22,6 +21,8 @@ namespace ShortCuts
         public void Resolve(KeyCode code)
         {
             env["activeDetectors"] = controller.activeDetectors;
+            Debug.Log(command);
+            Debug.Log(env["activeDetectors"]);
             command.ExecuteExpressionAsync(env).Coroutine();
         }
     }

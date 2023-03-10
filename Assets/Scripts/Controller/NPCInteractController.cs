@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using DefaultNamespace;
 using Logic.Detector;
 using Logic.Detector.Config;
 using Logic.Detector.Scriptable;
@@ -18,6 +17,8 @@ namespace Controller
         [SerializeField] 
         private ScriptableDetectorBase[] detectors;
 
+        [SerializeField] private Vector3 tipOffset;
+
         public readonly HashSet<KeyValuePair<IDetector, Collider2D>> activeDetectors = new ();
 
         private InteractTip tip;
@@ -27,6 +28,7 @@ namespace Controller
             collisionDetector = GetComponent<CollisionDetector>();
             foreach (var item in detectors)
             {
+                Debug.Log(item.GetDetector());
                 Debug.Log($"Add Detector {item.GetDetector().GetType().Name}");
                 var detector = item.GetDetector();
                 detector.onDetect(onDetect);
@@ -57,30 +59,47 @@ namespace Controller
         private async void showInteractMenu()
         {
             var items = InteractMenuConfig.buildMenuItems(activeDetectors.ToList());
-            var menuTypes = items.Select((item) => item.menuID).Distinct().ToList();
+            var targets = items.Select((item) => item.collision).Distinct();
+
+            var target = ReferenceEquals(tip, null)
+                ? targets.FirstOrDefault()
+                : targets.FirstOrDefault(t => t.GetInstanceID() == tip.targetID);
+
+            if (ReferenceEquals(target, null)) return;
+            
+            var menuTypes = items.Where((item) => item.collision.GetInstanceID() == target.GetInstanceID())
+                .Select((item) => item.menuID).Distinct().ToList();
+            
             if (menuTypes.Count <= 0)
             {
                 return;
             }
             var menuID = menuTypes.Count > 1  ? 0 : menuTypes.First();
 
+            var offset = new Vector3(0, target.bounds.size.y, 0);
+
             if (ReferenceEquals(tip, null))
             {
                 tip = await InteractTip.Show(menuID);
+                
+                tip.SetPosition(target.transform.position  + offset, target.GetInstanceID());
             }
             else
             {
                 tip.UpdateMenu(menuID);
+                tip.Show();
+                tip.SetPosition(target.transform.position + offset, target.GetInstanceID());
             }
             
             var menuConfig = InteractMenuConfigCollection.Instance.GetConfig(menuID);
-            
+
             InputCommandResolver.Instance.Register(tip.keyCode, new InteractMenuHandler(this, menuConfig.MenuResolver));
 
         }
 
         private void hideInteractMenu()
         {
+            if (ReferenceEquals(tip, null)) return;
             UIManager.Instance.Hide(tip.GetInstanceID());
             InputCommandResolver.Instance.UnRegister(tip.keyCode);
             tip = null;

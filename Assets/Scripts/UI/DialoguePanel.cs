@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Assets.HeroEditor.Common.Scripts.Common;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
@@ -15,21 +16,19 @@ namespace UI
         public Text dialogueText;
         public Image characterImage;
         public GameObject choicesPanel;
-        public Button choiceButtonPrefab;
+        public GameObject choiceButtonPrefab;
         public float typingSpeed = 0.02f;
 
         private DialogueLine currentDialogue;
-        private int currentLineIndex;
         private bool isDialogueActive;
         private bool isTyping;
         private string currentText = "";
-        
+
+        public DialogueLine CurrentDialogue => currentDialogue;
+
         private void Awake()
         {
-            nameText = transform.Find("Name").GetComponent<Text>();
-            dialogueText = transform.Find("Dialogue").GetComponent<Text>();
-            characterImage = transform.Find("CharacterImage").GetComponent<Image>();
-            choicesPanel = transform.Find("ChoicesPanel").gameObject;
+            transform.SetParent(UIManager.Instance.worldRoot);
         }
 
         public void StartDialogue(DialogueLine dialogue)
@@ -43,7 +42,6 @@ namespace UI
 
             // Load first line of dialogue
             currentDialogue = dialogue;
-            currentLineIndex = 0;
             LoadCurrentLine();
         }
 
@@ -87,11 +85,9 @@ namespace UI
             }
 
             isTyping = false;
-            if (currentDialogue.choices.Count > 0)
-            {
-                ShowChoices();
-                UpdateChoices(currentDialogue.choices);
-            }
+
+            ShowChoices();
+            UpdateChoices(currentDialogue.choices);
         }
 
         private void ShowChoices()
@@ -111,11 +107,17 @@ namespace UI
             {
                 Destroy(child.gameObject);
             }
+            
+            choices.Add(new DialogueChoice()
+            {
+                text = "结束对话",
+                onSelect = Hide
+            });
 
             // Create choice buttons
             foreach (var choice in choices)
             {
-                var button = Instantiate(choiceButtonPrefab, choicesPanel.transform);
+                var button = Instantiate(choiceButtonPrefab, choicesPanel.transform).GetComponent<Button>();
                 button.GetComponentInChildren<Text>().text = choice.text;
                 button.onClick.AddListener(() => OnChoiceSelected(choice));
             }
@@ -129,29 +131,14 @@ namespace UI
             // Go to the corresponding dialogue line
             // currentLineIndex = choice.nextLineIndex;
 
-            var next = choice.onSelect();
+            choice.onSelect();
 
             // Update dialogue
-            if (next != null)
-            {
-                currentDialogue = next;
-                LoadCurrentLine();
-            }
-            else
-            {
-                // End of dialogue
-                Hide();
-                isDialogueActive = false;
-
-                // Reset choices
-                HideChoices();
-            }
         }
 
         public static async void Show(DialogueLine dialogue)
         {
-            var panel = await UIManager.Instance.FindOrCreateAsync<DialoguePanel>() as DialoguePanel;
-            if (!ReferenceEquals(panel, null))
+            if (await UIManager.Instance.FindOrCreateAsync<DialoguePanel>(true) is DialoguePanel panel)
             {
                 panel.StartDialogue(dialogue);
             }
@@ -171,7 +158,6 @@ namespace UI
     public class DialogueChoice
     {
         public string text;
-        public int nextLineIndex;
-        public Func<DialogueLine> onSelect;
+        public Action onSelect;
     }
 }

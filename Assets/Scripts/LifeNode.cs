@@ -55,6 +55,7 @@ public class LifeNode
         for (int i = ProcessedCount; i < Events.Count; i++)
         {
             var e = Events[i];
+            Debug.Log($"Process Event {e.Event.ID} {e.Event.Effect}");
             await e.DoEffect();
             int branch = await e.DoBranch();
             if (branch >= 0 && branch < e.Event.Branch.Length)
@@ -67,7 +68,6 @@ public class LifeNode
                 }
 
             }
-            Debug.Log($"EventBranch {branch}");
             ProcessedCount = i + 1;
             LifeEngine.Instance.lifeData.AddNodeEvent(e.Event);
         }

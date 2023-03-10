@@ -2,15 +2,16 @@ using System;
 using System.Linq;
 using NPBehave;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Logic.Detector
 {
     public class SelectorDetector : Selector, IDetector
     {
-        private Action<IDetector, Collider2D> onDetectCallback;
-        private Action<IDetector, Collider2D> onEndDetectCallback;
-
-        public SelectorDetector(Action<IDetector, Collider2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
+        private UnityAction<IDetector, Collider2D> onDetectCallback;
+        private UnityAction<IDetector, Collider2D> onEndDetectCallback;
+        private bool isRoot;
+        public SelectorDetector(UnityAction<IDetector, Collider2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
         {
             onDetectCallback = callback;
         }
@@ -22,6 +23,12 @@ namespace Logic.Detector
             {
                 fireCallbackAsync(Blackboard.Get<Collider2D>("collision"));
             }
+            if (isRoot && currentState == State.INACTIVE)
+            {
+                Debug.Log("Stop Root");
+                RootNode.Stop();
+                RootNode.ChildStopped(this, false);
+            }
         }
         
         private async void fireCallbackAsync(Collider2D collision)
@@ -44,20 +51,32 @@ namespace Logic.Detector
         public void Start(DetectPhase phase, Blackboard blackboard, Collider2D collision)
         {
             RootNode ??= new Root(blackboard, this);
-            if (currentState == State.INACTIVE)
+            isRoot = true;
+            if (RootNode.CurrentState == State.INACTIVE)
             {
-                Blackboard.Set("phase", phase);
-                Blackboard.Set("collision", collision);
+                blackboard.Set("collision", collision);
+                blackboard.Set("phase", phase);
                 RootNode.Start();
             }
         }
+        
+        protected override void DoStop()
+        {
+            Stopped(false);
+            if (isRoot)
+            {
+                Debug.Log("Stop Root");
+                RootNode.Stop();
+                RootNode.ChildStopped(this, false);
+            }
+        }
 
-        public void onDetect(Action<IDetector, Collider2D> callback)
+        public void onDetect(UnityAction<IDetector, Collider2D> callback)
         {
             onDetectCallback = callback;
         }
         
-        public void onEndDetect(Action<IDetector, Collider2D> callback)
+        public void onEndDetect(UnityAction<IDetector, Collider2D> callback)
         {
             onEndDetectCallback = callback;
         }
@@ -65,11 +84,12 @@ namespace Logic.Detector
 
     public class SequenceDetector : Sequence, IDetector
     {
-        private Action<IDetector, Collider2D> onDetectCallback;
-        private Action<IDetector, Collider2D> onEndDetectCallback;
+        private UnityAction<IDetector, Collider2D> onDetectCallback;
+        private UnityAction<IDetector, Collider2D> onEndDetectCallback;
         private int currentIndex = -1;
+        private bool isRoot;
         
-        public SequenceDetector(Action<IDetector, Collider2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
+        public SequenceDetector(UnityAction<IDetector, Collider2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
         {
             onDetectCallback = callback;
         }
@@ -77,9 +97,14 @@ namespace Logic.Detector
         protected override void DoChildStopped(Node child, bool result)
         {
             base.DoChildStopped(child, result);
-
-            if (!result) return;
-            if (++currentIndex >= Children.Length)
+            if (isRoot && currentState == State.INACTIVE)
+            {
+                Debug.Log("Stop Root");
+                RootNode.Stop();
+                RootNode.ChildStopped(this, false);
+            }
+            
+            if (++currentIndex >= Children.Length && result)
             {
                 fireCallbackAsync(Blackboard.Get<Collider2D>("collision"));
             }
@@ -105,20 +130,32 @@ namespace Logic.Detector
         public void Start(DetectPhase phase, Blackboard blackboard, Collider2D collision)
         {
             RootNode ??= new Root(blackboard, this);
-            if (currentState == State.INACTIVE)
+            isRoot = true;
+            if (RootNode.CurrentState == State.INACTIVE)
             {
-                Blackboard.Set("collision", collision);
-                Blackboard.Set("phase", phase);
+                blackboard.Set("collision", collision);
+                blackboard.Set("phase", phase);
                 RootNode.Start();
             }
         }
+        
+        protected override void DoStop()
+        {
+            Stopped(false);
+            if (isRoot)
+            {
+                Debug.Log("Stop Root");
+                RootNode.Stop();
+                RootNode.ChildStopped(this, false);
+            }
+        }
 
-        public void onDetect(Action<IDetector, Collider2D> callback)
+        public void onDetect(UnityAction<IDetector, Collider2D> callback)
         {
             onDetectCallback = callback;
         }
         
-        public void onEndDetect(Action<IDetector, Collider2D> callback)
+        public void onEndDetect(UnityAction<IDetector, Collider2D> callback)
         {
             onEndDetectCallback = callback;
         }

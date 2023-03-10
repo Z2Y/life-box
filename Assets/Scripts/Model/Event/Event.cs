@@ -25,7 +25,7 @@ namespace Model
 
     [MessagePackObject(true)]
     [Serializable]
-    public class Event
+    public class Event : IEventTrigger
     {
         public long ID;
         public EventType EventType;
@@ -37,6 +37,11 @@ namespace Model
         public long[] Branch;
         public string Include;
         public string Exclude;
+        
+        public Event GetEvent()
+        {
+            return this;
+        }
     }
 }
 

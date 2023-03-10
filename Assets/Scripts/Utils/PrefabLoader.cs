@@ -48,6 +48,7 @@ namespace Utils
             
             if (request.asset == null)
             {
+                Debug.LogWarning($"Load ui prefab {tType.Name} failed.");
                 return null;
             }
 

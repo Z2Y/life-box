@@ -8,14 +8,20 @@ namespace UI
         public static T Create()
         {
             var ui = PrefabLoader<T>.Create(UIManager.Instance.transform);
-            UIManager.Instance.PushUI(ui);
+            if (!ReferenceEquals(ui, null))
+            {
+                UIManager.Instance.PushUI(ui);
+            }
             return ui;
         }
 
         public static async Task<T> CreateAsync()
         {
             var ui = await PrefabLoader<T>.CreateAsync(UIManager.Instance.transform);
-            UIManager.Instance.PushUI(ui);
+            if (!ReferenceEquals(ui, null))
+            {
+                UIManager.Instance.PushUI(ui);
+            }
             return ui;
         }
     }

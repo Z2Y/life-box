@@ -17,7 +17,6 @@ namespace Controller
         
         private CollisionDetector collisionDetector;
         public Character character { get; private set; }
-        
         public NPCAnimationController Animator { get; private set; }
         public NPCMovementController Movement { get; private set;  }
 

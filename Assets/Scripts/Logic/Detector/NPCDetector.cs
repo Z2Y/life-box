@@ -1,13 +1,14 @@
 using System;
 using Controller;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Logic.Detector
 {
     public class NPCDetector : BaseDetector
     {
         public NPCDetector() : base("NPCDetector") {}
-        public NPCDetector(Action<IDetector, Collider2D> callback) : base("NPCDetector")
+        public NPCDetector(UnityAction<IDetector, Collider2D> callback) : base("NPCDetector")
         {
             onDetectCallback = callback;
         }
@@ -27,7 +28,7 @@ namespace Logic.Detector
     public class TalkableNPCDetector : BaseDetector
     {
         public TalkableNPCDetector() : base("TalkableNPCDetector") {}
-        public TalkableNPCDetector(Action<IDetector, Collider2D> callback) : base("TalkableNPCDetector")
+        public TalkableNPCDetector(UnityAction<IDetector, Collider2D> callback) : base("TalkableNPCDetector")
         {
             onDetectCallback = callback;
         }
@@ -44,7 +45,7 @@ namespace Logic.Detector
     public class ShopableNPCDetector : BaseDetector
     {
         public ShopableNPCDetector() : base("ShopableNPCDetector") {}
-        public ShopableNPCDetector(Action<IDetector, Collider2D> callback) : base("TalkableNPCDetector")
+        public ShopableNPCDetector(UnityAction<IDetector, Collider2D> callback) : base("TalkableNPCDetector")
         {
             onDetectCallback = callback;
         }
