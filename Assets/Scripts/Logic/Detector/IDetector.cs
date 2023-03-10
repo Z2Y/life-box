@@ -10,6 +10,8 @@ namespace Logic.Detector
         public void Start(DetectPhase phase, Blackboard blackboard, Collider2D collision);
         public void onDetect(UnityAction<IDetector, Collider2D> callback);
         public void onEndDetect(UnityAction<IDetector, Collider2D> callback);
+        public void offEndDetect(UnityAction<IDetector, Collider2D> callback);
+        public void offDetect(UnityAction<IDetector, Collider2D> callback);
 
     }
 
@@ -69,6 +71,16 @@ namespace Logic.Detector
         public void onEndDetect(UnityAction<IDetector, Collider2D> callback)
         {
             onEndDetectCallback += callback;
+        }
+
+        public void offEndDetect(UnityAction<IDetector, Collider2D> callback)
+        {
+            onEndDetectCallback -= callback;
+        }
+
+        public void offDetect(UnityAction<IDetector, Collider2D> callback)
+        {
+            onDetectCallback -= callback;
         }
 
         protected async void fireCallbackAsync(Collider2D collision)

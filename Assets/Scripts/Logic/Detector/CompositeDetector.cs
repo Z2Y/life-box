@@ -80,6 +80,16 @@ namespace Logic.Detector
         {
             onEndDetectCallback = callback;
         }
+
+        public void offEndDetect(UnityAction<IDetector, Collider2D> callback)
+        {
+            onEndDetectCallback -= callback;
+        }
+
+        public void offDetect(UnityAction<IDetector, Collider2D> callback)
+        {
+            onDetectCallback -= callback;
+        }
     }
 
     public class SequenceDetector : Sequence, IDetector
@@ -158,6 +168,16 @@ namespace Logic.Detector
         public void onEndDetect(UnityAction<IDetector, Collider2D> callback)
         {
             onEndDetectCallback = callback;
+        }
+        
+        public void offEndDetect(UnityAction<IDetector, Collider2D> callback)
+        {
+            onEndDetectCallback -= callback;
+        }
+
+        public void offDetect(UnityAction<IDetector, Collider2D> callback)
+        {
+            onDetectCallback -= callback;
         }
     }
 }
