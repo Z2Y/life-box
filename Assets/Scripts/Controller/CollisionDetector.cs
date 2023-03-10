@@ -28,13 +28,30 @@ namespace Controller
         private void OnCollisionEnter2D(Collision2D collision)
         {
             collidingObjects.Add(collision.gameObject);
-            Debug.Log($"{collision.gameObject.name} enter");
             foreach (var detector in collisionDetectors)
             {
-                detector.Start(DetectPhase.Enter, blackboard, collision);
+                detector.Start(DetectPhase.Enter, blackboard, collision.collider);
             }
         }
-        
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            collidingObjects.Add(other.gameObject);
+            foreach (var detector in collisionDetectors)
+            {
+                detector.Start(DetectPhase.Enter, blackboard, other);
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            collidingObjects.Remove(other.gameObject);
+            foreach (var detector in collisionDetectors)
+            {
+                detector.Start(DetectPhase.Exit, blackboard, other);
+            }
+        }
+
         /*
         private void OnCollisionStay(Collision collision)
         {
@@ -47,7 +64,7 @@ namespace Controller
             Debug.Log($"{collision.gameObject.name} leave");
             foreach (var detector in collisionDetectors)
             {
-                detector.Start(DetectPhase.Exit, blackboard, collision);
+                detector.Start(DetectPhase.Exit, blackboard, collision.collider);
             }
         }
 

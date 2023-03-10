@@ -18,7 +18,7 @@ namespace Controller
         [SerializeField] 
         private ScriptableDetectorBase[] detectors;
 
-        public readonly HashSet<KeyValuePair<IDetector, Collision2D>> activeDetectors = new ();
+        public readonly HashSet<KeyValuePair<IDetector, Collider2D>> activeDetectors = new ();
 
         private InteractTip tip;
 
@@ -35,19 +35,19 @@ namespace Controller
             }
         }
 
-        private void onEndDetect(IDetector detector, Collision2D collision)
+        private void onEndDetect(IDetector detector, Collider2D collision)
         {
-            activeDetectors.Remove(new KeyValuePair<IDetector, Collision2D>(detector, collision));
+            activeDetectors.Remove(new KeyValuePair<IDetector, Collider2D>(detector, collision));
             if (activeDetectors.Count <= 0)
             {
                 hideInteractMenu();
             }
         }
 
-        private void onDetect(IDetector detector, Collision2D collision)
+        private void onDetect(IDetector detector, Collider2D collision)
         {
             Debug.Log($"Detect {detector.GetType().Name} ${collision.gameObject.name}");
-            activeDetectors.Add(new KeyValuePair<IDetector, Collision2D>(detector, collision));
+            activeDetectors.Add(new KeyValuePair<IDetector, Collider2D>(detector, collision));
             if (activeDetectors.Count > 0)
             {
                 showInteractMenu();

@@ -7,10 +7,10 @@ namespace Logic.Detector
 {
     public class SelectorDetector : Selector, IDetector
     {
-        private Action<IDetector, Collision2D> onDetectCallback;
-        private Action<IDetector, Collision2D> onEndDetectCallback;
+        private Action<IDetector, Collider2D> onDetectCallback;
+        private Action<IDetector, Collider2D> onEndDetectCallback;
 
-        public SelectorDetector(Action<IDetector, Collision2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
+        public SelectorDetector(Action<IDetector, Collider2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
         {
             onDetectCallback = callback;
         }
@@ -20,11 +20,11 @@ namespace Logic.Detector
             base.DoChildStopped(child, result);
             if (result)
             {
-                fireCallbackAsync(Blackboard.Get<Collision2D>("collision"));
+                fireCallbackAsync(Blackboard.Get<Collider2D>("collision"));
             }
         }
         
-        private async void fireCallbackAsync(Collision2D collision)
+        private async void fireCallbackAsync(Collider2D collision)
         {
             var phase = Blackboard.Get<DetectPhase>("phase");
             if (phase == DetectPhase.Enter)
@@ -41,23 +41,23 @@ namespace Logic.Detector
             }
         }
 
-        public void Start(DetectPhase phase, Blackboard blackboard, Collision2D collision)
+        public void Start(DetectPhase phase, Blackboard blackboard, Collider2D collision)
         {
-            Blackboard = blackboard;
+            RootNode ??= new Root(blackboard, this);
             if (currentState == State.INACTIVE)
             {
                 Blackboard.Set("phase", phase);
                 Blackboard.Set("collision", collision);
-                Start();
+                RootNode.Start();
             }
         }
 
-        public void onDetect(Action<IDetector, Collision2D> callback)
+        public void onDetect(Action<IDetector, Collider2D> callback)
         {
             onDetectCallback = callback;
         }
         
-        public void onEndDetect(Action<IDetector, Collision2D> callback)
+        public void onEndDetect(Action<IDetector, Collider2D> callback)
         {
             onEndDetectCallback = callback;
         }
@@ -65,11 +65,11 @@ namespace Logic.Detector
 
     public class SequenceDetector : Sequence, IDetector
     {
-        private Action<IDetector, Collision2D> onDetectCallback;
-        private Action<IDetector, Collision2D> onEndDetectCallback;
+        private Action<IDetector, Collider2D> onDetectCallback;
+        private Action<IDetector, Collider2D> onEndDetectCallback;
         private int currentIndex = -1;
         
-        public SequenceDetector(Action<IDetector, Collision2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
+        public SequenceDetector(Action<IDetector, Collider2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
         {
             onDetectCallback = callback;
         }
@@ -81,11 +81,11 @@ namespace Logic.Detector
             if (!result) return;
             if (++currentIndex >= Children.Length)
             {
-                fireCallbackAsync(Blackboard.Get<Collision2D>("collision"));
+                fireCallbackAsync(Blackboard.Get<Collider2D>("collision"));
             }
         }
         
-        private async void fireCallbackAsync(Collision2D collision)
+        private async void fireCallbackAsync(Collider2D collision)
         {
             var phase = Blackboard.Get<DetectPhase>("phase");
             if (phase == DetectPhase.Enter)
@@ -102,23 +102,23 @@ namespace Logic.Detector
             }
         }
 
-        public void Start(DetectPhase phase, Blackboard blackboard, Collision2D collision)
+        public void Start(DetectPhase phase, Blackboard blackboard, Collider2D collision)
         {
-            Blackboard = blackboard;
+            RootNode ??= new Root(blackboard, this);
             if (currentState == State.INACTIVE)
             {
                 Blackboard.Set("collision", collision);
                 Blackboard.Set("phase", phase);
-                Start();
+                RootNode.Start();
             }
         }
 
-        public void onDetect(Action<IDetector, Collision2D> callback)
+        public void onDetect(Action<IDetector, Collider2D> callback)
         {
             onDetectCallback = callback;
         }
         
-        public void onEndDetect(Action<IDetector, Collision2D> callback)
+        public void onEndDetect(Action<IDetector, Collider2D> callback)
         {
             onEndDetectCallback = callback;
         }

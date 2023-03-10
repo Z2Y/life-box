@@ -15,7 +15,7 @@ namespace Interact
     {
         public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
         {
-            var activeDetectors = env["activeDetectors"] as HashSet<KeyValuePair<IDetector, Collision>>;
+            var activeDetectors = env["activeDetectors"] as HashSet<KeyValuePair<IDetector, Collider2D>>;
 
             var npcObjects = new HashSet<GameObject>();
             var npcDetectors = new HashSet<IDetector>();
