@@ -8,6 +8,7 @@ namespace Model
 {
 
     [MessagePackObject(true)]
+    [Serializable]
     public class Command
     {
         public long ID;

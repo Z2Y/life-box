@@ -14,7 +14,7 @@ namespace Logic.Detector.Config
         };
 
 
-        public static List<InteractMenuItem> buildMenuItems(List<KeyValuePair<IDetector, Collision>> data)
+        public static List<InteractMenuItem> buildMenuItems(List<KeyValuePair<IDetector, Collision2D>> data)
         {
             var result = new List<InteractMenuItem>();
             foreach (var item in data)
@@ -44,7 +44,7 @@ namespace Logic.Detector.Config
     public class InteractMenuItem
     {
         public IDetector detector;
-        public Collision collision;
+        public Collision2D collision;
         public long menuID;
     }
 }

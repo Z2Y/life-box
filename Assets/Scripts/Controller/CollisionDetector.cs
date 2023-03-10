@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Logic.Detector;
+using NPBehave;
 using UnityEngine;
 
 namespace Controller
@@ -11,6 +12,8 @@ namespace Controller
         private readonly HashSet<GameObject> collidingObjects = new ();
 
         private readonly List<IDetector> collisionDetectors = new();
+        
+        private readonly Blackboard blackboard = new (null, UnityContext.GetClock());
 
         public void AddDetector(IDetector detector)
         {
@@ -22,12 +25,13 @@ namespace Controller
             collisionDetectors.Remove(detector);
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnCollisionEnter2D(Collision2D collision)
         {
             collidingObjects.Add(collision.gameObject);
+            Debug.Log($"{collision.gameObject.name} enter");
             foreach (var detector in collisionDetectors)
             {
-                detector.Start(DetectPhase.Enter, collision);
+                detector.Start(DetectPhase.Enter, blackboard, collision);
             }
         }
         
@@ -37,12 +41,13 @@ namespace Controller
             collidingObjects.Add(collision.gameObject);
         }*/
 
-        private void OnCollisionExit(Collision collision)
+        private void OnCollisionExit2D(Collision2D collision)
         {
             collidingObjects.Remove(collision.gameObject);
+            Debug.Log($"{collision.gameObject.name} leave");
             foreach (var detector in collisionDetectors)
             {
-                detector.Start(DetectPhase.Exit, collision);
+                detector.Start(DetectPhase.Exit, blackboard, collision);
             }
         }
 

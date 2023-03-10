@@ -7,12 +7,12 @@ namespace Logic.Detector
     public class NPCDetector : BaseDetector
     {
         public NPCDetector() : base("NPCDetector") {}
-        public NPCDetector(Action<IDetector, Collision> callback) : base("NPCDetector")
+        public NPCDetector(Action<IDetector, Collision2D> callback) : base("NPCDetector")
         {
             onDetectCallback = callback;
         }
 
-        public override bool isTarget(Collision collision)
+        public override bool isTarget(Collision2D collision)
         {
             if (collision.gameObject.layer == LayerMask.GetMask("NPC"))
             {
@@ -27,12 +27,12 @@ namespace Logic.Detector
     public class TalkableNPCDetector : BaseDetector
     {
         public TalkableNPCDetector() : base("TalkableNPCDetector") {}
-        public TalkableNPCDetector(Action<IDetector, Collision> callback) : base("TalkableNPCDetector")
+        public TalkableNPCDetector(Action<IDetector, Collision2D> callback) : base("TalkableNPCDetector")
         {
             onDetectCallback = callback;
         }
 
-        public override bool isTarget(Collision collision)
+        public override bool isTarget(Collision2D collision)
         {
             var npcController = collision.gameObject.GetComponent<NPCController>();
             if (ReferenceEquals(npcController, null)) return false;
@@ -44,12 +44,12 @@ namespace Logic.Detector
     public class ShopableNPCDetector : BaseDetector
     {
         public ShopableNPCDetector() : base("ShopableNPCDetector") {}
-        public ShopableNPCDetector(Action<IDetector, Collision> callback) : base("TalkableNPCDetector")
+        public ShopableNPCDetector(Action<IDetector, Collision2D> callback) : base("TalkableNPCDetector")
         {
             onDetectCallback = callback;
         }
 
-        public override bool isTarget(Collision collision)
+        public override bool isTarget(Collision2D collision)
         {
             var npcController = collision.gameObject.GetComponent<NPCController>();
             if (ReferenceEquals(npcController, null)) return false;
