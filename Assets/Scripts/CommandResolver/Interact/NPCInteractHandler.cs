@@ -5,6 +5,7 @@ using Controller;
 using Logic.Detector;
 using Model;
 using ModelContainer;
+using NPBehave;
 using UI;
 using UnityEngine;
 
@@ -77,6 +78,12 @@ namespace Interact
             }
             
         }
+        
+        void onLeave()
+        {
+            LifeEngine.Instance.MainCharacter.enableMove();
+            LifeEngine.Instance.MainCharacter.enableAllShortCuts();
+        }
 
         private void buildDialog(Character character, IEnumerable<IDetector> npcDetectors)
         {
@@ -106,26 +113,22 @@ namespace Interact
                     var shops = ShopConfigCollection.Instance.GetShopConfigsByCharacter(character.ID);
                     foreach (var shopConfig in shops)
                     {
-                        void onLeaveShop()
-                        {
-                            LifeEngine.Instance.MainCharacter.enableMove();
-                        }
                         async void OnSelect()
                         {
                             UIManager.Instance.FindByType<DialoguePanel>()?.Hide();
                             LifeEngine.Instance.MainCharacter.disableMove();
                             var panel = await ShopPanel.Show(shopConfig, (result) =>
                             {
-                                onLeaveShop();
+                                onLeave();
                                 Debug.Log(result);
                             });
                             if (ReferenceEquals(panel, null))
                             {
-                                onLeaveShop();
+                                onLeave();
                             }
                             else
                             {
-                                panel.SetCancelable(true, onLeaveShop);
+                                panel.SetCancelable(true, onLeave);
                             }
                         }
 
@@ -139,25 +142,17 @@ namespace Interact
             }
             
             LifeEngine.Instance.MainCharacter.disableAllShortCuts();
-
-            if (choices.Count == 0)
-            {
-                DialoguePanel.Show(new DialogueLine()
-                {
-                    speakerName = character.Name,
-                    text = "少侠，我们不熟，快快离去！"
-                });
-                return;
-            }
-
+            
             var dialogue = new DialogueLine()
             {
                 speakerName = character.Name,
-                text = "少侠 找我有什么事呢?",
-                choices = choices
+                text = choices.Count == 0 ? "少侠，我们不熟，快快离去！" : "少侠 找我有什么事呢?",
+                choices = choices,
+                onCancel = onLeave
             };
 
-            DialoguePanel.Show(dialogue);
+            
+            DialoguePanel.Show(dialogue).Coroutine();
         }
     }
     
@@ -165,15 +160,16 @@ namespace Interact
     [CommandResolverHandler("StopInteractToNPC")]
     public class StopNPCInteractHandler : CommandResolver
     {
-        public override Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+        public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
         {
-            var dialogID = UIManager.Instance.FindByType<DialoguePanel>()?.GetInstanceID() ?? 0;
-            if (dialogID != 0)
+            var dialog = UIManager.Instance.FindByType<DialoguePanel>();
+            if (dialog is { gameObject: { activeSelf: true } })
             {
-                UIManager.Instance.Hide(dialogID);
+                dialog.CurrentDialogue.onCancel?.Invoke();
+                dialog.Hide();
             }
-
-            return null;
+            
+            return await this.Done();;
         }
     }
 }

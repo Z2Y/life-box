@@ -146,7 +146,7 @@ namespace Battle.Realtime
                 var distanceB = Vector3.Distance(b.transform.position, position);
                 return distanceA.CompareTo(distanceB);
             });
-
+            
             return enemies;
         }
 

@@ -34,7 +34,12 @@ namespace UI
 
         public void StartDialogue(DialogueLine dialogue)
         {
-            // Reset dialogue box
+            // 继承原先对话的取消回调
+            if (dialogue.onCancel == null && gameObject.activeSelf)
+            {
+                dialogue.onCancel = currentDialogue.onCancel;
+            }
+            
             Show();
             isDialogueActive = true;
             nameText.text = "";
@@ -43,6 +48,7 @@ namespace UI
 
             // Load first line of dialogue
             currentDialogue = dialogue;
+
             LoadCurrentLine();
         }
 
@@ -101,6 +107,12 @@ namespace UI
             choicesPanel.SetActive(false);
         }
 
+        private void onCancel()
+        {
+            Hide();
+            currentDialogue.onCancel?.Invoke();
+        }
+
         private void UpdateChoices(List<DialogueChoice> choices)
         {
             // Remove previous buttons
@@ -112,7 +124,7 @@ namespace UI
             choices.Add(new DialogueChoice()
             {
                 text = "结束对话",
-                onSelect = Hide
+                onSelect = onCancel
             });
 
             // Create choice buttons
@@ -137,12 +149,17 @@ namespace UI
             // Update dialogue
         }
 
-        public static async void Show(DialogueLine dialogue)
+        public static async Task<DialoguePanel> Show(DialogueLine dialogue)
         {
             if (await UIManager.Instance.FindOrCreateAsync<DialoguePanel>(true) is DialoguePanel panel)
             {
                 panel.StartDialogue(dialogue);
+                return panel;
             }
+
+            dialogue.onCancel();
+
+            return null;
         }
     }
     
@@ -154,6 +171,7 @@ namespace UI
         public string spritePath;
         public bool uninterruptible;
         public List<DialogueChoice> choices = new ();
+        public Action onCancel;
     }
 
     [Serializable]

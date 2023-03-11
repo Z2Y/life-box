@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using MessagePack;
 using Model;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Model
 {
@@ -10,21 +12,34 @@ namespace Model
     public class Quest
     {
         public long ID;
-        public string title;
-        public string description;
-        public long startEventID;
-        public long endEventIDs;
-
+        public QuestType QuestType;
+        public string Title;
+        public string Description;
+        public string Requirement;
+        public string Award;
+        public string StartEffect;
+        public string TerminateEffect;
+        public string CompleteEffect;
+        public long StartEventID;
+        public long[] EndEventIDs;
+    }
+    
+    public enum QuestType {
+        Main = 0,
+        Bounty = 1,
+        Rumor = 2
     }
 }
 
 namespace ModelContainer
 {
     [ModelContainerOf(typeof(Quest), "quests")]
-    public class QuestCollection: Singleton<QuestCollection>
+    public class QuestCollection
     {
         private readonly Dictionary<long, Quest> lookup = new ();
-        private List<Quest> quests = new ();
+        private readonly List<Quest> quests = new ();
+        private static QuestCollection _instance;
+        public static QuestCollection Instance => _instance ??= new QuestCollection();
 
         private void OnLoad() {
             lookup.Clear();

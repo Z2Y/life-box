@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace UI
 {
     public class UIManager : MonoBehaviour
     {
-
+        private readonly Dictionary<Type, Task> loadingTasks = new();
         private readonly Dictionary<int, UIBase> _lookup = new();
         public static UIManager Instance { get; private set; }
 
@@ -47,9 +48,9 @@ namespace UI
             return _lookup.Values.FirstOrDefault((ui => ui.gameObject.name == uiName));
         }
         
-        public UIBase FindByType<T>()
+        public T FindByType<T>()
         {
-            return _lookup.Values.FirstOrDefault((ui) => ui is T);
+            return _lookup.Values.OfType<T>().FirstOrDefault();
         }
 
         public UIBase Remove(int instanceID)
@@ -80,12 +81,23 @@ namespace UI
         
         public async Task<UIBase> FindOrCreateAsync<T>(bool useActive = false) where T : UIBase
         {
+            var uiType = typeof(T);
             var exist = _lookup.Values.OfType<T>().FirstOrDefault(ui => (useActive || !ui.gameObject.activeSelf));
             if (exist != null)
             {
                 return exist;
             }
-            return await UIFactory<T>.CreateAsync();
+
+            if (useActive && loadingTasks.ContainsKey(uiType))
+            {
+                return await (Task<T>)loadingTasks[uiType];
+            }
+
+            var loading = UIFactory<T>.CreateAsync();
+            loadingTasks.TryAdd(uiType, loading);
+            var ui = await loading;
+            loadingTasks.Remove(uiType);
+            return ui;
         }
         
     }

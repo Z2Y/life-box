@@ -24,7 +24,7 @@ public class KnapsackPanel : UIBase
     {
         itemGridView = transform.Find("Panel/BagItemView").GetComponent<UIItemGridView>();
         currencyView = transform.Find("Panel/Currency").GetComponent<UICurrencyText>();
-        knapsack = LifeEngine.Instance?.lifeData?.knapsackInventory;
+        knapsack = LifeEngine.Instance.lifeData?.knapsackInventory;
         closeBtn = transform.Find("Panel/CancelButton")?.GetComponent<Button>();
         filters = transform.Find("Panel/TypeTabs").GetComponentsInChildren<UIItemTypeFilter>();
         usagePopup = transform.Find("Panel/Usage").GetComponent<UIItemUsagePopup>();

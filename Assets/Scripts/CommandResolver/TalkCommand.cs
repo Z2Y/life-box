@@ -43,7 +43,7 @@ public class TalkCommand : CommandResolver
                 uninterruptible = uninterruptible == 1
             };
 
-            DialoguePanel.Show(dialogue);
+            DialoguePanel.Show(dialogue).Coroutine();
         }
         catch (Exception e)
         {
