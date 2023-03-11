@@ -46,9 +46,9 @@ namespace ModelContainer
 
         private void OnLoad() {
             lookup.Clear();
-            foreach(Model.ShopConfig config in configs) {
+            foreach(ShopConfig config in configs) {
                 if (isValidConfig(config)) {
-                    lookup.Add(config.ID, config);
+                    lookup.TryAdd(config.ID, config);
                 } else {
                     UnityEngine.Debug.LogWarning($"Invalid Shop Config Found. Check {config.ID}");
                 }
@@ -66,7 +66,7 @@ namespace ModelContainer
             return lookup.TryGetValue(id, out var value) ? value : null;
         }
 
-        public List<Model.ShopConfig> GetShopConfigsByCharacter(long characterID)
+        public List<ShopConfig> GetShopConfigsByCharacter(long characterID)
         {
             return lookupByCharacter.TryGetValue(characterID, out var shopConfigs) ? shopConfigs : null;
         }

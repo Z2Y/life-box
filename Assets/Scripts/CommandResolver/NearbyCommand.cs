@@ -73,9 +73,9 @@ public class SelectTalkToNearBy : CommandResolver
 
     private void OnTalk(Character character)
     {
-        var trigger = TalkTriggerContainer.Instance.GetTrigger(character.ID);
+        var trigger = TalkTriggerContainer.Instance.GetTalkConfig(character.ID);
         if (trigger == null) return;
-        trigger.Trigger().Coroutine();
+        trigger.GetEvent().Trigger().Coroutine();
         UnityEngine.Debug.Log($"Talk to {character.ID}");
     }
 }

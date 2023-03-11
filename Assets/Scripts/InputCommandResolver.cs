@@ -10,6 +10,8 @@ public class InputCommandResolver : MonoBehaviour
     public static InputCommandResolver Instance { get; private set;}
     
     private static readonly Dictionary<KeyCode, IInputCommandResolver> Resolvers = new ();
+
+    private static readonly HashSet<KeyCode> keyDisabled = new();
     private void Awake()
     {
         Instance = this;
@@ -20,10 +22,20 @@ public class InputCommandResolver : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            var handlers = Resolvers.Where((pair) => Input.GetKeyDown(pair.Key)).ToList();
+            var handlers = Resolvers.Where((pair) => Input.GetKeyDown(pair.Key) && !keyDisabled.Contains(pair.Key)).ToList();
             handlers.ForEach(pair => pair.Value.Resolve(pair.Key));
         }
 
+    }
+
+    public void DisableKeyCode(KeyCode code)
+    {
+        keyDisabled.Add(code);
+    }
+
+    public void EnableKeyCode(KeyCode code)
+    {
+        keyDisabled.Remove(code);
     }
 
     public void Register(KeyCode code, IInputCommandResolver resolver) {

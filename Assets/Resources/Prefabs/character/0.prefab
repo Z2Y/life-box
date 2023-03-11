@@ -716,6 +716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterID: 0
+  skillShortCuts: []
 --- !u!114 &8814682170512722174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,7 +731,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectors:
   - {fileID: 11400000, guid: 157f555e4c8e844f79e1279eb1979985, type: 2}
-  tipOffset: {x: 0, y: 0, z: 0}
+  - {fileID: 11400000, guid: 675773041890c4ebf8af5b34ca14b505, type: 2}
 --- !u!70 &4764537031477365957
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -27129,7 +27130,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &4167466494787575452

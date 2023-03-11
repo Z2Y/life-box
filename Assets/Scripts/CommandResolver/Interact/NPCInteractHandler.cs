@@ -16,6 +16,7 @@ namespace Interact
         public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
         {
             var activeDetectors = env["activeDetectors"] as HashSet<KeyValuePair<IDetector, Collider2D>>;
+            var self = LifeEngine.Instance.MainCharacter;
 
             var npcObjects = new HashSet<GameObject>();
             var npcDetectors = new HashSet<IDetector>();
@@ -45,20 +46,29 @@ namespace Interact
             {
                 var characters = npcObjects.Select((npc) => npc.GetComponent<NPCController>()).ToList();
                 var names = characters.Select((npc) => npc.character.Name).ToList();
+                self!.disableAllShortCuts();
                 var selector = await SelectPanel.Show("选择想要交互的人物", names, (idx) =>
                 {
                     var detectors = activeDetectors.Where((pair) => pair.Value.gameObject == characters[idx].gameObject)
                         .Select((pair) => pair.Key);
                     buildDialog(characters[idx].character, new HashSet<IDetector>(detectors));
                 });
-                selector.SetCancelable(true);
+                selector.SetCancelable(true, onCancel: () =>
+                {
+                    self.enableAllShortCuts();
+                });
             }
 
             return null;
         }
 
-        private void onCharacterLeave(Character character)
-        {   
+        private void stopTalk(IDetector detector, Collider2D collider)
+        {
+            detector.offEndDetect(stopTalk);
+            LifeEngine.Instance.MainCharacter.enableAllShortCuts();
+            var npcController = collider.gameObject.GetComponent<NPCController>();
+            if (ReferenceEquals(npcController, null)) return;
+            var character = npcController.character;
             Debug.Log("Character leave");
             var dialoguePanel = UIManager.Instance.FindByType<DialoguePanel>();
             if (dialoguePanel is DialoguePanel panel && panel.CurrentDialogue.speakerName == character.Name)
@@ -76,40 +86,77 @@ namespace Interact
             {
                 if (detector is TalkableNPCDetector)
                 {
-                    choices.Add(new DialogueChoice()
+                    var talks = TalkTriggerContainer.Instance.GetTalkConfig(character.ID).GetTalks();
+                    foreach (var talkEvent in talks)
                     {
-                        text = "随便聊聊",
-                        onSelect = () =>
+                        choices.Add(new DialogueChoice()
                         {
-                            TalkTriggerContainer.Instance.GetTrigger(character.ID).Trigger().Coroutine();
-                        }
-                    });
-                    detector.onEndDetect((_, __) => onCharacterLeave(character));
+                            text = talkEvent.Description,
+                            onSelect = () =>
+                            {
+                                talkEvent.Trigger().Coroutine();
+                            }
+                        });
+                    }
+                    detector.onEndDetect(stopTalk);
                 }
 
                 if (detector is ShopableNPCDetector)
                 {
-                    choices.Add(new DialogueChoice()
+                    var shops = ShopConfigCollection.Instance.GetShopConfigsByCharacter(character.ID);
+                    foreach (var shopConfig in shops)
                     {
-                        text = "购买",
-                        onSelect = () => {}
-                    });
+                        void onLeaveShop()
+                        {
+                            LifeEngine.Instance.MainCharacter.enableMove();
+                        }
+                        async void OnSelect()
+                        {
+                            UIManager.Instance.FindByType<DialoguePanel>()?.Hide();
+                            LifeEngine.Instance.MainCharacter.disableMove();
+                            var panel = await ShopPanel.Show(shopConfig, (result) =>
+                            {
+                                onLeaveShop();
+                                Debug.Log(result);
+                            });
+                            if (ReferenceEquals(panel, null))
+                            {
+                                onLeaveShop();
+                            }
+                            else
+                            {
+                                panel.SetCancelable(true, onLeaveShop);
+                            }
+                        }
+
+                        choices.Add(new DialogueChoice()
+                        {
+                            text = $"购买 {shopConfig.Name}",
+                            onSelect = OnSelect
+                        });
+                    }
                 }
             }
-
-            if (choices.Count == 1)
-            {
-                // choices[0].onSelect();
-                // return;
-            }
             
+            LifeEngine.Instance.MainCharacter.disableAllShortCuts();
+
+            if (choices.Count == 0)
+            {
+                DialoguePanel.Show(new DialogueLine()
+                {
+                    speakerName = character.Name,
+                    text = "少侠，我们不熟，快快离去！"
+                });
+                return;
+            }
+
             var dialogue = new DialogueLine()
             {
                 speakerName = character.Name,
                 text = "少侠 找我有什么事呢?",
                 choices = choices
             };
-            
+
             DialoguePanel.Show(dialogue);
         }
     }

@@ -121,6 +121,7 @@ public class UIShopConfirmPopup : UIBase
 
     public void ShowItem(string title, ShopConfirmData data, int maxCount, Action<ShopConfirmData, int> callback)
     {
+        Show();
         itemData = data;
         Item item = data.ItemStack.item;
         description.text = title;
@@ -132,7 +133,6 @@ public class UIShopConfirmPopup : UIBase
         slider.maxValue = maxCount;
         slider.value = 1;
         onPurchase = callback;
-        Show();
     }
 }
 

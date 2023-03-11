@@ -9,7 +9,7 @@ public interface ICharacterState {
 public class Talkable : Singleton<Talkable>, ICharacterState {
     public bool IsState(Character character) {
         if (character == null) return false;
-        var trigger = TalkTriggerContainer.Instance.GetTrigger(character.ID);
+        var trigger = TalkTriggerContainer.Instance.GetTalkConfig(character.ID);
 
         character.Relations.TryGetValue(0, out var relation); // 0 for player
         UnityEngine.Debug.Log($"{character.ID} {relation}");

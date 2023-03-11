@@ -4,6 +4,7 @@ using Logic.Detector;
 using Logic.Detector.Config;
 using Logic.Detector.Scriptable;
 using ModelContainer;
+using NPBehave;
 using ShortCuts;
 using UI;
 using UnityEngine;
@@ -17,9 +18,9 @@ namespace Controller
         [SerializeField] 
         private ScriptableDetectorBase[] detectors;
 
-        [SerializeField] private Vector3 tipOffset;
-
         public readonly HashSet<KeyValuePair<IDetector, Collider2D>> activeDetectors = new ();
+
+        private bool tipUpdating;
 
         private InteractTip tip;
 
@@ -28,8 +29,6 @@ namespace Controller
             collisionDetector = GetComponent<CollisionDetector>();
             foreach (var item in detectors)
             {
-                Debug.Log(item.GetDetector());
-                Debug.Log($"Add Detector {item.GetDetector().GetType().Name}");
                 var detector = item.GetDetector();
                 detector.onDetect(onDetect);
                 detector.onEndDetect(onEndDetect);
@@ -78,23 +77,52 @@ namespace Controller
 
             var offset = new Vector3(0, target.bounds.size.y, 0);
 
-            if (ReferenceEquals(tip, null))
-            {
-                tip = await InteractTip.Show(menuID);
-                
-                tip.SetPosition(target.transform.position  + offset, target.GetInstanceID());
-            }
-            else
-            {
-                tip.UpdateMenu(menuID);
-                tip.Show();
-                tip.SetPosition(target.transform.position + offset, target.GetInstanceID());
-            }
             
-            var menuConfig = InteractMenuConfigCollection.Instance.GetConfig(menuID);
 
-            InputCommandResolver.Instance.Register(tip.keyCode, new InteractMenuHandler(this, menuConfig.MenuResolver));
+            try
+            {
+                while (tipUpdating)
+                {
+                    await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
+                }
+                tipUpdating = true;
+                if (ReferenceEquals(tip, null))
+                {
+                    Debug.Log("Add new Tip");
+                    tip = await InteractTip.Show(menuID);
 
+                    tip.SetPosition(target.transform.position + offset, target.GetInstanceID());
+                }
+                else
+                {
+                    Debug.Log("Update old Tip");
+                    tip.UpdateMenu(menuID);
+                    tip.Show();
+                    tip.SetPosition(target.transform.position + offset, target.GetInstanceID());
+                }
+
+                var menuConfig = InteractMenuConfigCollection.Instance.GetConfig(menuID);
+
+                InputCommandResolver.Instance.Register(tip.keyCode,
+                    new InteractMenuHandler(this, menuConfig.MenuResolver));
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("e");
+            }
+            tipUpdating = false;
+        }
+
+        public void disableInteract()
+        {
+            if (ReferenceEquals(tip, null)) return;
+            InputCommandResolver.Instance.DisableKeyCode(tip.keyCode);
+        }
+
+        public void enableInteract()
+        {
+            if (ReferenceEquals(tip, null)) return;
+            InputCommandResolver.Instance.EnableKeyCode(tip.keyCode);
         }
 
         private void hideInteractMenu()

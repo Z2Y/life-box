@@ -21,8 +21,7 @@ namespace ShortCuts
         public void Resolve(KeyCode code)
         {
             env["activeDetectors"] = controller.activeDetectors;
-            Debug.Log(command);
-            Debug.Log(env["activeDetectors"]);
+            env["self"] = controller.GetComponent<NPCController>();
             command.ExecuteExpressionAsync(env).Coroutine();
         }
     }

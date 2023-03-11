@@ -15,7 +15,8 @@ public class TalkCommand : CommandResolver
         {
             var characterID = Convert.ToInt64(args[0]);
             var description = Convert.ToString(args[1]);
-            var options = args.Skip(2);
+            var uninterruptible = Convert.ToInt32(args[2]);
+            var options = args.Skip(3);
 
             var character = CharacterCollection.Instance.GetCharacter(characterID);
 
@@ -38,7 +39,8 @@ public class TalkCommand : CommandResolver
             {
                 speakerName = character.Name,
                 text = description,
-                choices = dialogueOptions
+                choices = dialogueOptions,
+                uninterruptible = uninterruptible == 1
             };
 
             DialoguePanel.Show(dialogue);

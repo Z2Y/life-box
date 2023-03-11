@@ -9,7 +9,10 @@ public abstract class UIBase : MonoBehaviour {
     }
 
     public void Hide() {
-        UIManager.Instance.Hide(GetInstanceID());
+        if (!UIManager.Instance.Hide(GetInstanceID()))
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void Destroy()

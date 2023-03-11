@@ -27,6 +27,7 @@ public class ShopPanel : UIBase
 
     void Awake()
     {
+        transform.SetParent(UIManager.Instance.worldRoot);
         description = transform.Find("Panel/Description").GetComponent<Text>();
         shopItemScroll = transform.Find("Panel/ShopItemView").GetComponent<ScrollRect>();
         bagItemScroll = transform.Find("Panel/BagItemView").GetComponent<ScrollRect>();
@@ -36,11 +37,6 @@ public class ShopPanel : UIBase
         itemPrefab = Resources.Load<GameObject>("Prefabs/ShopItem");
         cancelButton.onClick.AddListener(this.Destroy);
         SetCancelable(true, onClose);
-    }
-
-    void Start()
-    {
-        confirmPopup.Hide();
     }
 
     public void SetConfig(ShopConfig config, Action<ShopResult> callback)

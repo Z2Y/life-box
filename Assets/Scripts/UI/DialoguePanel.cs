@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Assets.HeroEditor.Common.Scripts.Common;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utils;
 
@@ -151,6 +152,7 @@ namespace UI
         public string speakerName;
         public string text;
         public string spritePath;
+        public bool uninterruptible;
         public List<DialogueChoice> choices = new ();
     }
 

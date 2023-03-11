@@ -3,12 +3,13 @@ using System.Linq;
 using System.Collections.Generic;
 using MessagePack;
 using Model;
+using ModelContainer;
 
 namespace Model
 {
     [MessagePackObject(true)]
     [Serializable]
-    public class TalkTrigger : IEventTrigger
+    public class TalkTrigger
     {
         public long ID;
         public long RelationLimit;
@@ -18,6 +19,11 @@ namespace Model
         public Event GetEvent()
         {
             return ModelContainer.EventCollection.RandomEvent(Event, Weight);
+        }
+
+        public List<Event> GetTalks()
+        {
+            return EventCollection.GetValidEvents(Event).ToList();
         }
     }
 }
@@ -43,7 +49,7 @@ namespace ModelContainer
 
         public static TalkTriggerContainer Instance => _instance ??= new TalkTriggerContainer();
 
-        public TalkTrigger GetTrigger(long characterID)
+        public TalkTrigger GetTalkConfig(long characterID)
         {
             return lookup.TryGetValue(characterID, out var value) ? value : null;
         }

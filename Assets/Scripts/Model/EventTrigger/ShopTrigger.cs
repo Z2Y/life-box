@@ -21,7 +21,7 @@ public class ShopTrigger : Singleton<ShopTrigger>, IEventTrigger
         {
             shopEvent = EventCollection.Instance.GetEventByType(EventType.Shop).FirstOrDefault();
         }
-        LifeNode lifenode = LifeEngine.Instance?.lifeData?.current;
+        LifeNode lifenode = LifeEngine.Instance.lifeData?.current;
         EventNode lastEvent = lifenode?.Events?.LastOrDefault();
         if (lastEvent != null && lastEvent.Event.EventType == EventType.Shop) {
             ShopResult lastShopResult = lastEvent.EffectResult as ShopResult;

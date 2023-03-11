@@ -60,12 +60,12 @@ namespace UI
             return ui;
         }
 
-        public UIBase Hide(int instanceID)
+        public bool Hide(int instanceID)
         {
-            if (!_lookup.TryGetValue(instanceID, out var ui)) return null;
+            if (!_lookup.TryGetValue(instanceID, out var ui)) return false;
             
             ui.gameObject.SetActive(false);
-            return ui;          
+            return true;          
         }
 
         public UIBase FindOrCreate<T>() where T : UIBase
