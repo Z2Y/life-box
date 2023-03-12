@@ -11,7 +11,6 @@ using Utils;
 [PrefabResource("Prefabs/ui/KnapsackPanel")]
 public class KnapsackPanel : UIBase
 {
-    private Button closeBtn;
     private UIItemGridView itemGridView;
     private UICurrencyText currencyView;
     private ItemInventory knapsack;
@@ -33,8 +32,8 @@ public class KnapsackPanel : UIBase
         itemGridView.OnPointerClickCell(OnPointerClickCell);
         itemGridView.OnPointerEnterCell(OnPointerEnterCell);
         itemGridView.OnPointerExitCell(OnPointerExitCell);
-
-        closeBtn?.onClick.AddListener(Hide);
+        
+        OnClose(Hide);
     }
 
     private void Start() {

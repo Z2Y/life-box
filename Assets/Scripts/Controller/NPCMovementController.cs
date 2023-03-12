@@ -90,7 +90,7 @@ namespace Controller
     public class NPCMoveTask
     {
         public Transform npcTransform;
-        public NPCAnimationController animator;
+        public IMoveAnimator animator;
 
         private Vector3 targetPos;
         private Vector3 startPos;

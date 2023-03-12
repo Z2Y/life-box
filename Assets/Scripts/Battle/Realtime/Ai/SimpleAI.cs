@@ -1,4 +1,5 @@
 using System;
+using Battle.Realtime.Ai.Battle.Realtime.Ai;
 using Controller;
 using ModelContainer;
 using UnityEngine;
@@ -24,7 +25,7 @@ namespace Battle.Realtime.Ai
             ownBlackBoard.Set("self_transform", transform);
             ownBlackBoard.Set("move_task", moveTask = new NPCMoveTask());
             moveTask.npcTransform = transform;
-            moveTask.animator = GetComponent<NPCAnimationController>();
+            moveTask.animator = GetComponent<IMoveAnimator>();
 
 #if UNITY_EDITOR
             var debugger = (Debugger)gameObject.AddComponent(typeof(Debugger));
@@ -40,17 +41,16 @@ namespace Battle.Realtime.Ai
                         new Sequence(
                         new FindPathTask(destinationFinder),
                         new PathMove(),
-                        new Wait(1f, 0.5f)
+                        new Wait(2f, 1f)
                     )),
                     new BlackboardCondition("enemy_target", Operator.IS_SET, Stops.IMMEDIATE_RESTART, 
                         new Selector(
-                            new BlackboardCondition("enemy_distance", Operator.IS_SMALLER, 0.8f, Stops.IMMEDIATE_RESTART, new NormalAttack(new BattleSkillAction 
-                                         {
-                                            self = gameObject,
-                                            skill = SkillCollection.Instance.GetSkill(3),
-                                            meleeSwordType = "Sword_1" 
-                                         })),
-                            new MoveForAttack(0.8f, Vector3.one)
+                            new BlackboardCondition("enemy_distance", Operator.IS_SMALLER, 0.8f, Stops.IMMEDIATE_RESTART, 
+                                new AnimalNormalAttack(GetComponent<IAttackAnimator>())),
+                            new RandomSelector(
+                                new MoveForSurround(1.5f, Vector3.one),
+                                new MoveForAttack(0.8f, Vector3.one)
+                            )
                         ))
                 ))
             );
@@ -77,6 +77,16 @@ namespace Battle.Realtime.Ai
         private void Update()
         {
             moveTask.Update();
+        }
+
+        public void StartAI()
+        {
+            behaviorTree.Start();
+        }
+
+        public void StopAI()
+        {
+            behaviorTree.Stop();
         }
     }
 }

@@ -206,6 +206,7 @@ namespace Utils
 
         public async Task<T> GetAsync(T2 arg)
         {
+            Debug.Log(arg);
             if (!pool.TryGetValue(arg, out var poolWithArg))
             {
                 poolWithArg = createPoolWithArg(arg);
@@ -213,7 +214,7 @@ namespace Utils
 
             if (poolWithArg.CountInactive <= 0)
             {
-                var obj = await PrefabLoader<T>.CreateAsync(Root);
+                var obj = await PrefabLoader<T, T2>.CreateAsync(arg, Root);
                 if (obj == null)
                 {
                     throw new Exception("Create From Prefab Failed.");

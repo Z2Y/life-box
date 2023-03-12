@@ -108,7 +108,7 @@ namespace Controller
             }
             catch (Exception e)
             {
-                Debug.LogError("e");
+                Debug.LogError(e);
             }
             tipUpdating = false;
         }

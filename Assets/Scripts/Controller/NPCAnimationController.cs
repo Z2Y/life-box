@@ -5,10 +5,11 @@ using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
 
 namespace Controller
 {
-    public class NPCAnimationController : MonoBehaviour
+    public class NPCAnimationController : MonoBehaviour, IMoveAnimator, IAttackAnimator
     {
         private CharacterScripts.Character character;
         private Animator animator;
+        private Transform aim;
         
         private static readonly int Ready = Animator.StringToHash("Ready");
         private static readonly int Charge = Animator.StringToHash("Charge");
@@ -25,6 +26,14 @@ namespace Controller
             }
             animator.SetBool(Ready, true);
         }
+        
+        private void Update()
+        {
+            if (!ReferenceEquals(aim, null))
+            {
+                Turn((aim.position - transform.position).x);
+            }
+        }
 
         public CharacterScripts.CharacterState GetState()
         {
@@ -34,6 +43,11 @@ namespace Controller
         public void SetState(CharacterScripts.CharacterState state)
         {
             character.SetState(state);
+        }
+        
+        public void SetAim(Transform aimTrans)
+        {
+            aim = aimTrans;
         }
 
         public void SetAttacking(bool value)
@@ -50,11 +64,11 @@ namespace Controller
                 return;
             }
             
-            if (speed.x != 0)
+            if (speed.x != 0 && ReferenceEquals(aim, null))
             {
                 Turn(speed.x);
-                Speed = speed;
             }
+            Speed = speed;
 
             if (Attacking)
             {
@@ -102,7 +116,7 @@ namespace Controller
             animator.SetInteger(Charge, 1);
         }
 
-        private void Turn(float direction)
+        public void Turn(float direction)
         {
             var oScale = character.transform.localScale;
             character.transform.localScale = new Vector3(Mathf.Sign(direction) * Math.Abs(oScale.x), oScale.y, 1);

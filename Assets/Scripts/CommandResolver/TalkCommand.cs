@@ -9,11 +9,9 @@ using UnityEngine;
 [CommandResolverHandler("Talk")]
 public class TalkCommand : CommandResolver
 {
-    public override Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        try
-        {
-            var characterID = Convert.ToInt64(args[0]);
+        var characterID = Convert.ToInt64(args[0]);
             var description = Convert.ToString(args[1]);
             var uninterruptible = Convert.ToInt32(args[2]);
             var options = args.Skip(3);
@@ -44,12 +42,7 @@ public class TalkCommand : CommandResolver
             };
 
             DialoguePanel.Show(dialogue).Coroutine();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
-        }
 
-        return null;
+            return await this.Done();
     }
 }

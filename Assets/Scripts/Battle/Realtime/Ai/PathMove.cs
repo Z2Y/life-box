@@ -55,8 +55,6 @@ namespace Battle.Realtime.Ai
                 }
                 catch (OperationCanceledException e)
                 {
-                    
-                    Stopped(false);
                     break;
                 }
                 movePath = movePath.ParentRoute;
@@ -77,7 +75,10 @@ namespace Battle.Realtime.Ai
             moveTask?.Cancel();
             moveTask = null;
             map = null;
-            Stopped(true);
+            if (currentState != State.INACTIVE)
+            {
+                Stopped(true);
+            }
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Controller
             if (!enabled) return;
             collidingObjects.Add(other.gameObject);
 
-            Debug.Log($"Trigger Enter {other.gameObject.name}");
+            // Debug.Log($"Trigger Enter {other.gameObject.name}");
             foreach (var detector in collisionDetectors)
             {
                 detector.Start(DetectPhase.Enter, blackboard, other);
@@ -56,7 +56,7 @@ namespace Controller
         {
             if (!enabled) return;
             collidingObjects.Remove(other.gameObject);
-            Debug.Log($"Trigger Leave {other.gameObject.name}");
+            // Debug.Log($"Trigger Leave {other.gameObject.name}");
             foreach (var detector in collisionDetectors)
             {
                 detector.Start(DetectPhase.Exit, blackboard, other);
@@ -67,7 +67,7 @@ namespace Controller
         {
             if (!enabled) return;
             collidingObjects.Remove(collision.gameObject);
-            Debug.Log($"{collision.gameObject.name} leave");
+            // Debug.Log($"{collision.gameObject.name} leave");
             foreach (var detector in collisionDetectors)
             {
                 detector.Start(DetectPhase.Exit, blackboard, collision.collider);

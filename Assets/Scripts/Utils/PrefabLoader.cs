@@ -79,7 +79,7 @@ namespace Utils
 
         public string Path(object args)
         {
-            Debug.Log($"{_basePath} xxx {args}");
+            // Debug.Log($"{_basePath} xxx {args}");
             return string.Format(_basePath, args);
         }
 
@@ -104,7 +104,7 @@ namespace Utils
             
             var prefab = Resources.Load<GameObject>($"{prefabResourceDefine.Path(arg)}");
 
-            if (prefab == null)
+            if (ReferenceEquals(prefab, null))
             {
                 Debug.LogWarning($"Cant Find Prefab {tType.Name}");
                 return null;

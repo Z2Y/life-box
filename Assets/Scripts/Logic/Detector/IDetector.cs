@@ -42,7 +42,6 @@ namespace Logic.Detector
             Stopped(success);
             if (isRoot)
             {
-                Debug.Log("Stop Root");
                 RootNode.Stop();
                 RootNode.ChildStopped(this, success);
             }
@@ -58,7 +57,7 @@ namespace Logic.Detector
             {
                 blackboard.Set("collision", collision);
                 blackboard.Set("phase", phase);
-                Debug.Log($"Start Detect {this.GetType().Name} {collision.gameObject.name} {phase}");
+                // Debug.Log($"Start Detect {this.GetType().Name} {collision.gameObject.name} {phase}");
                 RootNode.Start();
             }
         }
