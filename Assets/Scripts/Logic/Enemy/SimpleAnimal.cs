@@ -22,7 +22,6 @@ namespace Logic.Enemy
 
         public void OnLoaded(string arg)
         {
-            Debug.Log($"{arg} Loaded");
             animalType = arg;
             gameObject.name = arg;
         }

@@ -47,7 +47,7 @@ public class LifeEngine : MonoBehaviour {
 
         lifeData.DoForcast(lifeTime);
         lifeData.current.ProcessEvent().Coroutine();
-        LifeCardManager.Instance.UpdateCardActions();
+        // LifeCardManager.Instance.UpdateCardActions();
         OnLifeStart?.Invoke();
         AfterLifeChange?.Invoke();
     }
