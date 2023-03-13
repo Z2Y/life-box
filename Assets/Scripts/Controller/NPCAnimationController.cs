@@ -63,12 +63,16 @@ namespace Controller
             {
                 return;
             }
-            
+
             if (speed.x != 0 && ReferenceEquals(aim, null))
             {
                 Turn(speed.x);
+                Speed = speed;
             }
-            Speed = speed;
+            else
+            {
+                Speed = new Vector3(Mathf.Sign(character.transform.localScale.x) * 0.0001f, speed.y, speed.z);
+            }
 
             if (Attacking)
             {

@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using Utils;
 
@@ -23,12 +24,17 @@ namespace Controller
         {
             Turn(speed.x);
             particles.Emit(1);
-            transform.SetParent(parent);
-            offset.x *= -Mathf.Sign(speed.x);
-            transform.localPosition = offset;
-
+            // offset.x *= Mathf.Sign(speed.x);
             var main = particles.main;
-            await YieldCoroutine.WaitForSeconds(main.startLifetime.constant + main.startDelay.constant);
+            var sign = Mathf.Sign(speed.x);
+            var duration = main.startLifetime.constant + main.startDelay.constant;
+            var originRotation = transform.rotation;
+            transform.position = parent.position + offset;
+            transform.rotation = Quaternion.AngleAxis(
+                Vector3.SignedAngle(sign > 0 ? Vector3.right : Vector3.left , speed, Vector3.forward), Vector3.forward);
+            
+            await YieldCoroutine.WaitForInstruction(transform.DOMove(transform.position + (speed + 0.05f * speed.normalized)  * main.startLifetime.constant, duration).WaitForCompletion());
+            transform.rotation = originRotation;
             Pool.Return(this, swordType);
         }
         

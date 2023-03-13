@@ -66,7 +66,8 @@ namespace Battle.Realtime
                 case WeaponType.MeleePaired:
                     skillState = 2;
                     _controller.AttackNormal();
-                    SwordSlashController.Pool.Get(meleeSwordType).Emit(self.transform, _controller.GetMeleeArm().position - self.transform.position, _controller.Speed);
+                    SwordSlashController.Pool.Get(meleeSwordType).
+                        Emit(self.transform, _controller.GetMeleeArm().position - self.transform.position, _controller.Speed);
                     if (_originState == CharacterState.Run)
                     {
                         _controller.SetState(CharacterState.Idle);

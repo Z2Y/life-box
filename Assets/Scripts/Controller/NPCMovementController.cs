@@ -64,6 +64,8 @@ namespace Controller
                 return;
             }
             
+
+            
             if (input != speed && Vector3.Distance(input, speed) > 0.001f)
             {
                 speed.Set(input.x, input.y, input.z);
