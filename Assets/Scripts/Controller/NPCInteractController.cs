@@ -77,8 +77,6 @@ namespace Controller
 
             var offset = new Vector3(0, target.bounds.size.y, 0);
 
-            
-
             try
             {
                 while (tipUpdating)

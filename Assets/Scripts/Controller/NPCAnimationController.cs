@@ -90,7 +90,6 @@ namespace Controller
 
         public void Slide(Vector3 target)
         {
-            // character.rigidbody2D.Do
             if (Sliding) return;
             var originState = character.GetState();
             var originSpeed = Speed;

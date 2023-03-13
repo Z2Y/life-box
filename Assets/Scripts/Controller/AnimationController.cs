@@ -7,7 +7,7 @@ namespace Controller
 {
     public class AnimationController : MonoBehaviour, IMoveAnimator, IAttackAnimator
     {
-        private Animator animator;
+        public Animator animator { get; private set; }
         public Vector3 Speed { get; private set; }
         public bool Attacking { get; private set;  }
 
@@ -64,6 +64,11 @@ namespace Controller
             {
                 animator.SetFloat(Speed1, 0f);
             }
+        }
+
+        public void Play(string state)
+        {
+            animator.Play(state);
         }
         
 

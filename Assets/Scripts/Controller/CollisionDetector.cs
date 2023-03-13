@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Logic.Detector;
+using Logic.Detector.Scriptable;
 using NPBehave;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace Controller
 
     public class CollisionDetector : MonoBehaviour
     {
-        private readonly HashSet<GameObject> collidingObjects = new ();
+        private readonly HashSet<Collider2D> collidingObjects = new ();
 
         private readonly List<IDetector> collisionDetectors = new();
         
@@ -33,7 +34,7 @@ namespace Controller
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (!enabled) return;
-            collidingObjects.Add(collision.gameObject);
+            collidingObjects.Add(collision.collider);
             foreach (var detector in collisionDetectors)
             {
                 detector.Start(DetectPhase.Enter, blackboard, collision.collider);
@@ -42,8 +43,9 @@ namespace Controller
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            
+            collidingObjects.Add(other);
             if (!enabled) return;
-            collidingObjects.Add(other.gameObject);
 
             // Debug.Log($"Trigger Enter {other.gameObject.name}");
             foreach (var detector in collisionDetectors)
@@ -54,8 +56,8 @@ namespace Controller
 
         private void OnTriggerExit2D(Collider2D other)
         {
+            collidingObjects.Remove(other);
             if (!enabled) return;
-            collidingObjects.Remove(other.gameObject);
             // Debug.Log($"Trigger Leave {other.gameObject.name}");
             foreach (var detector in collisionDetectors)
             {
@@ -66,22 +68,44 @@ namespace Controller
         private void OnCollisionExit2D(Collision2D collision)
         {
             if (!enabled) return;
-            collidingObjects.Remove(collision.gameObject);
+            collidingObjects.Remove(collision.collider);
             // Debug.Log($"{collision.gameObject.name} leave");
             foreach (var detector in collisionDetectors)
             {
                 detector.Start(DetectPhase.Exit, blackboard, collision.collider);
             }
         }
-        
-        /*
-        private void OnCollisionStay(Collision collision)
+
+        private void OnEnable()
         {
-            collidingObjects.Add(collision.gameObject);
-        }*/
+            foreach (var collidingObject in collidingObjects)
+            {
+                foreach (var detector in collisionDetectors)
+                {
+                    detector.Start(DetectPhase.Enter, blackboard, collidingObject);
+                }
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (var collidingObject in collidingObjects)
+            {
+                foreach (var detector in collisionDetectors)
+                {
+                    detector.Start(DetectPhase.Exit, blackboard, collidingObject);
+                }
+            }
+        }
+
+        /*
+            private void OnCollisionStay(Collision collision)
+            {
+                collidingObjects.Add(collision.gameObject);
+            }*/
 
         // You can then access the set of colliding objects
-        public HashSet<GameObject> GetCollidingObjects()
+        public HashSet<Collider2D> GetCollidingObjects()
         {
             return collidingObjects;
         }

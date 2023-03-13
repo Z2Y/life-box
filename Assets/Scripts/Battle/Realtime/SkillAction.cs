@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.HeroEditor.Common.Scripts.CharacterScripts;
 using Controller;
 using HeroEditor.Common.Enums;
+using Logic.Enemy;
 using Model;
 using UnityEngine;
 
@@ -67,7 +68,13 @@ namespace Battle.Realtime
                     skillState = 2;
                     _controller.AttackNormal();
                     SwordSlashController.Pool.Get(meleeSwordType).
-                        Emit(self.transform, _controller.GetMeleeArm().position - self.transform.position, _controller.Speed);
+                        Emit(self.transform, _controller.GetMeleeArm().position - self.transform.position, _controller.Speed, new SwordHitConfig()
+                        {
+                           enemyTag = "Enemy",
+                           startHitDelay = 0,
+                           hitDuration = 0.3f,
+                           onHit = OnHit
+                        });
                     if (_originState == CharacterState.Run)
                     {
                         _controller.SetState(CharacterState.Idle);
@@ -109,6 +116,11 @@ namespace Battle.Realtime
                 skillState = 0;
             }
             
+        }
+
+        private void OnHit(IHitResponder responder, Collider2D collider)
+        {
+            responder.onHit(self);
         }
 
 

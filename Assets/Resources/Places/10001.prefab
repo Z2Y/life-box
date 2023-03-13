@@ -11593,7 +11593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animalTypes:
   - Hyena
-  MaxAliveInstance: 10
+  MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
 --- !u!212 &8048915622031182933
@@ -11695,7 +11695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animalTypes:
   - Hyena
-  MaxAliveInstance: 10
+  MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
 --- !u!212 &6535165734176215546
@@ -11797,7 +11797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animalTypes:
   - Hyena
-  MaxAliveInstance: 10
+  MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
 --- !u!212 &7808477999179240888
@@ -11899,7 +11899,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animalTypes:
   - Hyena
-  MaxAliveInstance: 10
+  MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
 --- !u!212 &9173134680649195299
@@ -131371,7 +131371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animalTypes:
   - Hyena
-  MaxAliveInstance: 10
+  MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
 --- !u!212 &658753063105020380
@@ -131473,7 +131473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animalTypes:
   - Hyena
-  MaxAliveInstance: 10
+  MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
 --- !u!212 &1709948276855286230

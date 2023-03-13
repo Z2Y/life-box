@@ -40,9 +40,16 @@ namespace Logic.Enemy
                                                 direction * Random.Range(0f,
                                                     SpawnRange / Mathf.Max(1, (int)direction.magnitude));
                     animal.OnLoaded(animalType);
+                    animal.SetBornPlace(this);
                     currentAliveInstance++;
                 }
             }
+        }
+
+        public void OnAnimalDeath(SimpleAnimal animal)
+        {
+            Pool.Return(animal, animal.animalType);
+            currentAliveInstance--;
         }
     }
 }

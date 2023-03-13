@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 913795179640084049}
   - component: {fileID: 9198934616110291714}
   - component: {fileID: 628965474847490151}
+  - component: {fileID: 8540332692605417000}
+  - component: {fileID: 5515865922783109097}
   m_Layer: 0
   m_Name: Sword_1
   m_TagString: Untagged
@@ -4840,6 +4842,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swordType: Sword_1
+--- !u!114 &8540332692605417000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496783324062003251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8177cee1954209ab70176e091f8811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!70 &5515865922783109097
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496783324062003251}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.4, y: 0.19}
+  m_Size: {x: 5.0465574, y: 6.391911}
+  m_Direction: 0
 --- !u!1 &7295792281765901028
 GameObject:
   m_ObjectHideFlags: 0
