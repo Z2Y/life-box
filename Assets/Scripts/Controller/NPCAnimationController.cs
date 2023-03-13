@@ -8,6 +8,7 @@ namespace Controller
     public class NPCAnimationController : MonoBehaviour, IMoveAnimator, IAttackAnimator
     {
         private CharacterScripts.Character character;
+        private CharacterTrail trial;
         private Animator animator;
         private Transform aim;
         
@@ -16,12 +17,15 @@ namespace Controller
 
         public Vector3 Speed { get; private set; }
         public bool Attacking { get; private set;  }
+        
+        public bool Sliding { get; private set; }
 
         private void Start()
         {
             if (character == null)
             {
                 character = gameObject.GetComponent<CharacterScripts.Character>();
+                trial = gameObject.AddComponent<CharacterTrail>();
                 animator = character.Animator;
             }
             animator.SetBool(Ready, true);
@@ -58,11 +62,6 @@ namespace Controller
         public void SetSpeed(Vector3 speed)
         {
             // animator.SetFloat(Speed, speed);
-            
-            if (character.GetState() == CharacterScripts.CharacterState.Jump)
-            {
-                return;
-            }
 
             if (speed.x != 0 && ReferenceEquals(aim, null))
             {
@@ -89,14 +88,23 @@ namespace Controller
             }
         }
 
-        public void Jump(Vector3 target)
+        public void Slide(Vector3 target)
         {
             // character.rigidbody2D.Do
-            if (character.GetState() == CharacterScripts.CharacterState.Jump) return;
-            character.SetState(CharacterScripts.CharacterState.Jump);
-            character.transform.DOJump(target, 1f, 1, 0.5f).OnComplete(() =>
+            if (Sliding) return;
+            var originState = character.GetState();
+            var originSpeed = Speed;
+            Sliding = true;
+            trial.enabled = true;
+            var tween = character.transform.DOMove(target, 0.4f).OnComplete(() =>
             {
-                character.SetState(CharacterScripts.CharacterState.Idle);
+                character.SetState(originState);
+                Sliding = false;
+                trial.enabled = false;
+            });
+            tween.OnUpdate(() =>
+            {
+                Speed = Vector3.Lerp(originSpeed, Vector3.zero, tween.ElapsedPercentage());
             });
         }
 
@@ -105,9 +113,12 @@ namespace Controller
             character.BodyScale = bodyScale;
         }
 
-        public void AttackNormal()
+        public async void AttackNormal()
         {
             character.Slash();
+            SetAttacking(true);
+            await YieldCoroutine.WaitForSeconds(0.25f);
+            SetAttacking(false);
         }
 
         public void GetReady()

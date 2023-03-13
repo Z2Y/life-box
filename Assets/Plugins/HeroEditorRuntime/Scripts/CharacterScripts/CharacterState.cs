@@ -14,6 +14,7 @@
 		Crouch 		= 4,
         Climb 		= 5,
         DeathB 		= 6,
-        DeathF 		= 7
+        DeathF 		= 7,
+        Slide       = 8
     }
 }

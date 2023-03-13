@@ -20,10 +20,7 @@ namespace Utils
 
                 return _root;
             }
-            set
-            {
-                _root = value;
-            }
+            set => _root = value;
         }
 
         private readonly ObjectPool<T> pool;
@@ -136,9 +133,7 @@ namespace Utils
         // private readonly ObjectPool<T> pool;
 
         private readonly Dictionary<T2, ObjectPool<T>> pool = new ();
-        
 
-        public PrefabPool() { }
 
         private void setUpDefaultRoot()
         {
@@ -206,7 +201,6 @@ namespace Utils
 
         public async Task<T> GetAsync(T2 arg)
         {
-            Debug.Log(arg);
             if (!pool.TryGetValue(arg, out var poolWithArg))
             {
                 poolWithArg = createPoolWithArg(arg);

@@ -42,7 +42,7 @@ namespace Controller
 
         private void updatePositionBySpeed()
         {
-            if (speed.magnitude <= 0.001f || animator.Attacking)
+            if (speed.magnitude <= 0.001f)
             {
                 return;
             }
@@ -55,17 +55,18 @@ namespace Controller
         {
             var speedX = Input.GetAxisRaw("Horizontal");
             var speedY = Input.GetAxisRaw("Vertical");
-            var isJump = Input.GetKeyDown(KeyCode.Space);
+            var isSlide = Input.GetKeyDown(KeyCode.Space);
             var input = new Vector3(speedX, speedY, 0).normalized * 2f;
 
-            if (isJump)
+            if (isSlide && !animator.Sliding && !animator.Attacking && input.magnitude > 0.0001f)
             {
-                animator.Jump(transform.position + input * 1.5f);
+                animator.SetSpeed(input * (2f / 0.5f));
+                animator.Slide(transform.position + input * 2f);
                 return;
             }
             
+            if (animator.Sliding) return;
 
-            
             if (input != speed && Vector3.Distance(input, speed) > 0.001f)
             {
                 speed.Set(input.x, input.y, input.z);

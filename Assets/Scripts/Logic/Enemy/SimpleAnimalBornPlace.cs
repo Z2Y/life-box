@@ -15,6 +15,8 @@ namespace Logic.Enemy
 
         public float SpawnInterval = 2f;
 
+        private const float SpawnVariance = 0.5f;
+
         private int currentAliveInstance;
 
 
@@ -28,7 +30,7 @@ namespace Logic.Enemy
         {
             while (enabled)
             {
-                await YieldCoroutine.WaitForSeconds(SpawnInterval);
+                await YieldCoroutine.WaitForSeconds(SpawnInterval + Random.Range(-SpawnVariance, SpawnVariance));
                 if (currentAliveInstance < MaxAliveInstance && animalTypes.Length > 0)
                 {
                     var animalType = animalTypes[Random.Range(0, animalTypes.Length)];

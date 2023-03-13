@@ -24,9 +24,9 @@ namespace Controller
         {
             Turn(speed.x);
             particles.Emit(1);
-            // offset.x *= Mathf.Sign(speed.x);
             var main = particles.main;
             var sign = Mathf.Sign(speed.x);
+            offset.x *= -1;
             var duration = main.startLifetime.constant + main.startDelay.constant;
             var originRotation = transform.rotation;
             transform.position = parent.position + offset;
@@ -42,7 +42,6 @@ namespace Controller
         {
             var oScale = transform.localScale;
             transform.localScale = new Vector3(Mathf.Sign(direction) * Math.Abs(oScale.x), oScale.y, 1);
-            // transform.localPosition *= Mathf.Sign(direction);
         }
 
         public void OnLoaded(string arg)
