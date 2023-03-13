@@ -10,7 +10,7 @@ namespace Logic.Enemy
     public class SimpleAnimal : MonoBehaviour, IOnPrefabLoaded<string>, IHitResponder
     {
         public string animalType;
-        public float animalHeight = 0.4f;
+        public float animalHeight;
         private AnimationController animator;
         private SimpleAnimalBornPlace bornPlace;
         private SimpleAI ai;
@@ -69,10 +69,11 @@ namespace Logic.Enemy
 
         private void bindAttackInfo()
         {
-            info.transform.SetParent(transform, false);
-            info.transform.localPosition = new Vector3(0, -animalHeight, 0);
-           //  info.transform.localScale = Vector3.one * info.transform.lossyScale.x;
-            info.transform.position = transform.position;
+            Transform transform1;
+            Debug.Log(animalHeight);
+            (transform1 = info.transform).SetParent(transform, false);
+            transform1.localPosition = new Vector3(0, animalHeight, 0);
+            //  info.transform.localScale = Vector3.one * info.transform.lossyScale.x;
         }
 
         private async void onDeath()

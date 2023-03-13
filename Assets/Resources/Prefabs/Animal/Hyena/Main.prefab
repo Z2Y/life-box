@@ -194,6 +194,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ce3755ccba642629d12565dcdee2bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animalType: 
+  animalHeight: 0.05
 --- !u!50 &1219027471126466703
 Rigidbody2D:
   serializedVersion: 4
