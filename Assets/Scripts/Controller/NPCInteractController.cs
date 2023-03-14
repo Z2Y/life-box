@@ -3,6 +3,7 @@ using System.Linq;
 using Logic.Detector;
 using Logic.Detector.Config;
 using Logic.Detector.Scriptable;
+using Logic.Loot;
 using ModelContainer;
 using NPBehave;
 using ShortCuts;
@@ -20,6 +21,8 @@ namespace Controller
 
         public readonly HashSet<KeyValuePair<IDetector, Collider2D>> activeDetectors = new ();
 
+        public ScriptableLootItemDetector lootDetector;
+
         private bool tipUpdating;
 
         private InteractTip tip;
@@ -33,6 +36,19 @@ namespace Controller
                 detector.onDetect(onDetect);
                 detector.onEndDetect(onEndDetect);
                 collisionDetector.AddDetector(detector);
+            }
+            lootDetector.GetDetector().onDetect(onLootItem);
+            collisionDetector.AddDetector(lootDetector.GetDetector());
+        }
+
+        private void onLootItem(IDetector detector, Collider2D collision)
+        {
+            var loot = collision.gameObject.GetComponent<ILootItem>();
+            var items = loot?.GetLootItemStack();
+            if (items is { Empty: false })
+            {
+                LifeEngine.Instance.lifeData.knapsackInventory.StoreItem(items.item, items.Count);
+                loot.OnLoot(gameObject);
             }
         }
 

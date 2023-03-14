@@ -32,8 +32,6 @@ public class KnapsackPanel : UIBase
         itemGridView.OnPointerClickCell(OnPointerClickCell);
         itemGridView.OnPointerEnterCell(OnPointerEnterCell);
         itemGridView.OnPointerExitCell(OnPointerExitCell);
-        
-        OnClose(Hide);
     }
 
     private void Start() {
@@ -156,13 +154,16 @@ public class KnapsackPanel : UIBase
         }
     }
 
-    public static async Task Show(ItemInventory inventory)
+    public static async Task<KnapsackPanel> Show(ItemInventory inventory)
     {
-        var panel = await UIManager.Instance.FindOrCreateAsync<KnapsackPanel>() as KnapsackPanel;
+        var panel = await UIManager.Instance.FindOrCreateAsync<KnapsackPanel>(true) as KnapsackPanel;
 
-        if (panel != null)
+        if (!ReferenceEquals(panel, null))
         {
             panel.BindInventory(inventory);
+            panel.Show();
         }
+
+        return panel;
     }
 }

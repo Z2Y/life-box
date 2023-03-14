@@ -8,7 +8,7 @@ using Utils;
 namespace Logic.Loot
 {
     [PrefabResource("Prefabs/vfx/Loot/DefaultLoot")]
-    public class WorldLootObject : MonoBehaviour
+    public class WorldLootObject : MonoBehaviour, ILootItem
     {
         private ItemStack items;
 
@@ -37,6 +37,7 @@ namespace Logic.Loot
         
         public void JumpOut(Vector3 position, Vector3 jumpDirection, float duration = 1.25f)
         {
+            spriteRenderer.DOFade(1, 0.5f);
             transform.position = position;
             transform.DOJump(position + jumpDirection, 0.3f, 1, 1f);
         }
@@ -49,5 +50,18 @@ namespace Logic.Loot
             return lootObj;
         }
 
+        public ItemStack GetLootItemStack()
+        {
+            return items;
+        }
+
+        public void OnLoot(GameObject by)
+        {
+            transform.DOMove(by.transform.position, 0.5f);
+            spriteRenderer.DOFade(0, 0.5f).OnComplete(() =>
+            {
+                pool.Return(this);
+            });
+        }
     }
 }

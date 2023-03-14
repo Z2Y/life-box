@@ -7,7 +7,7 @@ namespace Logic.Detector.Config
 {
     public static class InteractMenuConfig
     {
-        public static readonly Dictionary<Type, long> DetectorMenus = new()
+        private static readonly Dictionary<Type, long> DetectorMenus = new()
         {
             { typeof(TalkableNPCDetector), (long)InteractMenuType.NPC },
             { typeof(ShopableNPCDetector), (long)InteractMenuType.NPC }

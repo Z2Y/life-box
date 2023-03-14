@@ -11,6 +11,7 @@ public abstract class UIBase : MonoBehaviour
 
     public void Show() {
         UIManager.Instance.PushUI(this);
+        OnClose(Hide);
     }
 
     public void Hide() {
@@ -23,7 +24,6 @@ public abstract class UIBase : MonoBehaviour
     public void OnClose(UnityAction onClose = null)
     {
         if (ReferenceEquals(closeBtn, null)) return;
-        closeBtn.onClick.AddListener(Hide);
         if (onClose != null) {    
             closeBtn.onClick.AddListener(onClose);
         }

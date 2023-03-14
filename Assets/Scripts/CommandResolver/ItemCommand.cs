@@ -30,7 +30,6 @@ public class ReceiveItemCommand : ItemCommandResolver
         {
             ItemStack stack = ReceiveItem(Convert.ToInt64(args[i]), Convert.ToInt32(args[i + 1]));
             if (stack != null && !stack.Empty) {
-                UnityEngine.Debug.Log($"{stack.item.Name} {stack.Count}");
                 received.Items.Add(stack);
             }
         }
