@@ -73,11 +73,6 @@ namespace Controller
                 Speed = new Vector3(Mathf.Sign(character.transform.localScale.x) * 0.0001f, speed.y, speed.z);
             }
 
-            if (Attacking)
-            {
-                return;
-            }
-
             if (speed != Vector3.zero)
             {
                 character.SetState(CharacterScripts.CharacterState.Run);

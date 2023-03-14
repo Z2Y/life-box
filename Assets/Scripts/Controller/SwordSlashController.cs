@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DG.Tweening;
 using Logic.Detector;
 using Logic.Enemy;
@@ -17,6 +18,8 @@ namespace Controller
 
         public static readonly PrefabPool<SwordSlashController, string> Pool = new();
         private UnityAction<IHitResponder, Collider2D> hitCallback;
+        private Transform following;
+        private Vector3 followingOffset;
 
         public string swordType;
 
@@ -27,6 +30,14 @@ namespace Controller
             collisionDetector.enabled = false;
             normalAttackDetector = new NormalAttackDetector();
             collisionDetector.AddDetector(normalAttackDetector);
+        }
+
+        private void Update()
+        {
+            if (!ReferenceEquals(following, null))
+            {
+                followParent();
+            }
         }
 
         private void prepareCollision(string enemyTag, UnityAction<IHitResponder, Collider2D> callback)
@@ -57,21 +68,29 @@ namespace Controller
             var sign = Mathf.Sign(speed.x);
             offset.x *= -1;
             var duration = main.startLifetime.constant;
-            var originRotation = transform.rotation;
-            transform.position = parent.position + offset;
+            // var originRotation = transform.rotation;
+            // var originParent = transform.parent;
+            following = parent;
+            followingOffset = offset;
+            
             transform.rotation = Quaternion.AngleAxis(
                 Vector3.SignedAngle(sign > 0 ? Vector3.right : Vector3.left , speed, Vector3.forward), Vector3.forward);
-            
-            var move = transform.DOMove(transform.position + (speed + 0.05f * speed.normalized)  * main.startLifetime.constant, duration);
+
             // await YieldCoroutine.WaitForSeconds(Mathf.Max(main.startDelay.constant, hitConfig.startHitDelay));
             prepareCollision(hitConfig.enemyTag, hitConfig.onHit);
             await YieldCoroutine.WaitForSeconds(hitConfig.hitDuration);
             endCollision();
-            await YieldCoroutine.WaitForInstruction(move.WaitForCompletion());
-            transform.rotation = originRotation;
+            await YieldCoroutine.WaitForSeconds(duration);
+            // transform.rotation = originRotation;
+            following = null;
             Pool.Return(this, swordType);
         }
-        
+
+        private void followParent()
+        {
+            transform.position = following.position + followingOffset;
+        }
+
         private void Turn(float direction)
         {
             var oScale = transform.localScale;

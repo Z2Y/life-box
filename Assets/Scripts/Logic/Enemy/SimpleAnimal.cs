@@ -18,6 +18,7 @@ namespace Logic.Enemy
         private SimpleAI ai;
         private PropertyValue hp;
         private SimpleAttackInfo info;
+        private ItemStack lootItem;
 
         public bool isDeath;
 
@@ -26,6 +27,8 @@ namespace Logic.Enemy
             ai = GetComponent<SimpleAI>();
             animator = GetComponent<AnimationController>();
             hp = new PropertyValue(SubPropertyType.HitPoint, 20,null);
+            lootItem = new ItemStack();
+            lootItem.StoreItem(ItemCollection.Instance.GetItem(10016), 1);
             ai.StartAI();
         }
 
@@ -85,14 +88,11 @@ namespace Logic.Enemy
             
             await YieldCoroutine.WaitForSeconds(0.7f);
             
-            var lootItem = new ItemStack();
-            lootItem.StoreItem(ItemCollection.Instance.GetItem(10016), 1);
             var lootObj = await WorldLootObject.CreateAsync(lootItem);
-            lootObj.JumpOut(transform.position, UnityEngine.Random.insideUnitCircle);
+            lootObj.JumpOut(transform.position, Random.insideUnitCircle);
 
             await YieldCoroutine.WaitForSeconds(0.5f);
             bornPlace.OnAnimalDeath(this);
-            
 
         }
     }
