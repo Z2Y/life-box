@@ -1,7 +1,4 @@
-using System;
-using TMPro;
-using UI;
-using UnityEngine;
+using UnityEngine.UI;
 using Utils;
 
 namespace Logic.Enemy
@@ -9,7 +6,7 @@ namespace Logic.Enemy
     [PrefabResource("Prefabs/ui/HUDText")]
     public class SimpleHUDText : UIBase
     {
-        public TMP_Text hud;
+        public Text hud;
         
     }
 }

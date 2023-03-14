@@ -44,6 +44,7 @@ namespace Logic.Enemy
         private void onHideInfo(SimpleHUDText hudUI)
         {
             hudUI.hud.transform.localPosition = localOffset;
+            hudUI.hud.transform.localScale = Vector3.one;
             hudUI.Hide();
         }
 

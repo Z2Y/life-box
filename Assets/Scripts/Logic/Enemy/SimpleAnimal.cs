@@ -17,16 +17,13 @@ namespace Logic.Enemy
         private PropertyValue hp;
         private SimpleAttackInfo info;
 
-        private bool isDeath;
-        private void Awake()
+        public bool isDeath;
+
+        private void Start()
         {
             ai = GetComponent<SimpleAI>();
             animator = GetComponent<AnimationController>();
             hp = new PropertyValue(SubPropertyType.HitPoint, 20,null);
-        }
-
-        private void Start()
-        {
             ai.StartAI();
         }
 
@@ -40,7 +37,9 @@ namespace Logic.Enemy
             animalType = arg;
             gameObject.name = arg;
             isDeath = false;
-            hp.Change(20);
+            enabled = true;
+            hp?.Change(20);
+            ai?.StartAI();
             info?.UpdateHp(hp);
         }
 
@@ -50,7 +49,7 @@ namespace Logic.Enemy
             var position = transform.position;
             var direction = (position - from.transform.position).normalized;
             animator.Play("Hurt");
-            transform.DOMove(position + direction * 0.25f, 0.25f).SetDelay(0.15f);
+            transform.DOMove(position + direction * 0.2f, 0.25f).SetDelay(0.15f);
 
             if (ReferenceEquals(info, null))
             {
@@ -70,7 +69,6 @@ namespace Logic.Enemy
         private void bindAttackInfo()
         {
             Transform transform1;
-            Debug.Log(animalHeight);
             (transform1 = info.transform).SetParent(transform, false);
             transform1.localPosition = new Vector3(0, animalHeight, 0);
             //  info.transform.localScale = Vector3.one * info.transform.lossyScale.x;
@@ -80,7 +78,9 @@ namespace Logic.Enemy
         {
             isDeath = true;
             animator.Play("Death");
-            await YieldCoroutine.WaitForSeconds(0.3f);
+            ai.StopAI();
+            enabled = false;
+            await YieldCoroutine.WaitForSeconds(1f);
             bornPlace.OnAnimalDeath(this);
         }
     }
