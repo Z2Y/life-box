@@ -30,6 +30,8 @@ namespace Model
         public int StackCount;
         public string Effect;
         public string EffectDescription;
+        public string WorldSprite;
+        public string IconSprite;
     }
 }
 

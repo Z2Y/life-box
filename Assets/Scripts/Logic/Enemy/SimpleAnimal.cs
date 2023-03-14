@@ -1,6 +1,8 @@
 using Battle.Realtime.Ai;
 using Controller;
 using DG.Tweening;
+using Logic.Loot;
+using ModelContainer;
 using UnityEngine;
 using Utils;
 
@@ -80,8 +82,18 @@ namespace Logic.Enemy
             animator.Play("Death");
             ai.StopAI();
             enabled = false;
-            await YieldCoroutine.WaitForSeconds(1f);
+            
+            await YieldCoroutine.WaitForSeconds(0.7f);
+            
+            var lootItem = new ItemStack();
+            lootItem.StoreItem(ItemCollection.Instance.GetItem(10016), 1);
+            var lootObj = await WorldLootObject.CreateAsync(lootItem);
+            lootObj.JumpOut(transform.position, UnityEngine.Random.insideUnitCircle);
+
+            await YieldCoroutine.WaitForSeconds(0.5f);
             bornPlace.OnAnimalDeath(this);
+            
+
         }
     }
 }
