@@ -14,7 +14,7 @@ public class KnapsackPanel : UIBase
     private UIItemGridView itemGridView;
     private UICurrencyText currencyView;
     private ItemInventory knapsack;
-    private List<ItemCellData> stackDatas;
+    private List<ItemCellData> stackData;
     private UIItemTypeFilter[] filters;
     private UIItemTypeFilter currentFilter;
     private UIItemUsagePopup usagePopup;
@@ -35,7 +35,7 @@ public class KnapsackPanel : UIBase
     }
 
     private void Start() {
-        usagePopup?.Hide();
+        usagePopup.Hide();
     }
 
     private void BindInventory(ItemInventory inventory)
@@ -45,7 +45,7 @@ public class KnapsackPanel : UIBase
             knapsack.OnInventoryChange?.RemoveListener(UpdateByCurrentFilter);
         }
         knapsack = inventory;
-        currencyView?.SetCurrency(LifeEngine.Instance?.lifeData?.moneyInventory?.DefaultMoneyItem);
+        currencyView.SetCurrency(LifeEngine.Instance.lifeData?.moneyInventory?.DefaultMoneyItem);
         knapsack?.OnInventoryChange?.AddListener(UpdateByCurrentFilter);
         InitStackData();
     }
@@ -54,11 +54,11 @@ public class KnapsackPanel : UIBase
     {
         if (knapsack == null)
         {
-            stackDatas.Clear();
+            stackData.Clear();
         }
         else
         {
-            stackDatas = Enumerable.Range(0, knapsack.Capacity).Select((idx) =>
+            stackData = Enumerable.Range(0, knapsack.Capacity).Select((idx) =>
             {
                 var data = new ItemCellData(idx);
                 if (idx < knapsack.Stacks.Count)
@@ -73,7 +73,7 @@ public class KnapsackPanel : UIBase
             }).ToList();
         }
 
-        itemGridView?.UpdateContents(stackDatas);
+        itemGridView.UpdateContents(stackData);
     }
 
     public void UpdateByCurrentFilter()
@@ -81,7 +81,7 @@ public class KnapsackPanel : UIBase
         if (currentFilter == null) {
             UpdateItemGridView();
         } else {
-            FilterItemwByType(currentFilter.ItemType);
+            FilterItemByType(currentFilter.ItemType);
         }
     }
 
@@ -93,26 +93,26 @@ public class KnapsackPanel : UIBase
         }
         for (int i = 0; i < knapsack.Stacks.Count; i++)
         {
-            stackDatas[i].ItemStack = knapsack.Stacks[i];
-            stackDatas[i].Index = i;
+            stackData[i].ItemStack = knapsack.Stacks[i];
+            stackData[i].Index = i;
         }
-        itemGridView?.UpdateContents(stackDatas);
+        itemGridView.UpdateContents(stackData);
     }
 
-    public void FilterItemwByType(ItemType type)
+    public void FilterItemByType(ItemType type)
     {
         if (knapsack == null) return;
         List<int> stackIdx = knapsack.Stacks.Select((_, idx) => idx).Where((idx) => !knapsack.Stacks[idx].Empty && knapsack.Stacks[idx].item.ItemType == type).ToList();
         for (int i = 0; i < stackIdx.Count; i++)
         {
-            stackDatas[i].ItemStack = knapsack.Stacks[stackIdx[i]];
-            stackDatas[i].Index = stackIdx[i];
+            stackData[i].ItemStack = knapsack.Stacks[stackIdx[i]];
+            stackData[i].Index = stackIdx[i];
         }
-        for (int i = stackIdx.Count; i < stackDatas.Count; i++)
+        for (int i = stackIdx.Count; i < stackData.Count; i++)
         {
-            stackDatas[i].ItemStack = new ItemStack();
+            stackData[i].ItemStack = new ItemStack();
         }
-        itemGridView?.UpdateContents(stackDatas);
+        itemGridView?.UpdateContents(stackData);
         currentFilter = filters.FirstOrDefault((filter) => filter.ItemType == type);
     }
 
@@ -123,11 +123,11 @@ public class KnapsackPanel : UIBase
 
     private void OnPointerEnterCell(int index)
     {
-        if (index >= stackDatas.Count)
+        if (index >= stackData.Count)
         {
             return;
         }
-        ItemStack stack = stackDatas[index].ItemStack;
+        ItemStack stack = stackData[index].ItemStack;
         if (!stack.Empty)
         {
             // UIItemTooltip tooltip = UIHelper.Show<UIItemTooltip>(UIType.UIItemTooltip);
@@ -137,19 +137,19 @@ public class KnapsackPanel : UIBase
 
     private void OnPointerClickCell(int index)
     {
-        if (index >= stackDatas.Count)
+        if (index >= stackData.Count)
         {
             return;
         }
-        ItemStack stack = stackDatas[index].ItemStack;
+        ItemStack stack = stackData[index].ItemStack;
         if (!stack.Empty)
         {
             UsableItemStack usableItemStack = stack.UsableStack();
             if (usableItemStack != null) {
-                knapsack.ReplaceStack(stackDatas[index].Index, usableItemStack);
-                usagePopup?.ShowItem(usableItemStack);
+                knapsack.ReplaceStack(stackData[index].Index, usableItemStack);
+                usagePopup.ShowItem(usableItemStack);
             } else {
-                usagePopup?.ShowItem(stack);
+                usagePopup.ShowItem(stack);
             }
         }
     }

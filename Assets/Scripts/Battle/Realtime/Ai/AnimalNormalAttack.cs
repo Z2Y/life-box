@@ -4,7 +4,7 @@ namespace Battle.Realtime.Ai
 {
     public class AnimalNormalAttack : NPBehave.Task
     {
-        private IAttackAnimator animator;
+        private readonly IAttackAnimator animator;
         
         public AnimalNormalAttack(IAttackAnimator animator) : base("AnimalNormalAttack")
         {

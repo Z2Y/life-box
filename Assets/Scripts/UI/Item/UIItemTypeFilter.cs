@@ -18,7 +18,7 @@ public class UIItemTypeFilter: UIBase, IPointerClickHandler
         if (None) {
             knapsack?.UpdateItemGridView();
         } else {
-            knapsack?.FilterItemwByType(ItemType);
+            knapsack?.FilterItemByType(ItemType);
         }
     }
 }
