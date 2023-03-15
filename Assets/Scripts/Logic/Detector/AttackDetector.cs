@@ -22,7 +22,8 @@ namespace Logic.Detector
 
         protected override bool isTarget(Collider2D collision)
         {
-            if (!targetTag.IsEmpty() && !collision.CompareTag(targetTag))
+            Debug.Log($"Check is Attack Target {collision.gameObject.name} {targetTag} {collision.CompareTag(targetTag)}");
+            if (!targetTag.IsEmpty() &&  !collision.CompareTag(targetTag))
             {
                 return false;
             }

@@ -500,6 +500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1495752314}
   - component: {fileID: 1495752313}
+  - component: {fileID: 1495752315}
   m_Layer: 0
   m_Name: CoroutineRunner
   m_TagString: Untagged
@@ -534,6 +535,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1495752315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1495752312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0168f3756ece4ec5a00201f1dfefa31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniq: 1
 --- !u!1 &1941623504
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,3 +691,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0168f3756ece4ec5a00201f1dfefa31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniq: 1

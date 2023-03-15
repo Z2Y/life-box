@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Assets.HeroEditor.Common.Scripts.CharacterScripts;
 using Model;
 using ModelContainer;
 using UnityEngine;
 using BattleSkillAction = Battle.Realtime.BattleSkillAction;
+using Character = Model.Character;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -21,8 +23,8 @@ namespace Controller
         public Character character { get; private set; }
         public NPCAnimationController Animator { get; private set; }
         public NPCMovementController Movement { get; private set;  }
-        
         public NPCInteractController Interact { get; private set; }
+        public LifeProperty Property { get; private set; }
 
         private void Awake()
         {
@@ -31,7 +33,9 @@ namespace Controller
             Movement = gameObject.AddComponent<NPCMovementController>();
             Interact = gameObject.GetComponent<NPCInteractController>();
             collisionDetector = gameObject.AddComponent<CollisionDetector>();
+            gameObject.AddComponent<NPCHitController>();
             collisionDetector.enabled = false;
+            Property = LifePropertyFactory.Random(40);
         }
 
         public void SetLocation(Location location)
@@ -47,6 +51,7 @@ namespace Controller
             if (isPlayer)
             {
                 addSkillShortCuts(KeyCode.Mouse0, SkillCollection.Instance.GetSkill(3));
+                Property = LifeEngine.Instance.lifeData.property;
             }
             else
             {
@@ -111,6 +116,16 @@ namespace Controller
         {
             Animator.SetBodyScale(bodyScale);
         }
+
+        public void onDeath()
+        {
+            Animator.SetState(CharacterState.DeathF);
+            if (character.ID == 0)
+            {
+                LifeEngine.Instance.GameEnd();
+            }
+            Destroy(gameObject, 1f);
+        }
         
         public static async Task<NPCController> LoadCharacterAsync(long characterID)
         {
@@ -138,7 +153,7 @@ namespace Controller
             }
 
             var obj = Instantiate(loader.asset as GameObject, GameObject.Find("CharacterRoot").transform).GetComponent<NPCController>();
-            lookup.Add(characterID, obj);
+            lookup[characterID] = obj;
             return obj;
         }
         

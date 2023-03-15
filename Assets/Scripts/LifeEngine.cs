@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Controller;
 using Logic.Enemy;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Utils;
 
 public class LifeEngine : MonoBehaviour {
@@ -50,6 +51,13 @@ public class LifeEngine : MonoBehaviour {
         // LifeCardManager.Instance.UpdateCardActions();
         OnLifeStart?.Invoke();
         AfterLifeChange?.Invoke();
+    }
+
+    public void GameEnd()
+    {
+        WorldCameraController.Instance.FollowTo(null).Coroutine();
+
+        GameLoader.Instance.LoadSceneWithAnimation("MainScene").Coroutine();
     }
 
     private async void OnNextMonth() {

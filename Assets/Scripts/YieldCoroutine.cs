@@ -7,12 +7,7 @@ using UnityEngine;
 public class YieldCoroutine : MonoBehaviour
 {
     protected static readonly List<YieldTask> Tasks = new ();
-
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
+    
     private void Update() {
         if (Tasks.Count > 0)
         {

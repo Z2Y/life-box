@@ -10,8 +10,8 @@ namespace Logic.Enemy
     {
         private CollisionDetector collisionDetector;
         
-        private ScriptableDetectorBase[] detectors;
-
+        public ScriptableDetectorBase[] detectors;
+        
         private void Awake()
         {
             collisionDetector = GetComponent<CollisionDetector>();
@@ -23,14 +23,25 @@ namespace Logic.Enemy
                 collisionDetector.AddDetector(detector);
             }
         }
-        
+
+        private void OnEnable()
+        {
+            collisionDetector.enabled = true;
+        }
+
+        private void OnDisable()
+        {
+            collisionDetector.enabled = false;
+        }
+
         private void onEndDetect(IDetector detector, Collider2D collision)
         {
         }
 
         private void onDetect(IDetector detector, Collider2D collision)
         {
-            
+            var hitResponder = collision.GetComponent<IHitResponder>();
+            hitResponder.onHit(gameObject);
         }
     }
 }

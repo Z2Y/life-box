@@ -1,3 +1,4 @@
+using System;
 using Battle.Realtime.Ai;
 using Controller;
 using DG.Tweening;
@@ -5,6 +6,7 @@ using Logic.Loot;
 using ModelContainer;
 using UnityEngine;
 using Utils;
+using Random = UnityEngine.Random;
 
 namespace Logic.Enemy
 {
@@ -22,14 +24,24 @@ namespace Logic.Enemy
 
         public bool isDeath;
 
-        private void Start()
+        private void Awake()
         {
             ai = GetComponent<SimpleAI>();
             animator = GetComponent<AnimationController>();
             hp = new PropertyValue(SubPropertyType.HitPoint, 20,null);
             lootItem = new ItemStack();
             lootItem.StoreItem(ItemCollection.Instance.GetItem(10016), 1);
+        }
+
+        private void OnEnable()
+        {
+            Debug.Log("Enabled");
             ai.StartAI();
+        }
+
+        private void OnDisable()
+        {
+            ai.StopAI();
         }
 
         public void SetBornPlace(SimpleAnimalBornPlace place)
@@ -43,8 +55,8 @@ namespace Logic.Enemy
             gameObject.name = arg;
             isDeath = false;
             enabled = true;
+            Debug.Log("Loaded");
             hp?.Change(20);
-            ai?.StartAI();
             info?.UpdateHp(hp);
         }
 

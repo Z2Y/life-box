@@ -9,7 +9,7 @@ namespace Logic.Detector.Scriptable
     
     public class ScriptableDetector<T>: ScriptableDetectorBase where T : IDetector, new()
     {
-        private readonly T detector = new ();
+        protected readonly T detector = new ();
 
         public override IDetector GetDetector()
         {

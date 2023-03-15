@@ -23,6 +23,11 @@ namespace Controller
             defaultSign = Mathf.Sign(transform.localScale.x);
         }
 
+        private void OnDisable()
+        {
+            aim = null;
+        }
+
         private void Update()
         {
             if (!ReferenceEquals(aim, null))

@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Logic.Enemy;
 using UnityEngine;
 using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
 
@@ -134,6 +135,11 @@ namespace Controller
         public Transform GetMeleeArm()
         {
             return character.MeleeWeapon.transform;
+        }
+
+        public void onHit(GameObject from)
+        {
+            animator.Play("Hit");
         }
     }
 }

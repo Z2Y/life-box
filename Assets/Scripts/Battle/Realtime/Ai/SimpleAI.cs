@@ -14,6 +14,7 @@ namespace Battle.Realtime.Ai
         private FindDestRD destinationFinder;
         private FindEnemy enemyFinder;
         private NPCMoveTask moveTask;
+        private bool markStart;
 
         private void Start()
         {
@@ -26,6 +27,10 @@ namespace Battle.Realtime.Ai
             ownBlackBoard.Set("move_task", moveTask = new NPCMoveTask());
             moveTask.npcTransform = transform;
             moveTask.animator = GetComponent<IMoveAnimator>();
+            if (markStart)
+            {
+                behaviorTree.Start();
+            }
 
 #if UNITY_EDITOR
             var debugger = (Debugger)gameObject.AddComponent(typeof(Debugger));
@@ -81,12 +86,26 @@ namespace Battle.Realtime.Ai
 
         public void StartAI()
         {
-            behaviorTree.Start();
+            if (behaviorTree?.IsActive ?? false)
+            {
+                behaviorTree.Start();
+            }
+            else
+            {
+                markStart = true;
+            }
         }
 
         public void StopAI()
         {
-            behaviorTree.Stop();
+            if (behaviorTree?.IsActive ?? false)
+            {
+                behaviorTree.Stop();
+            }
+            else
+            {
+                markStart = false;
+            }
         }
     }
 }

@@ -87,6 +87,11 @@ namespace Controller
             }
         }
 
+        private void OnApplicationQuit()
+        {
+            collidingObjects.Clear();
+        }
+
         private void OnDisable()
         {
             foreach (var collidingObject in collidingObjects)
