@@ -127,8 +127,8 @@ namespace Controller
                 Where((place) => place.MapID == mapID).
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID)))).
                 Where((p) => p != null).ToList();
-
-            lookup.TryAdd(worldMap.mapID, worldMap);
+            
+            lookup[worldMap.mapID] = worldMap;
 
             return worldMap;
         }

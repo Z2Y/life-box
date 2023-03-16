@@ -32,13 +32,6 @@ namespace Logic.Enemy
             lootItem = new ItemStack();
             lootItem.StoreItem(ItemCollection.Instance.GetItem(10016), 1);
         }
-
-        private void OnEnable()
-        {
-            Debug.Log("Enabled");
-            ai.StartAI();
-        }
-
         private void OnDisable()
         {
             ai.StopAI();
@@ -55,7 +48,7 @@ namespace Logic.Enemy
             gameObject.name = arg;
             isDeath = false;
             enabled = true;
-            Debug.Log("Loaded");
+            ai.StartAI();
             hp?.Change(20);
             info?.UpdateHp(hp);
         }

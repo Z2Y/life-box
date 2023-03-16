@@ -22,14 +22,13 @@ namespace Battle.Realtime.Ai
             destinationFinder = new FindDestRD(10, transform.position );
             enemyFinder = new FindEnemy(10, LayerMask.GetMask("Default"));
             behaviorTree = createBehaviorTree();
-            ownBlackBoard.Set("word_map", LifeEngine.Instance.Map);
             ownBlackBoard.Set("self_transform", transform);
             ownBlackBoard.Set("move_task", moveTask = new NPCMoveTask());
             moveTask.npcTransform = transform;
             moveTask.animator = GetComponent<IMoveAnimator>();
             if (markStart)
-            {
-                behaviorTree.Start();
+            { 
+                StartAI();
             }
 
 #if UNITY_EDITOR
@@ -84,10 +83,21 @@ namespace Battle.Realtime.Ai
             moveTask.Update();
         }
 
+        private void onBeforeStart()
+        {
+            ownBlackBoard.Set("word_map", LifeEngine.Instance.Map);
+        }
+
+        private void onAfterStop()
+        {
+            
+        }
+
         public void StartAI()
         {
-            if (behaviorTree?.IsActive ?? false)
+            if (behaviorTree is { IsActive: false })
             {
+                onBeforeStart();
                 behaviorTree.Start();
             }
             else
@@ -98,9 +108,10 @@ namespace Battle.Realtime.Ai
 
         public void StopAI()
         {
-            if (behaviorTree?.IsActive ?? false)
+            if (behaviorTree is { IsActive: true })
             {
                 behaviorTree.Stop();
+                onAfterStop();
             }
             else
             {
