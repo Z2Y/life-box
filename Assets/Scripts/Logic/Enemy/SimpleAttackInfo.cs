@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
-using TMPro;
 using DG.Tweening;
 using UI;
 using UnityEngine;
@@ -22,6 +22,12 @@ namespace Logic.Enemy
         private void Awake() {
             localOffset = transform.localPosition;
             uiTransform = transform.Find("UI");
+        }
+
+        private void OnDisable()
+        {
+            StopCoroutine(nameof(autoHideHpBar));
+            HpSlider.gameObject.SetActive(false);
         }
 
         public async void ShowAttackInfo(string content, Vector3 jumpDirection, float duration = 1.25f)
@@ -50,9 +56,18 @@ namespace Logic.Enemy
 
         public void UpdateHp(PropertyValue Hp)
         {
+            HpSlider.gameObject.SetActive(true);
             HpSlider.DOValue((float)Hp.value / Hp.max, 0.5f);
+            StopCoroutine(nameof(autoHideHpBar));
+            StartCoroutine(nameof(autoHideHpBar));
         }
-        
+
+        private IEnumerator autoHideHpBar()
+        {
+            yield return new WaitForSeconds(5f);
+            HpSlider.gameObject.SetActive(false);
+        }
+
         public static async Task<SimpleAttackInfo> Show()
         {
             var panel = await UIManager.Instance.FindOrCreateAsync<SimpleAttackInfo>() as SimpleAttackInfo;

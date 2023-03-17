@@ -24,7 +24,7 @@ namespace Battle.Realtime
 
             if (Input.GetKeyUp(keycode))
             {
-                DoSkill();
+                DoEndPrepareSkill();
             }
         }
 
@@ -35,20 +35,29 @@ namespace Battle.Realtime
                 return;
             }
 
-            action.prepare();
+            if (!action.isReady())
+            {
+                action.prepare();
+            }
+            else
+            {
+                action.DoSkill();
+            }
         }
 
-        private void DoSkill()
+        private void DoEndPrepareSkill()
         {
-            if (action.isPreparing())
+            if (!action.isPreparing())
             {
-                action.endPrepare();
+                return;
             }
+            action.endPrepare();
+            
             if (!action.isReady())
             {
                 return;
             }
-
+            
             action.DoSkill();
         }
 

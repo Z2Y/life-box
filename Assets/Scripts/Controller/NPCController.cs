@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Assets.HeroEditor.Common.Scripts.CharacterScripts;
-using Model;
+using Battle.Realtime;
+using Battle.Realtime.Ai;
 using ModelContainer;
 using UnityEngine;
 using Character = Model.Character;
@@ -18,7 +19,7 @@ namespace Controller
         
         private CollisionDetector collisionDetector;
 
-        public List<Battle.Realtime.BattleSkill> skillShortCuts;
+        public List<BattleSkill> skillShortCuts;
         public Character character { get; private set; }
         public NPCAnimationController Animator { get; private set; }
         public NPCMovementController Movement { get; private set;  }
@@ -49,7 +50,16 @@ namespace Controller
             collisionDetector.enabled = isPlayer;
             if (isPlayer)
             {
-                addSkillShortCuts(KeyCode.Mouse0, SkillCollection.Instance.GetSkill(3));
+                addSkillShortCuts(KeyCode.Mouse0, new Battle.Realtime.BattleSkillAction()
+                {
+                    skill = SkillCollection.Instance.GetSkill(3),
+                    self = gameObject,
+                    meleeSwordType = "Sword_1"
+                });
+                addSkillShortCuts(KeyCode.Space, new SlideAction()
+                {
+                    self = gameObject
+                });
                 Property = LifeEngine.Instance.lifeData.property;
             }
             else
@@ -97,17 +107,12 @@ namespace Controller
             Movement.enabled = true;
         }
 
-        public void addSkillShortCuts(KeyCode keyCode, Skill skill)
+        public void addSkillShortCuts(KeyCode keyCode, ISkillAction action)
         {
             var self = gameObject;
-            var skillControl = self.AddComponent<Battle.Realtime.BattleSkill>();
+            var skillControl = self.AddComponent<BattleSkill>();
             skillControl.keycode = keyCode;
-            skillControl.action = new Battle.Realtime.BattleSkillAction()
-            {
-                skill = skill,
-                self = self,
-                meleeSwordType = "Sword_1"
-            };
+            skillControl.action = action;
             skillShortCuts.Add(skillControl);
         }
 

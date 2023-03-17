@@ -53,19 +53,11 @@ namespace Controller
 
         private void updateSpeedFromUserInput()
         {
+            if (animator.Sliding) return;
+            
             var speedX = Input.GetAxisRaw("Horizontal");
             var speedY = Input.GetAxisRaw("Vertical");
-            var isSlide = Input.GetKeyDown(KeyCode.Space);
             var input = new Vector3(speedX, speedY, 0).normalized * 2f;
-
-            if (isSlide && !animator.Sliding && !animator.Attacking && input.magnitude > 0.0001f)
-            {
-                animator.SetSpeed(input * (2f / 0.5f));
-                animator.Slide(transform.position + input * 2f);
-                return;
-            }
-            
-            if (animator.Sliding) return;
 
             if (input != speed && Vector3.Distance(input, speed) > 0.001f)
             {

@@ -66,7 +66,7 @@ namespace Battle.Realtime
                 case WeaponType.Melee1H:
                 case WeaponType.Melee2H:
                 case WeaponType.MeleePaired:
-                    skillState = 2;
+                    skillState = 1;
                     _controller.AttackNormal();
                     SwordSlashController.Pool.Get(meleeSwordType).
                         Emit(self.transform, _controller.GetMeleeArm().position - self.transform.position, _controller.Speed, new SwordHitConfig()
@@ -82,7 +82,7 @@ namespace Battle.Realtime
                     }
                     return;
                 default:
-                    skillState = 2;
+                    skillState = 1;
                     return;
             }
             
@@ -98,6 +98,7 @@ namespace Battle.Realtime
                     skillState = charged ? 2 : 0;
                     return;
                 default:
+                    skillState = 2;
                     return;
             }
         }
