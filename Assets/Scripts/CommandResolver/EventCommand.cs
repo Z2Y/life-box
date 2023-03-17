@@ -96,7 +96,7 @@ public class SelectEventResolver : CommandResolver
         var tcs = new TaskCompletionSource<int>();
         var onSelect = new Action<int>((idx) => tcs.SetResult(idx));
 
-        SelectPanel.Show(description, options, onSelect);
+        SelectPanel.Show(description, options, onSelect).Coroutine();
         return tcs.Task;
     }
 }

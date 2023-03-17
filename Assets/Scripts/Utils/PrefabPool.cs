@@ -112,15 +112,26 @@ namespace Utils
             }
             used.Remove(obj);
         }
+        
+        public void RecycleUsed()
+        {
+            var recycles = used.ToList();
+            foreach (var item in recycles)
+            {
+                Return(item);
+            }
+        }
 
         public void Clear()
         {
+            RecycleUsed();
             pool.Clear();
+            unused.Clear();
         }
 
         public void Dispose()
         {
-            pool.Dispose();
+            Clear();
         }
         
     }
@@ -253,6 +264,7 @@ namespace Utils
 
         public void Clear()
         {
+            RecycleUsed();
             foreach (var keyValuePair in pool)
             {
                 keyValuePair.Value.Clear();
