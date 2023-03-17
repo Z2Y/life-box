@@ -5,9 +5,9 @@ namespace Battle.Realtime.Ai
 {
     public class NormalAttack : NPBehave.Task
     {
-        private readonly BattleSkillAction skillAction;
+        private readonly SwordSkillAction skillAction;
         
-        public NormalAttack(BattleSkillAction skillAction) : base("NormalAttack")
+        public NormalAttack(SwordSkillAction skillAction) : base("NormalAttack")
         {
             this.skillAction = skillAction;
             skillAction.Init();

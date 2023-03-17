@@ -50,13 +50,13 @@ namespace Controller
             collisionDetector.enabled = isPlayer;
             if (isPlayer)
             {
-                addSkillShortCuts(KeyCode.Mouse0, new Battle.Realtime.BattleSkillAction()
+                addSkillShortCuts(KeyCode.Mouse0, new SwordSkillAction()
                 {
                     skill = SkillCollection.Instance.GetSkill(3),
                     self = gameObject,
                     meleeSwordType = "Sword_1"
                 });
-                addSkillShortCuts(KeyCode.Space, new SlideAction()
+                addSkillShortCuts(KeyCode.Space, new SlideSkillAction()
                 {
                     self = gameObject
                 });

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Battle.Realtime
 {
-    public class SlideAction : ISkillAction
+    public class SlideSkillAction : ISkillAction
     {
         public Skill skill;
         public GameObject self;
