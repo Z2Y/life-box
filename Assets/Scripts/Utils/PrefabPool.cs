@@ -133,6 +133,7 @@ namespace Utils
         // private readonly ObjectPool<T> pool;
 
         private readonly Dictionary<T2, ObjectPool<T>> pool = new ();
+        private readonly HashSet<KeyValuePair<T, T2>> used = new();
 
 
         private void setUpDefaultRoot()
@@ -146,8 +147,8 @@ namespace Utils
         {
             var poolWithArg = new ObjectPool<T>(
                 createFunc: () => createFromLoader(arg), 
-                actionOnGet: onGetFromPool,
-                actionOnRelease: onReturnToPool,
+                actionOnGet: (obj) => onGetFromPool(obj, arg),
+                actionOnRelease: (obj) => onReturnToPool(obj, arg),
                 actionOnDestroy: onDestroy,
                 collectionCheck: false);
             pool.Add(arg, poolWithArg);
@@ -165,14 +166,16 @@ namespace Utils
             return obj;
         }
 
-        private void onGetFromPool(T obj)
+        private void onGetFromPool(T obj, T2 arg)
         {
+            used.Add(new KeyValuePair<T, T2>(obj, arg));
             obj.gameObject.SetActive(true);
             obj.transform.SetParent(Root);
         }
 
-        private void onReturnToPool(T obj)
+        private void onReturnToPool(T obj, T2 arg)
         {
+            used.Remove(new KeyValuePair<T, T2>(obj, arg));
             obj.transform.SetParent(Root);
             obj.gameObject.SetActive(false);
         }
@@ -235,6 +238,14 @@ namespace Utils
             }
 
             pool.Clear();
+        }
+
+        public void RecycleUsed()
+        {
+            foreach (var item in used)
+            {
+                Return(item.Key, item.Value);
+            }
         }
 
         public void Dispose()

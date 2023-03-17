@@ -56,7 +56,7 @@ public class LifeEngine : MonoBehaviour {
     public void GameEnd()
     {
         WorldCameraController.Instance.FollowTo(null).Coroutine();
-
+        SwordSlashController.Pool.RecycleUsed();
         GameLoader.Instance.LoadSceneWithAnimation("MainScene").Coroutine();
     }
 
