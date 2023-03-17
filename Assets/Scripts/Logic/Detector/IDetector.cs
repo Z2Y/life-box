@@ -55,6 +55,7 @@ namespace Logic.Detector
             isRoot = true;
             if (RootNode.CurrentState == State.INACTIVE)
             {
+                RootNode.UpdateBlackBoard(blackboard);
                 blackboard.Set("collision", collision);
                 blackboard.Set("phase", phase);
                 // Debug.Log($"Start Detect {this.GetType().Name} {collision.gameObject.name} {phase}");

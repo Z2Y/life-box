@@ -66,6 +66,15 @@ namespace NPBehave
             }
         }
 
+        public void UpdateClock(Clock other)
+        {
+            if (this.clock != null)
+            {
+                this.clock.RemoveTimer(this.NotifiyObservers);
+            }
+            this.clock = other;
+        }
+
         public object this[string key]
         {
             get

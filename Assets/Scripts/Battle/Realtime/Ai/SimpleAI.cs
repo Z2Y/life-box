@@ -83,7 +83,9 @@ namespace Battle.Realtime.Ai
 
         private void onBeforeStart()
         {
+            ownBlackBoard.UpdateClock(UnityContext.GetClock());
             ownBlackBoard.Set("word_map", LifeEngine.Instance.Map);
+            behaviorTree.UpdateClock();
         }
 
         private void onAfterStop()

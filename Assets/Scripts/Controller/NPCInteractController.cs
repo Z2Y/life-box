@@ -40,6 +40,17 @@ namespace Controller
             lootDetector.GetDetector().onDetect(onLootItem);
             collisionDetector.AddDetector(lootDetector.GetDetector());
         }
+        
+        private void OnDisable()
+        {
+            foreach (var item in detectors)
+            {
+                var detector = item.GetDetector();
+                detector.offDetect(onDetect);
+                detector.offEndDetect(onEndDetect);
+                collisionDetector.RemoveDetector(detector);
+            }
+        }
 
         private void onLootItem(IDetector detector, Collider2D collision)
         {
@@ -145,14 +156,6 @@ namespace Controller
             UIManager.Instance.Hide(tip.GetInstanceID());
             InputCommandResolver.Instance.UnRegister(tip.keyCode);
             tip = null;
-        }
-
-        private void OnDisable()
-        {
-            foreach (var item in detectors)
-            {
-                collisionDetector.RemoveDetector(item.GetDetector());
-            }
         }
     }
 }

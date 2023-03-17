@@ -30,7 +30,6 @@ namespace Battle.Realtime.Ai
             }
             else
             {
-                Debug.Log("Path Move Start");
                 moveByRoutePath().Coroutine();
             }
         }
@@ -62,7 +61,6 @@ namespace Battle.Realtime.Ai
             
             
             Stopped(movePath == null);
-            Debug.Log("Path Move Stopped");
             // clean up
             path?.Dispose();
         }
@@ -80,7 +78,6 @@ namespace Battle.Realtime.Ai
             
             if (currentState != State.INACTIVE)
             {
-                Debug.Log("Path Move DoStop");
                 Stopped(true);
             }
         }

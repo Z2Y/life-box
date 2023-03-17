@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Logic.Detector;
 using Logic.Detector.Scriptable;
 using NPBehave;
@@ -78,6 +79,11 @@ namespace Controller
 
         private void OnEnable()
         {
+            blackboard.UpdateClock(UnityContext.GetClock());
+            var removed = collidingObjects.RemoveWhere((obj) => obj == null || obj.gameObject == null);
+            
+            // Debug.Log($"Remove {removed} invalid object");
+            
             foreach (var collidingObject in collidingObjects)
             {
                 foreach (var detector in collisionDetectors)

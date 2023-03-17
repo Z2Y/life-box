@@ -63,6 +63,18 @@ namespace NPBehave
             this.mainNode.SetRoot(rootNode);
         }
 
+        public void UpdateClock()
+        {
+            Assert.AreEqual(CurrentState, State.INACTIVE);
+            this.clock = UnityContext.GetClock();
+        }
+
+        public void UpdateBlackBoard(Blackboard other)
+        {
+            Assert.AreEqual(CurrentState, State.INACTIVE);
+            this.blackboard = other;
+        }
+
 
         override protected void DoStart()
         {
