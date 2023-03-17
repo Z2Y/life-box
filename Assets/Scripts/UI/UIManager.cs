@@ -18,9 +18,7 @@ namespace UI
         private void Awake()
         {
             Instance ??= this;
-
-            worldRoot = transform.Find("World");
-            screenRoot = transform.Find("Screen");
+            
             // collect all ui in direct child
             for (var i = 0; i < screenRoot.childCount; i++)
             {
@@ -30,6 +28,13 @@ namespace UI
                     PushUI(ui);
                 }
             }
+        }
+
+        private void OnDestroy()
+        {
+            _lookup.Clear();
+            loadingTasks.Clear();
+            Instance = null;
         }
 
         public bool PushUI(UIBase ui)

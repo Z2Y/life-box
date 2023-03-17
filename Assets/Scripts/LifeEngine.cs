@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Controller;
 using Logic.Enemy;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utils;
@@ -46,7 +47,7 @@ public class LifeEngine : MonoBehaviour {
         WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Coroutine();
         isReady = true;
 
-        lifeData.DoForcast(lifeTime);
+        lifeData.DoForecast(lifeTime);
         lifeData.current.ProcessEvent().Coroutine();
         // LifeCardManager.Instance.UpdateCardActions();
         OnLifeStart?.Invoke();
@@ -66,7 +67,7 @@ public class LifeEngine : MonoBehaviour {
             return;
         }
         await lifeData.DoNext();
-        lifeData.DoForcast(lifeTime);
+        lifeData.DoForecast(lifeTime);
         LifeCardManager.Instance.UpdateCardActions();
         AfterLifeChange?.Invoke();
     }

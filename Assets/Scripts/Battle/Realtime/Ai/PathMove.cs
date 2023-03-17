@@ -23,14 +23,14 @@ namespace Battle.Realtime.Ai
             map = Blackboard.Get<WorldMapController>("word_map");
             moveTask = Blackboard.Get<NPCMoveTask>("move_task");
             path = Blackboard.Get<RoutePath>("path_route");
-            destination = Blackboard.Get<Vector3>("destination");
-            moveTask.Cancel(); //  cancel previous task
+            destination = Blackboard.Get<Vector3>("destination"); //  cancel previous task
             if (isArrived())
             {
-                Stopped(true);
+                DoStop();
             }
             else
             {
+                Debug.Log("Path Move Start");
                 moveByRoutePath().Coroutine();
             }
         }
@@ -62,6 +62,7 @@ namespace Battle.Realtime.Ai
             
             
             Stopped(movePath == null);
+            Debug.Log("Path Move Stopped");
             // clean up
             path?.Dispose();
         }
@@ -73,10 +74,13 @@ namespace Battle.Realtime.Ai
         protected override void DoStop()
         {
             moveTask?.Cancel();
+            path?.Dispose();
             moveTask = null;
             map = null;
+            
             if (currentState != State.INACTIVE)
             {
+                Debug.Log("Path Move DoStop");
                 Stopped(true);
             }
         }

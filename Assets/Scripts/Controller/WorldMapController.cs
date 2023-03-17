@@ -28,6 +28,8 @@ namespace Controller
         private Bounds bounds;
         private GridLayout ground;
 
+        public List<PlaceController> Places => places;
+
         private void Awake()
         {
             worldCamera = Camera.main;

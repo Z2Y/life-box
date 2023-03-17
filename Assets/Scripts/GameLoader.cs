@@ -10,7 +10,7 @@ public class GameLoader : MonoBehaviour
     private static GameLoader _instance;
     public Text loadingText;
     public CanvasGroup loadingCanvas;
-    private bool isLoading = false;
+    private bool isLoading;
 
     public static GameLoader Instance
     {

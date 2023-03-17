@@ -24,9 +24,8 @@ public class LifeProperty
     }
 }
 
-public class LifePropertyFactory
+public static class LifePropertyFactory
 {
-
     public class RandomPropertyConfig
     {
         public readonly SubPropertyType propertyType;
@@ -42,11 +41,11 @@ public class LifePropertyFactory
     public static RangeInt DefaultRange = new RangeInt(0, 20);
 
     public static readonly List<RandomPropertyConfig> DefaultRandomConfig = new List<RandomPropertyConfig>() {
-        new RandomPropertyConfig(SubPropertyType.Fortune, DefaultRange),
-        new RandomPropertyConfig(SubPropertyType.Literary, DefaultRange),
-        new RandomPropertyConfig(SubPropertyType.Wealth, DefaultRange),
-        new RandomPropertyConfig(SubPropertyType.Agile, DefaultRange),
-        new RandomPropertyConfig(SubPropertyType.Strength, DefaultRange)
+        new (SubPropertyType.Fortune, DefaultRange),
+        new (SubPropertyType.Literary, DefaultRange),
+        new (SubPropertyType.Wealth, DefaultRange),
+        new (SubPropertyType.Agile, DefaultRange),
+        new (SubPropertyType.Strength, DefaultRange)
     };
     public static LifeProperty Random(int total, List<RandomPropertyConfig> configs = null)
     {
@@ -58,9 +57,9 @@ public class LifePropertyFactory
         int randomTotal = configs.Select((config) => config.propertyRange.end).Sum();
         foreach (RandomPropertyConfig config in configs)
         {
-            int min = Math.Min(total, config.propertyRange.start);
-            int max = Math.Min(total, config.propertyRange.end);
-            int value = UnityEngine.Random.Range(min, max + 1);
+            var min = Math.Min(total, config.propertyRange.start);
+            var max = Math.Min(total, config.propertyRange.end);
+            var value = UnityEngine.Random.Range(min, max + 1);
             total -= value;
             lifeProperty.AddProperty(config.propertyType, value);
         }

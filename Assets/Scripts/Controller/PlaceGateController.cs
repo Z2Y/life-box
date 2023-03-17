@@ -7,11 +7,12 @@ namespace Controller
 {
     public class PlaceGateController : MonoBehaviour
     {
-        [SerializeField] private long fromPlaceID;
+        [SerializeField] public long fromPlaceID;
 
-        [SerializeField] private long toPlaceID;
+        [SerializeField] public long toPlaceID;
 
         [SerializeField] private string rule;
+        
 
         // private Collider2D collider2D;
 

@@ -1,7 +1,5 @@
-using System;
 using Battle.Realtime.Ai.Battle.Realtime.Ai;
 using Controller;
-using ModelContainer;
 using UnityEngine;
 using NPBehave;
 
@@ -90,7 +88,8 @@ namespace Battle.Realtime.Ai
 
         private void onAfterStop()
         {
-            
+            ownBlackBoard.Unset("enemy_target");
+            ownBlackBoard.Unset("enemy_distance");
         }
 
         public void StartAI()

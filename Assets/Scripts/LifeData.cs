@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using ModelContainer;
 using System.Collections.Generic;
-using UnityEngine;
 using Event = Model.Event;
 
 public class LifeData
@@ -12,7 +11,7 @@ public class LifeData
     public MoneyInventory moneyInventory = new ();
     public Dictionary<long, long> Events = new (); // 所有经历过的事件
 
-    public void DoForcast(LifeTime time)
+    public void DoForecast(LifeTime time)
     {
         current.Forecast(TimeTriggerContainer.Instance.GetTrigger(time.Time.Next()));
     }
