@@ -36,7 +36,14 @@ namespace Controller
         {
             if (!ReferenceEquals(following, null))
             {
-                followParent();
+                try
+                {
+                    followParent();
+                }
+                catch
+                {
+                    following = null;
+                }
             }
         }
 

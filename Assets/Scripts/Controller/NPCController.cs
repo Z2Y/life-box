@@ -4,7 +4,6 @@ using Assets.HeroEditor.Common.Scripts.CharacterScripts;
 using Model;
 using ModelContainer;
 using UnityEngine;
-using BattleSkillAction = Battle.Realtime.BattleSkillAction;
 using Character = Model.Character;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -122,11 +121,12 @@ namespace Controller
             Animator.SetState(CharacterState.DeathF);
             if (character.ID == 0)
             {
+                disableAllShortCuts();
                 LifeEngine.Instance.GameEnd();
             }
             Destroy(gameObject, 1f);
         }
-        
+
         public static async Task<NPCController> LoadCharacterAsync(long characterID)
         {
             var controller = GetCharacterController(characterID);
