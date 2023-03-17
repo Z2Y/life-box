@@ -1,11 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Controller;
-using Logic.Enemy;
-using UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Utils;
 
 public class LifeEngine : MonoBehaviour {
 

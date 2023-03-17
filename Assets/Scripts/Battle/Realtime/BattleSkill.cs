@@ -1,3 +1,4 @@
+using Battle.Realtime.Ai;
 using UnityEngine;
 
 namespace Battle.Realtime
@@ -7,7 +8,7 @@ namespace Battle.Realtime
 
         [SerializeField] public KeyCode keycode;
 
-        [SerializeField] public BattleSkillAction action;
+        public ISkillAction action;
 
         private void Start()
         {

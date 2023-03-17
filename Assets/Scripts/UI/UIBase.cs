@@ -15,7 +15,7 @@ public abstract class UIBase : MonoBehaviour
     }
 
     public void Hide() {
-        if (!UIManager.Instance.Hide(GetInstanceID()))
+        if (!UIManager.Instance || !UIManager.Instance.Hide(GetInstanceID()))
         {
             gameObject.SetActive(false);
         }

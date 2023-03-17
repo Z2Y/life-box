@@ -83,8 +83,9 @@ namespace Controller
             var removed = collidingObjects.RemoveWhere((obj) => obj == null || obj.gameObject == null);
             
             // Debug.Log($"Remove {removed} invalid object");
+            var existed = collidingObjects.ToList();
             
-            foreach (var collidingObject in collidingObjects)
+            foreach (var collidingObject in existed)
             {
                 foreach (var detector in collisionDetectors)
                 {
@@ -100,7 +101,11 @@ namespace Controller
 
         private void OnDisable()
         {
-            foreach (var collidingObject in collidingObjects)
+            collidingObjects.RemoveWhere((obj) => obj == null || obj.gameObject == null);
+            
+            var existed = collidingObjects.ToList();
+            
+            foreach (var collidingObject in existed)
             {
                 foreach (var detector in collisionDetectors)
                 {

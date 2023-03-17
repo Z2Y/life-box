@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.HeroEditor.Common.Scripts.CharacterScripts;
+using Battle.Realtime.Ai;
 using Controller;
 using HeroEditor.Common.Enums;
 using Logic.Enemy;
@@ -11,7 +12,7 @@ using UnityEngine;
 namespace Battle.Realtime
 {
     [Serializable]
-    public class BattleSkillAction {
+    public class BattleSkillAction : ISkillAction {
         public Skill skill;
         public GameObject self;
         public AnimationClip skillAnimation;

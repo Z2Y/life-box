@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -24,6 +25,8 @@ namespace Utils
         }
 
         private readonly ObjectPool<T> pool;
+        private readonly HashSet<T> used = new();
+        private readonly HashSet<T> unused = new();
 
         public PrefabPool()
         {
@@ -56,12 +59,16 @@ namespace Utils
 
         private void onGetFromPool(T obj)
         {
+            used.Add(obj);
+            unused.Remove(obj);
             obj.gameObject.SetActive(true);
             obj.transform.SetParent(Root);
         }
 
         private void onReturnToPool(T obj)
         {
+            used.Remove(obj);
+            unused.Add(obj);
             obj.transform.SetParent(Root);
             obj.gameObject.SetActive(false);
         }
@@ -99,7 +106,11 @@ namespace Utils
 
         public void Return(T obj)
         {
-            pool.Release(obj);
+            if (!unused.Contains(obj))
+            {
+                pool.Release(obj);
+            }
+            used.Remove(obj);
         }
 
         public void Clear()
@@ -134,6 +145,7 @@ namespace Utils
 
         private readonly Dictionary<T2, ObjectPool<T>> pool = new ();
         private readonly HashSet<KeyValuePair<T, T2>> used = new();
+        private readonly HashSet<KeyValuePair<T, T2>> unused = new();
 
 
         private void setUpDefaultRoot()
@@ -168,14 +180,18 @@ namespace Utils
 
         private void onGetFromPool(T obj, T2 arg)
         {
-            used.Add(new KeyValuePair<T, T2>(obj, arg));
+            var pair = new KeyValuePair<T, T2>(obj, arg);
+            used.Add(pair);
+            unused.Remove(pair);
             obj.gameObject.SetActive(true);
             obj.transform.SetParent(Root);
         }
 
         private void onReturnToPool(T obj, T2 arg)
         {
-            used.Remove(new KeyValuePair<T, T2>(obj, arg));
+            var pair = new KeyValuePair<T, T2>(obj, arg);
+            used.Remove(pair);
+            unused.Add(pair);
             obj.transform.SetParent(Root);
             obj.gameObject.SetActive(false);
         }
@@ -224,10 +240,15 @@ namespace Utils
 
         public void Return(T obj, T2 arg)
         {
-            if (pool.TryGetValue(arg, out var poolWithArg))
+            var pair = new KeyValuePair<T, T2>(obj, arg);
+            if (!unused.Contains(pair))
             {
-                poolWithArg.Release(obj);
+                if (pool.TryGetValue(arg, out var poolWithArg))
+                {
+                    poolWithArg.Release(obj);
+                }
             }
+            used.Remove(pair);
         }
 
         public void Clear()
@@ -242,7 +263,8 @@ namespace Utils
 
         public void RecycleUsed()
         {
-            foreach (var item in used)
+            var recycles = used.ToList();
+            foreach (var item in recycles)
             {
                 Return(item.Key, item.Value);
             }
