@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BattleScene.unity
     guid: 2cf21a6e38e2fff48ba71c62cea1dd94
+  - enabled: 1
+    path: Assets/Plugins/HeroEditor/Megapack/Scenes/TestRoom [Megapack].unity
+    guid: 21494f4e4290f604c9776b4aa10ce143
   m_configObjects: {}

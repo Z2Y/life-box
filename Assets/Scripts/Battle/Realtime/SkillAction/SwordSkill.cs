@@ -30,6 +30,10 @@ namespace Battle.Realtime
             _controller = self.GetComponent<NPCAnimationController>();
         }
 
+        public void Update()
+        {
+        }
+
         public bool isReady()
         {
             return skill != null && skillState == 2;
@@ -52,6 +56,7 @@ namespace Battle.Realtime
         public void prepare()
         {
             _controller.GetReady();
+            _controller.UseSword();
             _originState = _controller.GetState();
             switch (skill.WeaponType)
             {

@@ -1,3 +1,4 @@
+using System;
 using Battle.Realtime.Ai;
 using UnityEngine;
 
@@ -22,10 +23,17 @@ namespace Battle.Realtime
                 DoPrepareSkill();
             }
 
+
+
             if (Input.GetKeyUp(keycode))
             {
                 DoEndPrepareSkill();
             }
+        }
+
+        private void LateUpdate()
+        {
+            action.Update();
         }
 
         private void DoPrepareSkill()

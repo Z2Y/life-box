@@ -15,5 +15,7 @@ namespace Battle.Realtime.Ai
         public void prepare();
 
         public void Init();
+
+        public void Update();
     }
 }

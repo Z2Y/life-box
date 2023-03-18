@@ -1,5 +1,9 @@
 using System;
+using System.Linq;
+using Assets.HeroEditor.Common.Scripts.ExampleScripts;
 using DG.Tweening;
+using HeroEditor.Common;
+using HeroEditor.Common.Enums;
 using Logic.Enemy;
 using UnityEngine;
 using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
@@ -15,10 +19,10 @@ namespace Controller
         
         private static readonly int Ready = Animator.StringToHash("Ready");
         private static readonly int Charge = Animator.StringToHash("Charge");
-
+        
+        
         public Vector3 Speed { get; private set; }
         public bool Attacking { get; private set;  }
-        
         public bool Sliding { get; private set; }
 
         private void Start()
@@ -55,18 +59,20 @@ namespace Controller
             aim = aimTrans;
         }
 
-        public void SetAttacking(bool value)
+        private void SetAttacking(bool value)
         {
             Attacking = value;
         }
 
         public void SetSpeed(Vector3 speed)
         {
-            // animator.SetFloat(Speed, speed);
 
             if (speed.x != 0 && ReferenceEquals(aim, null))
             {
-                Turn(speed.x);
+                if (character.WeaponType != WeaponType.Bow)
+                {
+                    Turn(speed.x);
+                }
                 Speed = speed;
             }
             else
@@ -76,7 +82,7 @@ namespace Controller
 
             if (speed != Vector3.zero)
             {
-                character.SetState(CharacterScripts.CharacterState.Run);
+                character.SetState(character.WeaponType != WeaponType.Bow ? CharacterScripts.CharacterState.Run : CharacterScripts.CharacterState.Walk);
             }
             else
             {
@@ -121,9 +127,14 @@ namespace Controller
             character.GetReady();
         }
 
+        public bool IsReady()
+        {
+            return character.IsReady();
+        }
+
         public void BowCharge(int chargeState)
         {
-            animator.SetInteger(Charge, 1);
+            animator.SetInteger(Charge, chargeState);
         }
 
         public void Turn(float direction)
@@ -132,9 +143,33 @@ namespace Controller
             character.transform.localScale = new Vector3(Mathf.Sign(direction) * Math.Abs(oScale.x), oScale.y, 1);
         }
 
+        public void UseBow()
+        {
+            if (character.Bow.Count <= 0)
+            {
+                character.Equip(character.SpriteCollection.Bow.First(), EquipmentPart.Bow);
+            }
+            else
+            {
+                character.WeaponType = WeaponType.Bow;
+                character.Initialize();
+            }
+        }
+
+        public void UseSword()
+        {
+            character.WeaponType = WeaponType.Melee1H;
+            character.Initialize();
+        }
+
         public Transform GetMeleeArm()
         {
             return character.MeleeWeapon.transform;
+        }
+
+        public Transform GetLeftArm()
+        {
+            return character.GetComponent<CharacterScripts.CharacterBodySculptor>().ArmL;
         }
 
         public void onHit(GameObject from)

@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using Controller;
+using HeroEditor.Common;
 using UnityEngine;
 
 public class LifeEngine : MonoBehaviour {
 
     public static LifeEngine Instance { get; private set;}
-
     public LifeTime lifeTime {get; private set;}
     public LifeData lifeData {get; private set;}
 

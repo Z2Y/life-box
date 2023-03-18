@@ -15,6 +15,11 @@ namespace Battle.Realtime
         {
             animator = self.GetComponent<NPCAnimationController>();
         }
+
+        public void Update()
+        {
+        }
+
         public bool isIdle()
         {
             return !animator.Sliding && !animator.Attacking;

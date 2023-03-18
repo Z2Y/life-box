@@ -1171,6 +1171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d11ece8112dd1d448038a28be958fa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NpcSprites: {fileID: 11400000, guid: 9bdff99cda6064917bf01914ad82f14b, type: 2}
   isReady: 0
 --- !u!1 &1083677627
 GameObject:

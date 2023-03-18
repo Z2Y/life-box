@@ -60,6 +60,11 @@ namespace Controller
                 {
                     self = gameObject
                 });
+                addSkillShortCuts(KeyCode.Mouse1, new BowSkillAction()
+                {
+                    skill = SkillCollection.Instance.GetSkill(3),
+                    self = gameObject
+                });
                 Property = LifeEngine.Instance.lifeData.property;
             }
             else
