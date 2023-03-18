@@ -35,6 +35,11 @@ namespace Battle.Realtime
             var speedX = Input.GetAxisRaw("Horizontal");
             var speedY = Input.GetAxisRaw("Vertical");
             var input = new Vector3(speedX, speedY, 0).normalized * 2f;
+
+            if (input.magnitude < 0.0001f)
+            {
+                return;
+            }
             
             animator.SetSpeed(input * (2f / 0.5f));
             animator.Slide(self.transform.position + input * 2f);

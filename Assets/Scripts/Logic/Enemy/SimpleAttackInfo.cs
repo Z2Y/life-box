@@ -27,13 +27,12 @@ namespace Logic.Enemy
         private void OnDisable()
         {
             StopCoroutine(nameof(autoHideHpBar));
-            HpSlider.gameObject.SetActive(false);
+            HpSlider.value = 1f;
         }
 
         public async void ShowAttackInfo(string content, Vector3 jumpDirection, float duration = 1.25f)
         {
-            var hudUI = await UIManager.Instance.FindOrCreateAsync<SimpleHUDText>() as SimpleHUDText;
-            if (!ReferenceEquals(hudUI, null))
+            if (await UIManager.Instance.FindOrCreateAsync<SimpleHUDText>() is SimpleHUDText hudUI)
             {
                 var hud = hudUI.hud;
                 hud.transform.SetParent(uiTransform, false);
@@ -56,8 +55,17 @@ namespace Logic.Enemy
 
         public void UpdateHp(PropertyValue Hp)
         {
-            HpSlider.gameObject.SetActive(true);
-            HpSlider.DOValue((float)Hp.value / Hp.max, 0.5f);
+            
+            if (gameObject.activeSelf)
+            {
+                HpSlider.DOValue((float)Hp.value / Hp.max, 0.5f);
+            }
+            else
+            {
+                Show();
+                HpSlider.value = (float)Hp.value / Hp.max;
+            }
+            
             StopCoroutine(nameof(autoHideHpBar));
             StartCoroutine(nameof(autoHideHpBar));
         }
@@ -65,10 +73,10 @@ namespace Logic.Enemy
         private IEnumerator autoHideHpBar()
         {
             yield return new WaitForSeconds(5f);
-            HpSlider.gameObject.SetActive(false);
+            Hide();
         }
 
-        public static async Task<SimpleAttackInfo> Show()
+        public static async Task<SimpleAttackInfo> CreateAsync()
         {
             var panel = await UIManager.Instance.FindOrCreateAsync<SimpleAttackInfo>() as SimpleAttackInfo;
 

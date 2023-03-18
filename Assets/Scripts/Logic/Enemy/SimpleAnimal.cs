@@ -50,7 +50,6 @@ namespace Logic.Enemy
             enabled = true;
             ai.StartAI();
             hp?.Change(20);
-            info?.UpdateHp(hp);
         }
 
         public async void onHit(GameObject from)
@@ -61,19 +60,20 @@ namespace Logic.Enemy
             animator.Play("Hurt");
             transform.DOMove(position + direction * 0.2f, 0.25f).SetDelay(0.15f);
 
-            if (ReferenceEquals(info, null))
+            if (ReferenceEquals(info, null) || info.transform.parent != transform)
             {
-                info = await SimpleAttackInfo.Show();
+                info = await SimpleAttackInfo.CreateAsync();
                 bindAttackInfo();
             }
             hp.value -= 1;
+
+            info.ShowAttackInfo("1", direction);
+            info.UpdateHp(hp);
+            
             if (hp.value <= 0)
             {
                 onDeath();
             }
-            
-            info.ShowAttackInfo("-1", direction);
-            info.UpdateHp(hp);
         }
 
         private void bindAttackInfo()
@@ -89,6 +89,8 @@ namespace Logic.Enemy
             isDeath = true;
             animator.Play("Death");
             ai.StopAI();
+            info?.Hide();
+            info = null;
             enabled = false;
             
             await YieldCoroutine.WaitForSeconds(0.7f);
