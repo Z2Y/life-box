@@ -27,11 +27,13 @@ namespace Logic.Map
 
         public async Task Jump()
         {
+            /*
             var nextPlaceID = GetNextPlaceID();
             var nextPlace = await PlaceController.LoadPlaceAsync(nextPlaceID);
             if (nextPlace == null) return;
 
             await nextPlace.Activate();
+            */
             // todo Move Camera to target place.
         }
     }

@@ -41,6 +41,11 @@ public class GameLoader : MonoBehaviour
         });
     }
 
+    public async Task LoadWithAnimation(Func<Task> action)
+    {
+        await CrossFade(action);
+    }
+    
     public async Task SwitchSceneWithAnimation(Scene origin, Scene current)
     {
         await CrossFade(async () =>

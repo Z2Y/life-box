@@ -32,6 +32,7 @@ namespace Controller
 
         public async Task Jump()
         {
+            /*
             var nextPlace = await PlaceController.LoadPlaceAsync(toPlaceID);
             if (nextPlace == null) return;
 
@@ -39,6 +40,7 @@ namespace Controller
             if (targetGate == null) return;
 
             await nextPlace.Activate();
+            */
             // todo Move Camera to target place.
         }
     }

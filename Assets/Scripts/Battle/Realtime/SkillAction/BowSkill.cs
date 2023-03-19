@@ -5,6 +5,7 @@ using Battle.Realtime.Ai;
 using Controller;
 using HeroEditor.Common.Enums;
 using Logic.Enemy;
+using Logic.Projectile;
 using Model;
 using UnityEngine;
 using Character = Assets.HeroEditor.Common.Scripts.CharacterScripts.Character;
@@ -26,6 +27,7 @@ namespace Battle.Realtime
         private Character character;
         private Transform _arm;
         private Transform _weapon;
+        private Transform _fire;
         
         private int skillState = 0;
         private float prepareStartTime = 0;
@@ -36,6 +38,7 @@ namespace Battle.Realtime
             character = self.GetComponent<Character>();
             _arm = _controller.GetLeftArm();
             _weapon = character.BowRenderers[3].transform;
+            _fire = character.BowRenderers[6].transform.parent;
         }
 
         public void Update()
@@ -79,11 +82,16 @@ namespace Battle.Realtime
             targets = GetEnemiesInSightRange(self.transform, skill.SelectRange, 120f).Take(1).ToList();
         }
 
-        public void endPrepare()
+        public async void endPrepare()
         {
             var charged = Time.time - prepareStartTime > 0.05f;
             _controller.BowCharge(charged ? 2 : 3);
             skillState = charged ? 2 : 0;
+
+            if (charged)
+            {
+               CreateArrow();
+            }
         }
 
         public async void DoSkill()
@@ -187,6 +195,16 @@ namespace Battle.Realtime
             while (angle < -180) angle += 360;
 
             return angle;
+        }
+        
+        private async void CreateArrow()
+        {
+            var arrow  = await Arrow.CreateAsync();
+            const float speed = 12.75f; // TODO: Change this!
+            
+            arrow.SetEnemyTag("Enemy");
+            var velocity = _fire.right * (speed * Mathf.Sign(character.transform.lossyScale.x) * UnityEngine.Random.Range(0.85f, 1.15f));
+            arrow.Fire(_fire, character.Bow.Single(j => j.name == "Arrow"), velocity);
         }
 
     }

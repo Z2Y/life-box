@@ -1,10 +1,7 @@
 using System;
 using System.Linq;
-using Assets.HeroEditor.Common.Scripts.ExampleScripts;
 using DG.Tweening;
-using HeroEditor.Common;
 using HeroEditor.Common.Enums;
-using Logic.Enemy;
 using UnityEngine;
 using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
 
@@ -25,12 +22,16 @@ namespace Controller
         public bool Attacking { get; private set;  }
         public bool Sliding { get; private set; }
 
+        private void Awake()
+        {
+            trial = gameObject.AddComponent<CharacterTrail>();
+        }
+
         private void Start()
         {
             if (character == null)
             {
                 character = gameObject.GetComponent<CharacterScripts.Character>();
-                trial = gameObject.AddComponent<CharacterTrail>();
                 animator = character.Animator;
             }
             animator.SetBool(Ready, true);

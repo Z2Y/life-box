@@ -53,7 +53,7 @@ namespace Controller
             }
         }
 
-        public static async Task<PlaceController> LoadPlaceAsync(long placeID)
+        public static async Task<PlaceController> LoadPlaceAsync(long placeID, Transform parent = null)
         {
             var place = GetPlaceController(placeID);
             if (place != null)
@@ -62,7 +62,7 @@ namespace Controller
             }
 
             place = await PrefabLoader<PlaceController, long>.CreateAsync(placeID,
-                GameObject.Find("PlaceRoot").transform);
+                parent);
 
             if (place != null)
             {

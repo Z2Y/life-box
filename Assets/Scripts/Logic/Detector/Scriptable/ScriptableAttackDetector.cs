@@ -11,7 +11,8 @@ namespace Logic.Detector.Scriptable
         
         public override IDetector GetDetector()
         {
-            detector.SetTag(enemyTag);
+            var detector = base.GetDetector() as NormalAttackDetector;
+            detector?.SetTag(enemyTag);
             return detector;
         }
     }

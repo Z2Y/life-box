@@ -14,7 +14,7 @@ namespace Controller
     {
         private static readonly Dictionary<long, WorldMapController> lookup = new();
         
-        [SerializeField] private long mapID;
+        [SerializeField] public long mapID;
         
         [SerializeField] private GameObject placeRoot;
 
@@ -98,6 +98,16 @@ namespace Controller
             
             activePlaces = placesInBounds;
         }
+
+        public static void UnloadMap(long mapID)
+        {
+            var worldMap = GetWorldMapController(mapID);
+            if (worldMap != null)
+            {
+                lookup.Remove(mapID);
+                Destroy(worldMap.gameObject);
+            }
+        }
         
         public static async Task<WorldMapController> LoadMapAsync(long mapID)
         {
@@ -124,10 +134,12 @@ namespace Controller
                 Debug.LogWarning($"Load Map {mapID} Failed, Resource Not Found.");
                 return null;
             }
+
+            var placeRoot = worldMap.transform.Find("PlaceRoot");
             
             worldMap.places = (await Task.WhenAll(PlaceCollection.Instance.Places.
                 Where((place) => place.MapID == mapID).
-                Select((place) => PlaceController.LoadPlaceAsync(place.ID)))).
+                Select((place) => PlaceController.LoadPlaceAsync(place.ID, placeRoot)))).
                 Where((p) => p != null).ToList();
             
             lookup[worldMap.mapID] = worldMap;

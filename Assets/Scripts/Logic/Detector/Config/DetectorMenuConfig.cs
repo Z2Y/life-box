@@ -10,7 +10,8 @@ namespace Logic.Detector.Config
         private static readonly Dictionary<Type, long> DetectorMenus = new()
         {
             { typeof(TalkableNPCDetector), (long)InteractMenuType.NPC },
-            { typeof(ShopableNPCDetector), (long)InteractMenuType.NPC }
+            { typeof(ShopableNPCDetector), (long)InteractMenuType.NPC },
+            { typeof(MapGateDetector), (long)InteractMenuType.Gate }
         };
 
 
@@ -37,7 +38,8 @@ namespace Logic.Detector.Config
     public enum InteractMenuType
     {
         NPC = 1,
-        PICK = 2
+        PICK = 2,
+        Gate = 3
     }
 
 

@@ -21,7 +21,6 @@ public class Shopable : Singleton<Shopable>, ICharacterState {
     public bool IsState(Character character) {
         if (character == null) return false;
         ShopConfig config = ShopConfigCollection.Instance.GetShopConfigsByCharacter(character.ID)?.FirstOrDefault();
-        UnityEngine.Debug.Log($"{character.ID} {config}");
         return config != null && config.Item.Length > 0;
     }
 }

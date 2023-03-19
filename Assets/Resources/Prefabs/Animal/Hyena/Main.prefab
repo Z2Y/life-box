@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 7729192204280277902}
   - component: {fileID: 2106484178445777394}
   - component: {fileID: 7303520343612870899}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: AttakArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}

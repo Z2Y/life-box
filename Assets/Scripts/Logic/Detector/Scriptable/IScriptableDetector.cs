@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Logic.Detector.Scriptable
@@ -9,11 +10,9 @@ namespace Logic.Detector.Scriptable
     
     public class ScriptableDetector<T>: ScriptableDetectorBase where T : IDetector, new()
     {
-        protected readonly T detector = new ();
-
         public override IDetector GetDetector()
         {
-            return detector;
+            return Activator.CreateInstance<T>();
         }
     }
 }

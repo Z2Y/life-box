@@ -12,6 +12,7 @@ namespace Model
         Shop = 1,
         Other = 2,
         Water = 3,
+        Fuben = 4
     }
 
     [MessagePackObject(true)]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Logic.Detector;
@@ -5,10 +6,10 @@ using Logic.Detector.Config;
 using Logic.Detector.Scriptable;
 using Logic.Loot;
 using ModelContainer;
-using NPBehave;
 using ShortCuts;
 using UI;
 using UnityEngine;
+using Exception = NPBehave.Exception;
 
 namespace Controller
 {
@@ -21,34 +22,44 @@ namespace Controller
 
         public readonly HashSet<KeyValuePair<IDetector, Collider2D>> activeDetectors = new ();
 
+        private readonly List<IDetector> _detectors = new ();
+
         public ScriptableLootItemDetector lootDetector;
 
         private bool tipUpdating;
 
         private InteractTip tip;
 
-        private void OnEnable()
+        private void Awake()
         {
             collisionDetector = GetComponent<CollisionDetector>();
+            IDetector detector;
             foreach (var item in detectors)
             {
-                var detector = item.GetDetector();
+                detector = item.GetDetector();
                 detector.onDetect(onDetect);
                 detector.onEndDetect(onEndDetect);
-                collisionDetector.AddDetector(detector);
+                _detectors.Add(detector);
             }
-            lootDetector.GetDetector().onDetect(onLootItem);
-            collisionDetector.AddDetector(lootDetector.GetDetector());
+
+            detector = lootDetector.GetDetector();
+            detector.onDetect(onLootItem);
+            _detectors.Add(detector);
+        }
+
+        private void OnEnable()
+        {
+            foreach (var item in _detectors)
+            {
+                collisionDetector.AddDetector(item);
+            }
         }
         
         private void OnDisable()
         {
-            foreach (var item in detectors)
+            foreach (var item in _detectors)
             {
-                var detector = item.GetDetector();
-                detector.offDetect(onDetect);
-                detector.offEndDetect(onEndDetect);
-                collisionDetector.RemoveDetector(detector);
+                collisionDetector.RemoveDetector(item);
             }
         }
 
@@ -84,6 +95,7 @@ namespace Controller
 
         private async void showInteractMenu()
         {
+            activeDetectors.RemoveWhere((pair) => pair.Value == null);
             var items = InteractMenuConfig.buildMenuItems(activeDetectors.ToList());
             var targets = items.Select((item) => item.collision).Distinct();
 
@@ -101,11 +113,11 @@ namespace Controller
                 return;
             }
             var menuID = menuTypes.Count > 1  ? 0 : menuTypes.First();
-
-            var offset = new Vector3(0, target.bounds.size.y, 0);
-
+            
             try
             {
+                var offset = new Vector3(0, target.bounds.size.y, 0);
+                
                 while (tipUpdating)
                 {
                     await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
@@ -133,7 +145,7 @@ namespace Controller
             }
             catch (Exception e)
             {
-                Debug.LogError(e);
+                Debug.LogWarning(e);
             }
             tipUpdating = false;
         }

@@ -733,6 +733,7 @@ MonoBehaviour:
   detectors:
   - {fileID: 11400000, guid: 157f555e4c8e844f79e1279eb1979985, type: 2}
   - {fileID: 11400000, guid: 675773041890c4ebf8af5b34ca14b505, type: 2}
+  - {fileID: 11400000, guid: 676bc4eb410f24c1aadfe2a3b33b28db, type: 2}
   lootDetector: {fileID: 11400000, guid: 0160b4dee45294a28b68eb961237d3ba, type: 2}
 --- !u!70 &4764537031477365957
 CapsuleCollider2D:
