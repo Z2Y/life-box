@@ -6,6 +6,7 @@ using Model;
 
 namespace Model
 {
+    [Serializable]
     [MessagePackObject(true)]
     public class TimeTrigger : IEventTrigger
     {
@@ -27,23 +28,23 @@ namespace ModelContainer
     [ModelContainerOf(typeof(Model.TimeTrigger), "triggers")]
     public class TimeTriggerContainer
     {
-        private Dictionary<TimeSpan, Model.TimeTrigger> lookup = new Dictionary<TimeSpan, Model.TimeTrigger>();
-        private List<Model.TimeTrigger> triggers = new List<Model.TimeTrigger>();
+        private Dictionary<TimeSpan, Model.TimeTrigger> lookup = new ();
+        private List<TimeTrigger> triggers = new ();
         private static TimeTriggerContainer _instance;
         private TimeTriggerContainer() { }
 
         private void OnLoad()
         {
             lookup.Clear();
-            foreach (Model.TimeTrigger trigger in triggers)
+            foreach (var trigger in triggers)
             {
                 lookup.Add(new TimeSpan(trigger.Year, trigger.Month), trigger);
             }
         }
 
-        public static TimeTriggerContainer Instance => _instance ?? (_instance = new TimeTriggerContainer());
+        public static TimeTriggerContainer Instance => _instance ??= new TimeTriggerContainer();
 
-        public Model.TimeTrigger GetTrigger(TimeSpan timeSpan)
+        public TimeTrigger GetTrigger(TimeSpan timeSpan)
         {
             if (lookup.TryGetValue(timeSpan, out var value))
             {

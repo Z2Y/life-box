@@ -18,7 +18,7 @@ namespace Model
 
         public Event GetEvent()
         {
-            return ModelContainer.EventCollection.RandomEvent(Event, Weight);
+            return EventCollection.RandomEvent(Event, Weight);
         }
 
         public List<Event> GetTalks()

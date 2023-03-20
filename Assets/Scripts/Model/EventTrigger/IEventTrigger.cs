@@ -7,9 +7,9 @@ public interface IEventTrigger {
 public static class EventTriggerHelper {
     public static async Task<EventNode> Trigger(this IEventTrigger trigger)
     {
-        LifeNode lifeNode = LifeEngine.Instance.lifeData?.current;
+        var lifeNode = LifeEngine.Instance.lifeData?.current;
         if (lifeNode == null) return null;
-        EventNode eventNode = lifeNode.AddEventByTrigger(trigger);
+        var eventNode = lifeNode.AddEventByTrigger(trigger);
         await lifeNode.ProcessEvent();
         if (eventNode == null && lifeNode.ProcessedCount > 0) {
             eventNode = lifeNode.Events[lifeNode.ProcessedCount - 1];
