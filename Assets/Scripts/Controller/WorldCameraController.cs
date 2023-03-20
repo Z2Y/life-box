@@ -9,7 +9,11 @@ namespace Controller
     {
 
         private GameObject _followGameObject;
+        
+        [SerializeField]
         private bool isFollowing;
+        
+        [SerializeField]
         private Bounds worldBounds = new (Vector3.zero, Vector3.positiveInfinity);
         
         public static WorldCameraController Instance { get; private set; }
@@ -46,8 +50,8 @@ namespace Controller
             var targetPosition = _followGameObject.transform.position;
             var cameraPosition = transform.position;
 
-            targetPosition.x = Mathf.Clamp(cameraPosition.x, worldBounds.min.x, worldBounds.max.x);
-            targetPosition.y = Mathf.Clamp(cameraPosition.y, worldBounds.min.y, worldBounds.max.y);
+            targetPosition.x = Mathf.Clamp(targetPosition.x, worldBounds.min.x, worldBounds.max.x);
+            targetPosition.y = Mathf.Clamp(targetPosition.y, worldBounds.min.y, worldBounds.max.y);
             targetPosition.z = cameraPosition.z;
             return targetPosition;
         }

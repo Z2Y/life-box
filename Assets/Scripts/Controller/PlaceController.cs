@@ -30,6 +30,10 @@ namespace Controller
         {
             Place = PlaceCollection.Instance.GetPlace(placeID);
             tilemaps = GetComponentsInChildren<Tilemap>();
+        }
+
+        private void OnEnable()
+        {
             updateBounds();
         }
 
@@ -40,7 +44,7 @@ namespace Controller
             {
                 var cellBounds = tilemap.cellBounds;
                 var cellSize = tilemap.CellToWorld(new Vector3Int(1, 1, 0)) - tilemap.CellToWorld(new Vector3Int(0, 0, 0));
-                var tileBounds = new Bounds(tilemap.CellToWorld(cellBounds.position), new Vector3(cellSize.x * cellBounds.size.x, cellSize.y * cellBounds.size.y, 0));
+                var tileBounds = new Bounds(transform.position, new Vector3(cellSize.x * cellBounds.size.x, cellSize.y * cellBounds.size.y, 0));
                 
                 bounds.Encapsulate(tileBounds);
             }

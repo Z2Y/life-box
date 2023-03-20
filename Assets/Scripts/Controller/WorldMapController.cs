@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,20 +20,23 @@ namespace Controller
         [SerializeField] private Camera worldCamera;
 
         [SerializeField] private float zoom;
+        
+        [SerializeField ]private Bounds worldBounds;
 
-        private List<PlaceController> places = new();
         private List<PlaceController> activePlaces = new();
         private bool mapUpdating;
         private Bounds visibleBounds;
         private GridLayout ground;
 
-        public List<PlaceController> Places => places;
-        public Bounds worldBounds { get; private set; }
+        public List<PlaceController> Places { get; private set; } = new();
+
+        
 
         private void Awake()
         {
             worldCamera = Camera.main;
             ground = placeRoot.GetComponentInChildren<GridLayout>();
+            updateVisibleBounds();
         }
 
         private void Update()
@@ -45,29 +47,31 @@ namespace Controller
 
         private async void updateMap()
         {
-            if (mapUpdating) return;
-            updateVisibleBounds();
-            await updateWorldPlaces();
-            await YieldCoroutine.WaitForSeconds(0.08f);
-            mapUpdating = false;
+            // if (mapUpdating) return;
+            // updateVisibleBounds();
+            // await updateWorldPlaces();
+            // await YieldCoroutine.WaitForSeconds(0.08f);
+            // mapUpdating = false;
         }
 
         private void updateVisibleBounds()
         {
-            var position = ground.WorldToCell(worldCamera.ViewportToWorldPoint(Vector3.zero));
-            var rightTop = ground.WorldToCell(worldCamera.ViewportToWorldPoint(Vector3.one));
+            var position = worldCamera.ViewportToWorldPoint(Vector3.zero);
+            var rightTop = worldCamera.ViewportToWorldPoint(Vector3.one);
 
-            var size = new Vector3((int)((rightTop.x - position.x + 1) * zoom), (int)((rightTop.y - position.y + 1) * zoom), 1);
-            visibleBounds = new Bounds(position, size);
+            var size = new Vector3((rightTop.x - position.x), (rightTop.y - position.y), 1);
+            visibleBounds = new Bounds(transform.position, size);
         }
 
         private void updateWorldBounds()
         {
-            worldBounds = new Bounds();
+            var temp = new Bounds();
             foreach (var place in activePlaces)
             {
-                worldBounds.Encapsulate(place.bounds);
+                temp.Encapsulate(place.bounds);
             }
+
+            worldBounds = temp;
         }
 
         public bool isGridPositionBlocked(Vector3Int pos)
@@ -81,13 +85,15 @@ namespace Controller
 
         private List<PlaceController> getPlacesInBounds()
         {
-            return places.Where((place) => visibleBounds.Intersects(place.bounds)).ToList();
+            return Places.Where((place) => visibleBounds.Intersects(place.bounds)).ToList();
         }
 
 
         private async Task updateWorldPlaces()
         {
             var placesInBounds = getPlacesInBounds();
+            
+            Debug.Log($"current: {placesInBounds.Count} previous: {activePlaces.Count}");
 
             if (placesInBounds.Count == activePlaces.Count &&
                 placesInBounds.All((place) => activePlaces.Contains(place)))
@@ -106,12 +112,12 @@ namespace Controller
         public async Task InitMapWithPosition(Vector3 worldPosition)
         {
             mapUpdating = true;
-            var position = ground.WorldToCell(worldPosition);
+            transform.position = worldPosition;
 
-            visibleBounds = new Bounds(position, visibleBounds.size);
+            visibleBounds = new Bounds(worldPosition, visibleBounds.size);
 
             await updateWorldPlaces();
-            WorldCameraController.Instance.UpdateWorldBound(worldBounds.center, worldBounds.size);
+            WorldCameraController.Instance.UpdateWorldBound(worldBounds.center, worldBounds.size - visibleBounds.size);
             mapUpdating = false;
         }
 
@@ -153,7 +159,7 @@ namespace Controller
 
             var placeRoot = worldMap.transform.Find("PlaceRoot");
             
-            worldMap.places = (await Task.WhenAll(PlaceCollection.Instance.Places.
+            worldMap.Places = (await Task.WhenAll(PlaceCollection.Instance.Places.
                 Where((place) => place.MapID == mapID).
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID, placeRoot)))).
                 Where((p) => p != null).ToList();

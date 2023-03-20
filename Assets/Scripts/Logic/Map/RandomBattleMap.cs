@@ -20,10 +20,6 @@ namespace Logic.Map
         public WorldMapController map;
         public PlaceController fromPlace;
 
-        private void Awake()
-        {
-        }
-
         private long GetNextPlaceID()
         {
             return toPlaceIDs[Random.Range(0, toPlaceIDs.Length)];
