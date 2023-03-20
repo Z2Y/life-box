@@ -11,14 +11,16 @@ namespace Controller
         [SerializeField] private NPCAnimationController animator;
         [SerializeField] private bool isPlayer;
         [SerializeField] private bool fromJoystick;
+        private Rigidbody2D rgBody;
 
-        private readonly NPCMoveTask moveTask = new NPCMoveTask();
+        private readonly NPCMoveTask moveTask = new ();
 
         private void Awake()
         {
             animator = GetComponent<NPCAnimationController>();
+            rgBody = GetComponent<Rigidbody2D>();
             
-            moveTask.npcTransform = transform;
+            moveTask.rigidbody = rgBody;
             moveTask.animator = animator;
         }
 
@@ -27,7 +29,6 @@ namespace Controller
             if (isPlayer)
             {
                 updateSpeedFromUserInput();
-                updatePositionBySpeed();
             }
             else
             {
@@ -35,20 +36,32 @@ namespace Controller
             }
         }
 
+        private void FixedUpdate()
+        {
+            updatePositionBySpeed();
+        }
+
         public void SetAsPlayer(bool player = true)
         {
             isPlayer = player;
+        }
+
+        public void SetSpeed(Vector3 value)
+        {
+            speed = value;
         }
 
         private void updatePositionBySpeed()
         {
             if (speed.magnitude <= 0.001f)
             {
+                rgBody.velocity = Vector2.zero;
                 return;
             }
 
-            var npcTransform = transform;
-            npcTransform.position += speed * Time.deltaTime;
+            // var npcTransform = transform;
+            // npcTransform.position += speed * Time.deltaTime;
+            rgBody.velocity = speed;
         }
 
         private void updateSpeedFromUserInput()
@@ -84,7 +97,7 @@ namespace Controller
 
     public class NPCMoveTask
     {
-        public Transform npcTransform;
+        public Rigidbody2D rigidbody;
         public IMoveAnimator animator;
 
         private Vector3 targetPos;
@@ -101,7 +114,7 @@ namespace Controller
         public Task DoMove(Vector3 target, Vector3 speed, long expectTime)
         {
             targetPos = target;
-            startPos = npcTransform.position;
+            startPos = rigidbody.position;
             startTime = TimeHelper.Now();
             isComplete = false;
 
@@ -144,7 +157,7 @@ namespace Controller
                 return;
             }
             
-            npcTransform.position += moveSpeed * Time.deltaTime;
+            rigidbody.velocity = moveSpeed;
         }
 
         private void Complete()
@@ -154,6 +167,8 @@ namespace Controller
             {
                 animator.SetSpeed(Vector3.zero);
             }
+
+            rigidbody.velocity = Vector2.zero;
             isComplete = true;
         }
 
@@ -164,6 +179,7 @@ namespace Controller
             {
                 animator.SetSpeed(Vector3.zero);
             }
+            rigidbody.velocity = Vector2.zero;
             isComplete = true;
         }
     }

@@ -36,8 +36,6 @@ namespace Battle.Realtime.Ai
 
         private async Task moveByRoutePath()
         {
-
-            moveTask.npcTransform = Blackboard.Get<Transform>("self_transform");
             var movePath = path;
 
             while (movePath != null)

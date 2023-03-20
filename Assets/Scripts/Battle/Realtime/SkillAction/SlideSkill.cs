@@ -10,10 +10,12 @@ namespace Battle.Realtime
         public Skill skill;
         public GameObject self;
         private NPCAnimationController animator;
+        private NPCMovementController move;
         
         public void Init()
         {
             animator = self.GetComponent<NPCAnimationController>();
+            move = self.GetComponent<NPCMovementController>();
         }
 
         public void Update()
@@ -45,9 +47,12 @@ namespace Battle.Realtime
             {
                 return;
             }
+
+            move.SetSpeed(input * 5f);
+
+            animator.SetSpeed(input * 5f);
             
-            animator.SetSpeed(input * (2f / 0.5f));
-            animator.Slide(self.transform.position + input * 2f);
+            animator.Slide(0.4f);
         }
 
         public void endPrepare()

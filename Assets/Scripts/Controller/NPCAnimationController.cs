@@ -91,23 +91,17 @@ namespace Controller
             }
         }
 
-        public void Slide(Vector3 target)
+        public async void Slide(float duration)
         {
             if (Sliding) return;
             var originState = character.GetState();
             var originSpeed = Speed;
             Sliding = true;
             trial.enabled = true;
-            var tween = character.transform.DOMove(target, 0.4f).OnComplete(() =>
-            {
-                character.SetState(originState);
-                Sliding = false;
-                trial.enabled = false;
-            });
-            tween.OnUpdate(() =>
-            {
-                Speed = Vector3.Lerp(originSpeed, Vector3.zero, tween.ElapsedPercentage());
-            });
+            await YieldCoroutine.WaitForSeconds(duration);
+            Sliding = false;
+            trial.enabled = false;
+            character.SetState(originState);
         }
 
         public void SetBodyScale(Vector2 bodyScale)

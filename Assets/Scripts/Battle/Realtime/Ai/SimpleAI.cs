@@ -22,7 +22,7 @@ namespace Battle.Realtime.Ai
             behaviorTree = createBehaviorTree();
             ownBlackBoard.Set("self_transform", transform);
             ownBlackBoard.Set("move_task", moveTask = new NPCMoveTask());
-            moveTask.npcTransform = transform;
+            moveTask.rigidbody = GetComponent<Rigidbody2D>();
             moveTask.animator = GetComponent<IMoveAnimator>();
             if (markStart)
             { 

@@ -21,7 +21,9 @@ namespace Controller
 
         [SerializeField] private float zoom;
         
-        [SerializeField ]private Bounds worldBounds;
+        [SerializeField] private Bounds worldBounds;
+
+        [SerializeField] private EdgeCollider2D wall;
 
         private List<PlaceController> activePlaces = new();
         private bool mapUpdating;
@@ -72,6 +74,14 @@ namespace Controller
             }
 
             worldBounds = temp;
+            wall.points = new Vector2[]
+            {
+                worldBounds.min, 
+                worldBounds.min + new Vector3(worldBounds.size.x, 0, 0), 
+                worldBounds.max,
+                worldBounds.max - new Vector3(worldBounds.size.x, 0, 0),
+                worldBounds.min, 
+            };
         }
 
         public bool isGridPositionBlocked(Vector3Int pos)

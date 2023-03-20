@@ -435,7 +435,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -865848457
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &2442500533652643590
@@ -450,6 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8e7e2618c734bc69579588c0493512c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  closeBtn: {fileID: 0}
   icon: {fileID: 6907368645502883282}
   keyCodeText: {fileID: 5878898343696209979}
   tip: {fileID: 1535437626283565826}
