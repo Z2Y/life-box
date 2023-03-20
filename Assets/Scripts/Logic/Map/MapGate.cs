@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Logic.Map
 {
-    public class MapGate : MonoBehaviour
+    public class MapGate : MonoBehaviour, IMapGate
     {
         public long targetMapID;
 

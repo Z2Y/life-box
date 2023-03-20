@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace Logic.Map
 {
-    public class BattleMapRandomRoad : MonoBehaviour
+    public class BattleMapRandomRoad : MonoBehaviour, IMapGate
     {
         [SerializeField] public long fromPlaceID;
 
@@ -15,9 +15,13 @@ namespace Logic.Map
 
         [SerializeField] private string rule;
 
+        [SerializeField] private ConnectDirection direction;
+
+        public WorldMapController map;
+        public PlaceController fromPlace;
+
         private void Awake()
         {
-            // collider2D = GetComponentInChildren<Collider2D>();
         }
 
         private long GetNextPlaceID()
@@ -25,16 +29,47 @@ namespace Logic.Map
             return toPlaceIDs[Random.Range(0, toPlaceIDs.Length)];
         }
 
-        public async Task Jump()
+        private async Task Jump()
         {
-            /*
+            
             var nextPlaceID = GetNextPlaceID();
-            var nextPlace = await PlaceController.LoadPlaceAsync(nextPlaceID);
+            var nextPlace = map.Places.Find((place) => place.placeID == nextPlaceID);
             if (nextPlace == null) return;
 
-            await nextPlace.Activate();
-            */
+            switch (direction)
+            {
+                case ConnectDirection.UP:
+                    nextPlace.transform.position = transform.position + new Vector3(0, fromPlace.bounds.size.y, 0);
+                    break;
+                case ConnectDirection.Bottom:
+                    nextPlace.transform.position = transform.position + new Vector3(0, -fromPlace.bounds.size.y, 0);
+                    break;
+                case ConnectDirection.Left:
+                    nextPlace.transform.position = transform.position + new Vector3(-fromPlace.bounds.size.x, 0 , 0);
+                    break;
+                case ConnectDirection.Right:
+                    nextPlace.transform.position = transform.position + new Vector3(fromPlace.bounds.size.x, 0, 0);
+                    break;
+                default:
+                    break;
+            }
+            nextPlace.updateBounds();
+
+            // await nextPlace.Activate();
             // todo Move Camera to target place.
+        }
+
+        private enum ConnectDirection
+        {
+            UP = 0,
+            Left = 2,
+            Right = 3,
+            Bottom = 4
+        }
+
+        public void OnEnter()
+        {
+            Jump().Coroutine();
         }
     }
 }

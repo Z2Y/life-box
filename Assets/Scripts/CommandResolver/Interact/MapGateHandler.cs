@@ -17,7 +17,7 @@ namespace Interact
             {
                 if (pair.Key is MapGateDetector)
                 {
-                    pair.Value.GetComponent<MapGate>().OnEnter();
+                    pair.Value.GetComponent<IMapGate>().OnEnter();
                     break;
                 }
             }

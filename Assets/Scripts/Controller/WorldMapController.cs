@@ -25,10 +25,11 @@ namespace Controller
         private List<PlaceController> places = new();
         private List<PlaceController> activePlaces = new();
         private bool mapUpdating;
-        private Bounds bounds;
+        private Bounds visibleBounds;
         private GridLayout ground;
 
         public List<PlaceController> Places => places;
+        public Bounds worldBounds { get; private set; }
 
         private void Awake()
         {
@@ -45,19 +46,28 @@ namespace Controller
         private async void updateMap()
         {
             if (mapUpdating) return;
-            updateWorldBounds();
+            updateVisibleBounds();
             await updateWorldPlaces();
-            await YieldCoroutine.WaitForSeconds(0.05f);
+            await YieldCoroutine.WaitForSeconds(0.08f);
             mapUpdating = false;
         }
 
-        private void updateWorldBounds()
+        private void updateVisibleBounds()
         {
             var position = ground.WorldToCell(worldCamera.ViewportToWorldPoint(Vector3.zero));
             var rightTop = ground.WorldToCell(worldCamera.ViewportToWorldPoint(Vector3.one));
 
             var size = new Vector3((int)((rightTop.x - position.x + 1) * zoom), (int)((rightTop.y - position.y + 1) * zoom), 1);
-            bounds = new Bounds(position, size);
+            visibleBounds = new Bounds(position, size);
+        }
+
+        private void updateWorldBounds()
+        {
+            worldBounds = new Bounds();
+            foreach (var place in activePlaces)
+            {
+                worldBounds.Encapsulate(place.bounds);
+            }
         }
 
         public bool isGridPositionBlocked(Vector3Int pos)
@@ -71,7 +81,7 @@ namespace Controller
 
         private List<PlaceController> getPlacesInBounds()
         {
-            return places.Where((place) => bounds.Intersects(place.bounds)).ToList();
+            return places.Where((place) => visibleBounds.Intersects(place.bounds)).ToList();
         }
 
 
@@ -79,24 +89,30 @@ namespace Controller
         {
             var placesInBounds = getPlacesInBounds();
 
+            if (placesInBounds.Count == activePlaces.Count &&
+                placesInBounds.All((place) => activePlaces.Contains(place)))
+            {
+                return;
+            }
+
             await Task.WhenAll(placesInBounds.Select((place) => place.Activate()));
 
             await Task.WhenAll(activePlaces.Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
+
+            activePlaces = placesInBounds;
+            updateWorldBounds();
         }
         
         public async Task InitMapWithPosition(Vector3 worldPosition)
         {
+            mapUpdating = true;
             var position = ground.WorldToCell(worldPosition);
 
-            bounds = new Bounds(position, bounds.size);
+            visibleBounds = new Bounds(position, visibleBounds.size);
 
-            var placesInBounds = getPlacesInBounds();
-
-            await Task.WhenAll(placesInBounds.Select((place) => place.Activate()));
-
-            await Task.WhenAll(activePlaces.Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
-            
-            activePlaces = placesInBounds;
+            await updateWorldPlaces();
+            WorldCameraController.Instance.UpdateWorldBound(worldBounds.center, worldBounds.size);
+            mapUpdating = false;
         }
 
         public static void UnloadMap(long mapID)

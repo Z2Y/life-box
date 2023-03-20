@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Model;
 using ModelContainer;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Utils;
 
 namespace Controller
@@ -21,11 +22,28 @@ namespace Controller
 
         [SerializeField] public List<long> nearbyPlaceIDs;
 
+        private Tilemap[] tilemaps;
+
         public Place Place { get; private set; }
 
         private void Awake()
         {
             Place = PlaceCollection.Instance.GetPlace(placeID);
+            tilemaps = GetComponentsInChildren<Tilemap>();
+            updateBounds();
+        }
+
+        public void updateBounds()
+        {
+            bounds = new Bounds();
+            foreach (var tilemap in tilemaps)
+            {
+                var cellBounds = tilemap.cellBounds;
+                var cellSize = tilemap.CellToWorld(new Vector3Int(1, 1, 0)) - tilemap.CellToWorld(new Vector3Int(0, 0, 0));
+                var tileBounds = new Bounds(tilemap.CellToWorld(cellBounds.position), new Vector3(cellSize.x * cellBounds.size.x, cellSize.y * cellBounds.size.y, 0));
+                
+                bounds.Encapsulate(tileBounds);
+            }
         }
 
         private void OnDestroy()

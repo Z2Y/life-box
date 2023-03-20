@@ -31,9 +31,11 @@ namespace Battle.Realtime
         
         private int skillState = 0;
         private float prepareStartTime = 0;
+        private Camera camera;
 
         public void Init()
         {
+            camera = Camera.main;
             _controller = self.GetComponent<NPCAnimationController>();
             character = self.GetComponent<Character>();
             _arm = _controller.GetLeftArm();
@@ -45,7 +47,7 @@ namespace Battle.Realtime
         {
             if (_controller.IsReady() && character.WeaponType == WeaponType.Bow)
             {
-                var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                var targetPos = camera.ScreenToWorldPoint(Input.mousePosition);
                 RotateArm(_arm, _weapon,  targetPos, -60, 60);
                 _controller.Turn(Mathf.Sign((targetPos - self.transform.position).x));
             }
@@ -179,11 +181,6 @@ namespace Battle.Realtime
             else if (angle < angleMin)
             {
                 angle = angleMin;
-            }
-
-            if (float.IsNaN(angle))
-            {
-                Debug.LogWarning(angle);
             }
 
             arm.transform.localEulerAngles = new Vector3(0, 0, angle + angleToArm);
