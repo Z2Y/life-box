@@ -16,8 +16,9 @@ namespace Logic.Map
             {
                 try
                 {
-                    await WorldMapController.LoadMapAsync(targetMapID);
+                    var map = await WorldMapController.LoadMapAsync(targetMapID);
                     var oldMap = LifeEngine.Instance.Map;
+                    await map.InitMapWithPosition(enterPosition);
                     LifeEngine.Instance.MainCharacter.transform.position = enterPosition;
                     WorldMapController.UnloadMap(oldMap.mapID);
                 }

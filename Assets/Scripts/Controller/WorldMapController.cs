@@ -102,8 +102,6 @@ namespace Controller
         private async Task updateWorldPlaces()
         {
             var placesInBounds = getPlacesInBounds();
-            
-            Debug.Log($"current: {placesInBounds.Count} previous: {activePlaces.Count}");
 
             if (placesInBounds.Count == activePlaces.Count &&
                 placesInBounds.All((place) => activePlaces.Contains(place)))
