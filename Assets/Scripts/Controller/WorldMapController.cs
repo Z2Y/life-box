@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Logic.Map;
 using ModelContainer;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -26,18 +27,18 @@ namespace Controller
         [SerializeField] private EdgeCollider2D wall;
 
         private List<PlaceController> activePlaces = new();
+        private MapEdgeFog edgeFog;
         private bool mapUpdating;
         private Bounds visibleBounds;
         private GridLayout ground;
 
         public List<PlaceController> Places { get; private set; } = new();
 
-        
-
         private void Awake()
         {
             worldCamera = Camera.main;
             ground = placeRoot.GetComponentInChildren<GridLayout>();
+            edgeFog = wall.transform.GetComponent<MapEdgeFog>();
             updateVisibleBounds();
         }
 
@@ -49,11 +50,12 @@ namespace Controller
 
         private async void updateMap()
         {
-            // if (mapUpdating) return;
-            // updateVisibleBounds();
+            if (mapUpdating) return;
+            mapUpdating = true;
+            updateVisibleBounds();
             // await updateWorldPlaces();
-            // await YieldCoroutine.WaitForSeconds(0.08f);
-            // mapUpdating = false;
+            await YieldCoroutine.WaitForSeconds(0.125f);
+            mapUpdating = false;
         }
 
         private void updateVisibleBounds()
@@ -61,8 +63,10 @@ namespace Controller
             var position = worldCamera.ViewportToWorldPoint(Vector3.zero);
             var rightTop = worldCamera.ViewportToWorldPoint(Vector3.one);
 
-            var size = new Vector3((rightTop.x - position.x), (rightTop.y - position.y), 1);
-            visibleBounds = new Bounds(transform.position, size);
+            var size = new Vector3((rightTop.x - position.x), (rightTop.y - position.y), 0);
+            visibleBounds = new Bounds((Vector2)worldCamera.ViewportToWorldPoint(Vector3.one / 2), size);
+            
+            edgeFog.UpdateFogBounds(visibleBounds, worldBounds);
         }
 
         private void updateWorldBounds()

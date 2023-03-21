@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using Logic.Enemy;
 using UnityEngine;
+using UnityEngine.Events;
 using Utils;
 
 namespace Logic.Projectile
@@ -12,7 +13,7 @@ namespace Logic.Projectile
     [PrefabResource("Prefabs/Projectile/Arrow")]
     public class Arrow : MonoBehaviour
     {
-        public static readonly PrefabPool<Arrow> Pool = new();
+        private static readonly PrefabPool<Arrow> Pool = new();
         
         public SpriteRenderer SpRender;
         public GameObject Trail;
@@ -47,7 +48,7 @@ namespace Logic.Projectile
             _hitArea.SetEnemyTag(tagName);
         }
 
-        public async void Fire(Transform from, Sprite arrowSprite, Vector3 velocity, float maxAlive = 5f)
+        public async void Fire(Transform from, Sprite arrowSprite, Vector3 velocity, float maxAlive = 5f, UnityAction<Collider2D> onHit = null)
         {
             gameObject.SetActive(true);
             transform.SetParent(from);
@@ -57,6 +58,10 @@ namespace Logic.Projectile
             SpRender.sprite = arrowSprite;
             Rigidbody.velocity = velocity;
             transform.right = velocity.normalized;
+            if (onHit != null)
+            {
+                _hitArea.AddListener(onHit);
+            }
             StartCoroutine(autoRecycle(maxAlive));
         }
 
@@ -68,6 +73,7 @@ namespace Logic.Projectile
 
         private void Bang(Collider2D other)
         {
+            _hitArea.RemoveAllListener();
             Pool.Return(this);
         }
 

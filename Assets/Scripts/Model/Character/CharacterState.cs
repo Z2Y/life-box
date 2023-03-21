@@ -12,7 +12,6 @@ public class Talkable : Singleton<Talkable>, ICharacterState {
         var trigger = TalkTriggerContainer.Instance.GetTalkConfig(character.ID);
 
         character.Relations.TryGetValue(0, out var relation); // 0 for player
-        UnityEngine.Debug.Log($"{character.ID} {relation}");
         return trigger != null && trigger.Event.Length > 0 && relation >= trigger.RelationLimit;
     }
 }

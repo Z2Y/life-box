@@ -50,6 +50,11 @@ namespace Logic.Enemy
             _onDetect -= onDetect;
         }
 
+        public void RemoveAllListener()
+        {
+            _onDetect = null;
+        }
+
         private void OnEnable()
         {
             collisionDetector.enabled = true;
@@ -67,7 +72,7 @@ namespace Logic.Enemy
         private void onDetect(IDetector detector, Collider2D collision)
         {
             var hitResponder = collision.GetComponent<IHitResponder>();
-            hitResponder.onHit(gameObject);
+            hitResponder?.onHit(gameObject);
             _onDetect?.Invoke(collision);
         }
     }
