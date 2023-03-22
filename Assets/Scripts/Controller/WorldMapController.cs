@@ -72,9 +72,18 @@ namespace Controller
         private void updateWorldBounds()
         {
             var temp = new Bounds();
+            var isFirst = true;
             foreach (var place in activePlaces)
             {
-                temp.Encapsulate(place.bounds);
+                if (isFirst)
+                {
+                    temp = place.bounds;
+                    isFirst = false;
+                }
+                else
+                {
+                    temp.Encapsulate(place.bounds);  
+                }
             }
 
             worldBounds = temp;
@@ -115,7 +124,7 @@ namespace Controller
 
             await Task.WhenAll(placesInBounds.Select((place) => place.Activate()));
 
-            await Task.WhenAll(activePlaces.Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
+            await Task.WhenAll((activePlaces.Count > 0 ? activePlaces : Places).Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
 
             activePlaces = placesInBounds;
             updateWorldBounds();

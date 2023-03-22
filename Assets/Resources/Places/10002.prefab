@@ -11588,7 +11588,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 16, y: 16, z: 0}
   nearbyPlaceIDs: 
 --- !u!1001 &92145796381452983
 PrefabInstance:

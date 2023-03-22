@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Model;
 using ModelContainer;
@@ -32,22 +33,32 @@ namespace Controller
             tilemaps = GetComponentsInChildren<Tilemap>();
         }
 
-        private void OnEnable()
+        public void UpdateBoundsFormEditor()
         {
+            tilemaps = GetComponentsInChildren<Tilemap>();
             updateBounds();
         }
 
         public void updateBounds()
         {
-            bounds = new Bounds();
+            var isFirst = true;
             foreach (var tilemap in tilemaps)
             {
                 var cellBounds = tilemap.cellBounds;
                 var cellSize = tilemap.CellToWorld(new Vector3Int(1, 1, 0)) - tilemap.CellToWorld(new Vector3Int(0, 0, 0));
                 var tileBounds = new Bounds(transform.position, new Vector3(cellSize.x * cellBounds.size.x, cellSize.y * cellBounds.size.y, 0));
-                
-                bounds.Encapsulate(tileBounds);
+                if (isFirst)
+                {
+                    bounds = tileBounds;
+                    isFirst = false;
+                }
+                else
+                {
+                    bounds.Encapsulate(tileBounds);
+                }
             }
+            
+            Debug.Log(bounds);
         }
 
         private void OnDestroy()
@@ -58,11 +69,16 @@ namespace Controller
         public async Task Activate()
         {
             // throw new NotImplementedException();
+            Debug.Log($"Active Place: {placeID}");
+            // updateBounds();
+            gameObject.SetActive(true);
         }
 
         public async Task DeActivate()
         {
             // throw new NotImplementedException();
+            Debug.Log($"DeActivate Place: {placeID}");
+            gameObject.SetActive(false);
         }
 
         public static async Task UnloadPlaceAsync(long placeID)
@@ -83,12 +99,12 @@ namespace Controller
                 return place;
             }
 
-            place = await PrefabLoader<PlaceController, long>.CreateAsync(placeID,
-                parent);
+            place = await PrefabLoader<PlaceController, long>.CreateAsync(placeID, parent);
 
             if (place != null)
             {
                 lookup.TryAdd(placeID, place);
+                place.OnLoaded(placeID);
             }
 
             return place;
@@ -102,6 +118,9 @@ namespace Controller
         public void OnLoaded(long placeID)
         {
             // todo
+            this.placeID = placeID;
+            transform.localPosition = offset;
+            updateBounds();
         }
     }
 }
