@@ -11428,11 +11428,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fromPlaceID: 10002
+  fromMapID: 10001
   toPlaceIDs: 1327000000000000
   rule: 
   direction: 0
-  map: {fileID: 0}
-  fromPlace: {fileID: 0}
+  fromPlace: {fileID: -8801692112994693344}
 --- !u!1 &8214690960213980041
 GameObject:
   m_ObjectHideFlags: 0

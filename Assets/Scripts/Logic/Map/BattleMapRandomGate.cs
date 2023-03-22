@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Controller;
+using ModelContainer;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,8 +17,9 @@ namespace Logic.Map
         [SerializeField] private string rule;
 
         [SerializeField] private ConnectDirection direction;
-
-        public WorldMapController map;
+        private long fromMapID => PlaceCollection.Instance.GetPlace(fromPlaceID).MapID;
+        private WorldMapController map => WorldMapController.GetWorldMapController(fromMapID);
+        
         public PlaceController fromPlace;
 
         private long GetNextPlaceID()
@@ -27,31 +29,29 @@ namespace Logic.Map
 
         private async Task Jump()
         {
-            
             var nextPlaceID = GetNextPlaceID();
+            Debug.Log($"{nextPlaceID} {map}");
             var nextPlace = map.Places.Find((place) => place.placeID == nextPlaceID);
+
             if (nextPlace == null) return;
 
             switch (direction)
             {
                 case ConnectDirection.UP:
-                    nextPlace.transform.position = transform.position + new Vector3(0, fromPlace.bounds.size.y, 0);
+                    nextPlace.transform.position = fromPlace.transform.position + new Vector3(0, fromPlace.bounds.size.y, 0);
                     break;
                 case ConnectDirection.Bottom:
-                    nextPlace.transform.position = transform.position + new Vector3(0, -fromPlace.bounds.size.y, 0);
+                    nextPlace.transform.position = fromPlace.transform.position + new Vector3(0, -fromPlace.bounds.size.y, 0);
                     break;
                 case ConnectDirection.Left:
-                    nextPlace.transform.position = transform.position + new Vector3(-fromPlace.bounds.size.x, 0 , 0);
+                    nextPlace.transform.position = fromPlace.transform.position + new Vector3(-fromPlace.bounds.size.x, 0 , 0);
                     break;
                 case ConnectDirection.Right:
-                    nextPlace.transform.position = transform.position + new Vector3(fromPlace.bounds.size.x, 0, 0);
-                    break;
-                default:
+                    nextPlace.transform.position = fromPlace.transform.position + new Vector3(fromPlace.bounds.size.x, 0, 0);
                     break;
             }
-            nextPlace.updateBounds();
 
-            // await nextPlace.Activate();
+            await map.ActivatePlace(nextPlace);
             // todo Move Camera to target place.
         }
 
@@ -65,6 +65,7 @@ namespace Logic.Map
 
         public void OnEnter()
         {
+            Debug.Log($"Enter Place {fromPlaceID}");
             Jump().Coroutine();
         }
     }

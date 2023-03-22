@@ -95,6 +95,7 @@ namespace Controller
                 worldBounds.max - new Vector3(worldBounds.size.x, 0, 0),
                 worldBounds.min, 
             };
+            WorldCameraController.Instance.UpdateWorldBound(worldBounds.center, worldBounds.size - visibleBounds.size);
         }
 
         public bool isGridPositionBlocked(Vector3Int pos)
@@ -138,8 +139,19 @@ namespace Controller
             visibleBounds = new Bounds(worldPosition, visibleBounds.size);
 
             await updateWorldPlaces();
-            WorldCameraController.Instance.UpdateWorldBound(worldBounds.center, worldBounds.size - visibleBounds.size);
             mapUpdating = false;
+        }
+
+        public async Task ActivatePlace(PlaceController target)
+        {
+            if (activePlaces.Exists((p) => p.placeID == target.placeID))
+            {
+                return;
+            }
+            await target.Activate();
+            target.updateBounds();
+            activePlaces.Add(target);
+            updateWorldBounds();
         }
 
         public static void UnloadMap(long mapID)
