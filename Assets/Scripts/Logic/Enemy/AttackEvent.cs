@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Logic.Enemy
 {
@@ -7,6 +7,14 @@ namespace Logic.Enemy
     {
         public HitArea[] areas;
 
+        private void Awake()
+        {
+            foreach (var area in areas)
+            {
+                area.AddListener(onHit);
+            }
+        }
+        
         public void onBeginHitDetect()
         {
             foreach (var hitArea in areas)
@@ -21,6 +29,12 @@ namespace Logic.Enemy
             {
                 hitArea.enabled = false;
             }
+        }
+
+        private void onHit(Collider2D collision)
+        {
+            var hitResponder = collision.GetComponent<IHitResponder>();
+            hitResponder?.onHit(gameObject);
         }
     }
 }

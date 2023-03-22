@@ -201,7 +201,13 @@ namespace Battle.Realtime
             
             arrow.SetEnemyTag("Enemy");
             var velocity = _fire.right * (speed * Mathf.Sign(character.transform.lossyScale.x) * UnityEngine.Random.Range(0.85f, 1.15f));
-            arrow.Fire(_fire, character.Bow.Single(j => j.name == "Arrow"), velocity);
+            arrow.Fire(_fire, character.Bow.Single(j => j.name == "Arrow"), velocity, 5f, onHit);
+        }
+
+        private void onHit(Collider2D collision)
+        {
+            var hitResponder = collision.GetComponent<IHitResponder>();
+            hitResponder?.onHit(self);
         }
 
     }

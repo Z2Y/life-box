@@ -15,9 +15,9 @@ namespace Logic.Enemy
         
         public ScriptableDetectorBase[] detectors;
 
-        public UnityAction<Collider2D> _onDetect;
+        private UnityAction<Collider2D> _onDetect;
 
-        private List<IDetector> _detectors = new();
+        private readonly List<IDetector> _detectors = new();
 
         private void Awake()
         {
@@ -71,8 +71,6 @@ namespace Logic.Enemy
 
         private void onDetect(IDetector detector, Collider2D collision)
         {
-            var hitResponder = collision.GetComponent<IHitResponder>();
-            hitResponder?.onHit(gameObject);
             _onDetect?.Invoke(collision);
         }
     }
