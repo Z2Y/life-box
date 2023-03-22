@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace Logic.Map
 {
-    public class BattleMapRandomRoad : MonoBehaviour, IMapGate
+    public class BattleMapRandomGate : MonoBehaviour, IMapGate
     {
         [SerializeField] public long fromPlaceID;
 
