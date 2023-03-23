@@ -89,7 +89,7 @@ namespace Controller
 
         public void OffLeavePlaceListener(UnityAction<long> onLeave)
         {
-            _onEnterPlace -= onLeave;
+            _onLeavePlace -= onLeave;
         }
 
         private void updateSpeedFromUserInput()

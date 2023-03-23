@@ -70,8 +70,8 @@ namespace Logic.Map
             map.DeActivatePlace(fromPlace);
 
             await WorldCameraController.Instance.FollowTo(mainCharacter.gameObject, true, 1f);
+            await fromPlace.DeActivate();
             nextPlace.GetComponent<BattlePlaceController>().EnableAllGate();
-            fromPlace.DeActivate().Coroutine();
         }
         private enum ConnectDirection
         {
