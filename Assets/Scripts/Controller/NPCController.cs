@@ -17,7 +17,7 @@ namespace Controller
         
         [SerializeField] private long characterID;
         
-        private CollisionDetector collisionDetector;
+        public CollisionDetector Detector { get; private set; }
 
         public List<BattleSkill> skillShortCuts;
         public Character character { get; private set; }
@@ -32,9 +32,9 @@ namespace Controller
             Animator = gameObject.AddComponent<NPCAnimationController>();
             Movement = gameObject.AddComponent<NPCMovementController>();
             Interact = gameObject.GetComponent<NPCInteractController>();
-            collisionDetector = gameObject.AddComponent<CollisionDetector>();
+            Detector = gameObject.AddComponent<CollisionDetector>();
             gameObject.AddComponent<NPCHitController>();
-            collisionDetector.enabled = false;
+            Detector.enabled = false;
             Property = LifePropertyFactory.Random(40);
         }
 
@@ -47,7 +47,7 @@ namespace Controller
         public void SetAsPlayer(bool isPlayer)
         {
             Movement.SetAsPlayer(isPlayer);
-            collisionDetector.enabled = isPlayer;
+            Detector.enabled = isPlayer;
             if (isPlayer)
             {
                 addSkillShortCuts(KeyCode.Mouse0, new SwordSkillAction()

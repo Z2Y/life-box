@@ -15,7 +15,7 @@ namespace Logic.Detector
             }
 
             var gate = collision.GetComponent<IMapGate>();
-            return !ReferenceEquals(gate, null);
+            return !ReferenceEquals(gate, null) && gate.Interactive();
         }
     }
 }

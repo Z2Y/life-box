@@ -26,13 +26,15 @@ namespace Controller
 
         [SerializeField] private EdgeCollider2D wall;
 
-        private List<PlaceController> activePlaces = new();
+        
         private MapEdgeFog edgeFog;
         private bool mapUpdating;
         private Bounds visibleBounds;
         private GridLayout ground;
 
         public List<PlaceController> Places { get; private set; } = new();
+        public List<PlaceController> ActivePlaces { get; private set; } = new();
+        
 
         private void Awake()
         {
@@ -65,15 +67,18 @@ namespace Controller
 
             var size = new Vector3((rightTop.x - position.x), (rightTop.y - position.y), 0);
             visibleBounds = new Bounds((Vector2)worldCamera.ViewportToWorldPoint(Vector3.one / 2), size);
-            
-            edgeFog.UpdateFogBounds(visibleBounds, worldBounds);
+
+            if (worldBounds.size != Vector3.zero)
+            {
+                edgeFog.UpdateFogBounds(visibleBounds, worldBounds);
+            }
         }
 
         private void updateWorldBounds()
         {
             var temp = new Bounds();
             var isFirst = true;
-            foreach (var place in activePlaces)
+            foreach (var place in ActivePlaces)
             {
                 if (isFirst)
                 {
@@ -117,17 +122,17 @@ namespace Controller
         {
             var placesInBounds = getPlacesInBounds();
 
-            if (placesInBounds.Count == activePlaces.Count &&
-                placesInBounds.All((place) => activePlaces.Contains(place)))
+            if (placesInBounds.Count == ActivePlaces.Count &&
+                placesInBounds.All((place) => ActivePlaces.Contains(place)))
             {
                 return;
             }
 
             await Task.WhenAll(placesInBounds.Select((place) => place.Activate()));
 
-            await Task.WhenAll((activePlaces.Count > 0 ? activePlaces : Places).Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
+            await Task.WhenAll((ActivePlaces.Count > 0 ? ActivePlaces : Places).Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
 
-            activePlaces = placesInBounds;
+            ActivePlaces = placesInBounds;
             updateWorldBounds();
         }
         
@@ -142,15 +147,20 @@ namespace Controller
             mapUpdating = false;
         }
 
-        public async Task ActivatePlace(PlaceController target)
+        public void ActivatePlace(PlaceController target)
         {
-            if (activePlaces.Exists((p) => p.placeID == target.placeID))
+            if (ActivePlaces.Exists((p) => p.placeID == target.placeID))
             {
                 return;
             }
-            await target.Activate();
             target.updateBounds();
-            activePlaces.Add(target);
+            ActivePlaces.Add(target);
+            updateWorldBounds();
+        }
+
+        public void DeActivatePlace(PlaceController target)
+        {
+            ActivePlaces.Remove(target);
             updateWorldBounds();
         }
 

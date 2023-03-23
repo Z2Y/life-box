@@ -30,6 +30,10 @@ namespace Logic.Map
                 LifeEngine.Instance.lifeData.current.Location.MapID = targetMapID;
             }).Coroutine();
         }
-        
+
+        public bool Interactive()
+        {
+            return enabled;
+        }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Logic.Map;
 using Model;
 using ModelContainer;
 using UnityEngine;
@@ -21,15 +22,12 @@ namespace Controller
 
         [SerializeField] public Bounds bounds;
 
-        [SerializeField] public List<long> nearbyPlaceIDs;
-
         private Tilemap[] tilemaps;
 
-        public Place Place { get; private set; }
+        public Place Place => PlaceCollection.Instance.GetPlace(placeID);
 
         private void Awake()
         {
-            Place = PlaceCollection.Instance.GetPlace(placeID);
             tilemaps = GetComponentsInChildren<Tilemap>();
         }
 
@@ -57,8 +55,6 @@ namespace Controller
                     bounds.Encapsulate(tileBounds);
                 }
             }
-            
-            Debug.Log(bounds);
         }
 
         private void OnDestroy()
@@ -68,8 +64,6 @@ namespace Controller
 
         public async Task Activate()
         {
-            // throw new NotImplementedException();
-            Debug.Log($"Active Place: {placeID}");
             // updateBounds();
             gameObject.SetActive(true);
         }
@@ -77,7 +71,7 @@ namespace Controller
         public async Task DeActivate()
         {
             // throw new NotImplementedException();
-            Debug.Log($"DeActivate Place: {placeID}");
+            await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
             gameObject.SetActive(false);
         }
 

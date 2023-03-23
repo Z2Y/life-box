@@ -125,14 +125,12 @@ namespace Controller
                 tipUpdating = true;
                 if (ReferenceEquals(tip, null))
                 {
-                    Debug.Log("Add new Tip");
                     tip = await InteractTip.Show(menuID);
 
                     tip.SetPosition(target.transform.position + offset, target.GetInstanceID());
                 }
                 else
                 {
-                    Debug.Log("Update old Tip");
                     tip.UpdateMenu(menuID);
                     tip.Show();
                     tip.SetPosition(target.transform.position + offset, target.GetInstanceID());

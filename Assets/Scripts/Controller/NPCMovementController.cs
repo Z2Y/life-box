@@ -1,11 +1,14 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
+using Logic.Map;
 using UnityEngine;
+using UnityEngine.Events;
 using Utils;
 
 namespace Controller
 {
-    public class NPCMovementController : MonoBehaviour
+    public class NPCMovementController : MonoBehaviour, IRouteResponder
     {
         [SerializeField] private Vector3 speed;
         [SerializeField] private NPCAnimationController animator;
@@ -13,10 +16,14 @@ namespace Controller
         [SerializeField] private bool fromJoystick;
         private Rigidbody2D rgBody;
 
+        private NPCController mainController;
         private readonly NPCMoveTask moveTask = new ();
+        private UnityAction<long> _onEnterPlace;
+        private UnityAction<long> _onLeavePlace;
 
         private void Awake()
         {
+            mainController = GetComponent<NPCController>();
             animator = GetComponent<NPCAnimationController>();
             rgBody = GetComponent<Rigidbody2D>();
             
@@ -63,6 +70,27 @@ namespace Controller
             // npcTransform.position += speed * Time.deltaTime;
             rgBody.velocity = speed;
         }
+        
+        public void AddEnterPlaceListener(UnityAction<long> onEnter)
+        {
+            
+            _onEnterPlace += onEnter;
+        }
+
+        public void OffEnterPlaceListener(UnityAction<long> onEnter)
+        {
+            _onEnterPlace -= onEnter;
+        }
+        
+        public void AddLeavePlaceListener(UnityAction<long> onLeave)
+        {
+            _onLeavePlace += onLeave;
+        }
+
+        public void OffLeavePlaceListener(UnityAction<long> onLeave)
+        {
+            _onEnterPlace -= onLeave;
+        }
 
         private void updateSpeedFromUserInput()
         {
@@ -92,6 +120,16 @@ namespace Controller
             {
                 Debug.Log("Move To Canceled");
             }
+        }
+
+        public void OnEnter(long mapID, long placeID)
+        {
+            _onEnterPlace?.Invoke(placeID);
+        }
+
+        public void OnLeave(long mapID, long placeID)
+        {
+            _onLeavePlace?.Invoke(placeID);
         }
     }
 

@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Controller;
 using ModelContainer;
@@ -10,17 +8,16 @@ namespace Logic.Map
 {
     public class BattleMapRandomGate : MonoBehaviour, IMapGate
     {
-        [SerializeField] public long fromPlaceID;
-
         [SerializeField] public long[] toPlaceIDs;
 
         [SerializeField] private string rule;
 
         [SerializeField] private ConnectDirection direction;
-        private long fromMapID => PlaceCollection.Instance.GetPlace(fromPlaceID).MapID;
+        private long fromMapID => fromPlace.Place.MapID;
         private WorldMapController map => WorldMapController.GetWorldMapController(fromMapID);
         
         public PlaceController fromPlace;
+        private PlaceController nextPlace;
 
         private long GetNextPlaceID()
         {
@@ -30,8 +27,8 @@ namespace Logic.Map
         private async Task Jump()
         {
             var nextPlaceID = GetNextPlaceID();
-            Debug.Log($"{nextPlaceID} {map}");
-            var nextPlace = map.Places.Find((place) => place.placeID == nextPlaceID);
+            nextPlace = map.Places.Find((place) => place.placeID == nextPlaceID);
+            
 
             if (nextPlace == null) return;
 
@@ -51,10 +48,31 @@ namespace Logic.Map
                     break;
             }
 
-            await map.ActivatePlace(nextPlace);
-            // todo Move Camera to target place.
+            await nextPlace.Activate();
+            map.ActivatePlace(nextPlace);
+            fromPlace.GetComponent<BattlePlaceController>().DisableAllGate();
+
+            var mainCharacter = LifeEngine.Instance.MainCharacter;
+            mainCharacter.Movement.AddLeavePlaceListener(OnLeavePlace);
+
+            WorldCameraController.Instance.FollowTo(mainCharacter.gameObject, true, 1f).Coroutine();
         }
 
+        private async void OnLeavePlace(long leavePlaceID)
+        {
+            if (leavePlaceID != fromPlace.placeID)
+            {
+                return;
+            }
+            var mainCharacter = LifeEngine.Instance.MainCharacter;
+            mainCharacter.Movement.OffLeavePlaceListener(OnLeavePlace);
+
+            map.DeActivatePlace(fromPlace);
+
+            await WorldCameraController.Instance.FollowTo(mainCharacter.gameObject, true, 1f);
+            nextPlace.GetComponent<BattlePlaceController>().EnableAllGate();
+            fromPlace.DeActivate().Coroutine();
+        }
         private enum ConnectDirection
         {
             UP = 0,
@@ -65,8 +83,13 @@ namespace Logic.Map
 
         public void OnEnter()
         {
-            Debug.Log($"Enter Place {fromPlaceID}");
+            if (!Interactive()) return;
             Jump().Coroutine();
+        }
+
+        public bool Interactive()
+        {
+            return enabled;
         }
     }
 }

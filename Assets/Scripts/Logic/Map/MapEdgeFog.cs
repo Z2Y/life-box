@@ -27,17 +27,25 @@ namespace Logic.Map
         {
             if (direction >= fogPs.Length) return;
 
-            var shape = fogPs[direction].shape;
-            
-            fogPs[direction].gameObject.SetActive(start);
+            var currentFogPs = fogPs[direction];
+
+            var shape = currentFogPs.shape;
+            // fogPs[direction].gameObject.SetActive(start);
 
             if (!start)
             {
-                fogPs[direction].Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                /*if (currentFogPs.particleCount > 0)
+                {
+                    currentFogPs.time = currentFogPs.main.startLifetime.constant - 1f;
+                    currentFogPs.Simulate( 1f, true, false);
+                    currentFogPs.Play();
+                }*/
+                currentFogPs.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 return;
             }
 
-            fogPs[direction].Play();
+            currentFogPs.gameObject.SetActive(true);
+            currentFogPs.Play();
 
 
 

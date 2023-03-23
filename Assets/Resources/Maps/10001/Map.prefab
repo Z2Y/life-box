@@ -205,11 +205,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EdgeFog
       objectReference: {fileID: 0}
-    - target: {fileID: 1092893612242764714, guid: 5785ce3c9975f4b25bdbd724368839db,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1092893612242764717, guid: 5785ce3c9975f4b25bdbd724368839db,
         type: 3}
       propertyPath: m_RootOrder
@@ -265,11 +260,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1092893612242764719, guid: 5785ce3c9975f4b25bdbd724368839db,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5785ce3c9975f4b25bdbd724368839db, type: 3}
 --- !u!4 &2273670917607072642 stripped
@@ -289,11 +279,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EdgeFog
-      objectReference: {fileID: 0}
-    - target: {fileID: 1092893612242764714, guid: 5785ce3c9975f4b25bdbd724368839db,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1092893612242764717, guid: 5785ce3c9975f4b25bdbd724368839db,
         type: 3}
@@ -348,11 +333,6 @@ PrefabInstance:
     - target: {fileID: 1092893612242764717, guid: 5785ce3c9975f4b25bdbd724368839db,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1092893612242764719, guid: 5785ce3c9975f4b25bdbd724368839db,
-        type: 3}
-      propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -375,11 +355,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EdgeFog
       objectReference: {fileID: 0}
-    - target: {fileID: 1092893612242764714, guid: 5785ce3c9975f4b25bdbd724368839db,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1092893612242764717, guid: 5785ce3c9975f4b25bdbd724368839db,
         type: 3}
       propertyPath: m_RootOrder
@@ -435,11 +410,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1092893612242764719, guid: 5785ce3c9975f4b25bdbd724368839db,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5785ce3c9975f4b25bdbd724368839db, type: 3}
 --- !u!4 &5579073945023866064 stripped
@@ -459,11 +429,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EdgeFog
-      objectReference: {fileID: 0}
-    - target: {fileID: 1092893612242764714, guid: 5785ce3c9975f4b25bdbd724368839db,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1092893612242764717, guid: 5785ce3c9975f4b25bdbd724368839db,
         type: 3}
@@ -518,11 +483,6 @@ PrefabInstance:
     - target: {fileID: 1092893612242764717, guid: 5785ce3c9975f4b25bdbd724368839db,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1092893612242764719, guid: 5785ce3c9975f4b25bdbd724368839db,
-        type: 3}
-      propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

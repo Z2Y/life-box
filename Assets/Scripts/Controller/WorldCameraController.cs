@@ -23,19 +23,21 @@ namespace Controller
             Instance = this;
         }
 
-        public async Task FollowTo(GameObject other, bool moveSmoothly = true)
+        public async Task FollowTo(GameObject other, bool moveSmoothly = true, float duration = 0.5f)
         {
             _followGameObject = other;
-
+            isFollowing = false;
+            
             if (other == null)
             {
-                isFollowing = false;
                 return;
             }
             
             if (moveSmoothly)
             {
-                await YieldCoroutine.WaitForInstruction(transform.DOMove(tarGetPosition(), 0.5f).WaitForCompletion());
+                var tween = transform.DOMove(tarGetPosition(), duration);
+
+                await YieldCoroutine.WaitForInstruction(tween.WaitForCompletion());
             }
             else
             {
