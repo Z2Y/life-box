@@ -20,6 +20,7 @@ namespace Logic.Map
                     var oldMap = LifeEngine.Instance.Map;
                     await map.InitMapWithPosition(enterPosition);
                     LifeEngine.Instance.MainCharacter.transform.position = enterPosition;
+                    WorldCameraController.Instance.JumpToFollowPos();
                     WorldMapController.UnloadMap(oldMap.mapID);
                 }
                 catch (Exception e)

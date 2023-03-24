@@ -54,8 +54,7 @@ namespace Logic.Map
 
             var mainCharacter = LifeEngine.Instance.MainCharacter;
             mainCharacter.Movement.AddLeavePlaceListener(OnLeavePlace);
-
-            WorldCameraController.Instance.FollowTo(mainCharacter.gameObject, true, 1f).Coroutine();
+            
         }
 
         private async void OnLeavePlace(long leavePlaceID)
@@ -69,7 +68,11 @@ namespace Logic.Map
 
             map.DeActivatePlace(fromPlace);
 
-            await WorldCameraController.Instance.FollowTo(mainCharacter.gameObject, true, 1f);
+            // await WorldCameraController.Instance.FollowTo(mainCharacter.gameObject, true, 1f);
+            while (!WorldCameraController.Instance.isNearFollowTarget())
+            {
+                await YieldCoroutine.WaitForSeconds(0.125f);
+            }
             await fromPlace.DeActivate();
             nextPlace.GetComponent<BattlePlaceController>().EnableAllGate();
         }

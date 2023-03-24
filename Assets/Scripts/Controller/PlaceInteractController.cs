@@ -33,13 +33,13 @@ namespace Controller
 
         private void onEndDetect(IDetector detector, Collider2D collision)
         {
-            Debug.Log($"{collision.gameObject.name} Leave Place  {place.Place.MapID} {place.placeID}");
+            // Debug.Log($"{collision.gameObject.name} Leave Place  {place.Place.MapID} {place.placeID}");
             collision.GetComponent<IRouteResponder>()?.OnLeave(place.Place.MapID, place.placeID);
         }
 
         private void onDetect(IDetector detector, Collider2D collision)
         {
-            Debug.Log($"{collision.gameObject.name} Enter Place {place.placeID}");
+            // Debug.Log($"{collision.gameObject.name} Enter Place {place.placeID}");
             collision.GetComponent<IRouteResponder>()?.OnEnter(place.Place.MapID, place.placeID);
         }
     }

@@ -18,9 +18,24 @@ namespace Controller
         
         public static WorldCameraController Instance { get; private set; }
 
+        private const float maxMoveSpeed = 0.2f;
+
         private void Awake()
         {
             Instance = this;
+        }
+
+        public void JumpToFollowPos()
+        {
+            if (!isFollowing) return;
+            transform.position = tarGetPosition();
+        }
+
+        public bool isNearFollowTarget()
+        {
+            var targetPos = tarGetPosition();
+            var offset = targetPos - transform.position;
+            return offset.magnitude < maxMoveSpeed;
         }
 
         public async Task FollowTo(GameObject other, bool moveSmoothly = true, float duration = 0.5f)
@@ -41,7 +56,7 @@ namespace Controller
             }
             else
             {
-                transform.position = other.transform.position;
+                transform.position = tarGetPosition();
             }
 
             isFollowing = true;
@@ -63,10 +78,20 @@ namespace Controller
             worldBounds = new Bounds(center, size);
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
             if (!isFollowing) return;
-            transform.position = tarGetPosition();
+            var targetPos = tarGetPosition();
+            var offset = targetPos - transform.position;
+
+            if (offset.magnitude >= maxMoveSpeed)
+            {
+                transform.position += offset.normalized * maxMoveSpeed;
+            }
+            else
+            {
+                transform.position = targetPos;
+            }
         }
     }
 }

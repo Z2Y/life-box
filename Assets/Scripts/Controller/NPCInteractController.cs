@@ -85,7 +85,7 @@ namespace Controller
 
         private void onDetect(IDetector detector, Collider2D collision)
         {
-            Debug.Log($"Detect {detector.GetType().Name} ${collision.gameObject.name}");
+            // Debug.Log($"Detect {detector.GetType().Name} {collision.gameObject.name}");
             activeDetectors.Add(new KeyValuePair<IDetector, Collider2D>(detector, collision));
             if (activeDetectors.Count > 0)
             {
