@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Utils;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     public class RoutePath : PoolObject, IDisposable {
         public Vector3Int Point;

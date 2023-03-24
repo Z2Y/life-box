@@ -1,9 +1,9 @@
-using Battle.Realtime.Ai.Battle.Realtime.Ai;
 using Controller;
-using UnityEngine;
+using Logic.Battle.Realtime.Ai.Battle.Realtime.Ai;
 using NPBehave;
+using UnityEngine;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     public class SimpleAI : MonoBehaviour
     {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Controller;
 using UnityEngine;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     public class PathMove : NPBehave.Task
     {

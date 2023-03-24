@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using DG.Tweening;
 using Logic.Enemy;
 using UnityEngine;
 using UnityEngine.Events;
@@ -48,7 +45,7 @@ namespace Logic.Projectile
             _hitArea.SetEnemyTag(tagName);
         }
 
-        public async void Fire(Transform from, Sprite arrowSprite, Vector3 velocity, float maxAlive = 5f, UnityAction<Collider2D> onHit = null)
+        public void Fire(Transform from, Sprite arrowSprite, Vector3 velocity, float maxAlive = 5f, UnityAction<Collider2D> onHit = null)
         {
             gameObject.SetActive(true);
             transform.SetParent(from);

@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Assets.HeroEditor.Common.Scripts.CharacterScripts;
-using Battle.Realtime.Ai;
 using Controller;
 using HeroEditor.Common.Enums;
 using Logic.Enemy;
 using Model;
 using UnityEngine;
 
-namespace Battle.Realtime
+namespace Logic.Battle.Realtime.SkillAction
 {
     [Serializable]
     public class SwordSkillAction : ISkillAction {
@@ -92,11 +90,11 @@ namespace Battle.Realtime
 
         public async void DoSkill()
         {
-            var SkillEnv = new Dictionary<string, object>() { {"Skill" , this}};
+            // var SkillEnv = new Dictionary<string, object>() { {"Skill" , this}};
             skillState = 3;
             try
             {
-                battleResult = await skill.Effect.ExecuteExpressionAsync(SkillEnv) as BattleEffectResult;
+                // battleResult = await skill.Effect.ExecuteExpressionAsync(SkillEnv) as BattleEffectResult;
                 await YieldCoroutine.WaitForSeconds(skill.CoolDown);
                 skillState = 0;
             }

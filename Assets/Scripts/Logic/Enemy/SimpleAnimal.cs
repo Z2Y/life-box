@@ -1,7 +1,7 @@
 using System;
-using Battle.Realtime.Ai;
 using Controller;
 using DG.Tweening;
+using Logic.Battle.Realtime.Ai;
 using Logic.Loot;
 using ModelContainer;
 using UnityEngine;

@@ -1,11 +1,9 @@
 using System.Linq;
 using Assets.HeroEditor.Common.Scripts.Common;
-using Controller;
 using JetBrains.Annotations;
-using NPBehave;
 using UnityEngine;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     
     // Find Random Destination

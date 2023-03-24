@@ -1,7 +1,8 @@
-using NPBehave;
+using Logic.Battle.Realtime.SkillAction;
+
 // ReSharper disable Unity.NoNullPropagation
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     public class NormalAttack : NPBehave.Task
     {

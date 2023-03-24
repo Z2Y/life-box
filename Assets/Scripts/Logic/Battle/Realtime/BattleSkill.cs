@@ -1,8 +1,7 @@
-using System;
-using Battle.Realtime.Ai;
+using Logic.Battle.Realtime.SkillAction;
 using UnityEngine;
 
-namespace Battle.Realtime
+namespace Logic.Battle.Realtime
 {
     public class BattleSkill : MonoBehaviour
     {

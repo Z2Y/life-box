@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Assets.HeroEditor.Common.Scripts.CharacterScripts;
-using Battle.Realtime;
-using Battle.Realtime.Ai;
+using Logic.Battle.Realtime;
+using Logic.Battle.Realtime.SkillAction;
 using ModelContainer;
 using UnityEngine;
 using Character = Model.Character;

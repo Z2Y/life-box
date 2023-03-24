@@ -1,9 +1,8 @@
-using Battle.Realtime.Ai;
 using Controller;
 using Model;
 using UnityEngine;
 
-namespace Battle.Realtime
+namespace Logic.Battle.Realtime.SkillAction
 {
     public class SlideSkillAction : ISkillAction
     {

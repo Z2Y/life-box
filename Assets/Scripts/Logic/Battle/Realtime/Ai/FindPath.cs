@@ -3,7 +3,7 @@ using NPBehave;
 using UnityEngine;
 using Utils;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     public class FindPathTask : Task
     {

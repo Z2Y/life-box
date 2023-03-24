@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     public class RoutePathComparer : IComparer<RoutePath> {
 

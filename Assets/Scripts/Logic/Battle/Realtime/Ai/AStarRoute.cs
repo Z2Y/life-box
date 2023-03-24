@@ -4,7 +4,7 @@ using Controller;
 using UnityEngine;
 using Utils;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     public class AstarRoute : PoolObject, IDisposable {
         private readonly SortedSet<RoutePath> openList = new (new RoutePathComparer());

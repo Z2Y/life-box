@@ -1,6 +1,6 @@
 using Controller;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
     public class AnimalNormalAttack : NPBehave.Task
     {

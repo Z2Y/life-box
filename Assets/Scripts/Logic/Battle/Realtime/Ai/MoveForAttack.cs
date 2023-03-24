@@ -1,25 +1,23 @@
-namespace Battle.Realtime.Ai
-{
 using Controller;
 using NPBehave;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
 
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.Ai
 {
-    public class MoveForSurround : Task
+    public class MoveForAttack : Task
     {
-        private readonly float surroundRange;
+        private readonly float attackRange;
         private readonly Vector3 speed;
         private Collider2D enemy;
         private Transform selfTransform;
         private WorldMapController map;
         private NPCMoveTask moveTask;
         
-        public MoveForSurround(float surroundRange, Vector3 speed) : base("MoveForAttack")
+        public MoveForAttack(float attackRange, Vector3 speed) : base("MoveForAttack")
         {
-            this.surroundRange = surroundRange;
+            this.attackRange = attackRange;
             this.speed = speed + new Vector3(0.05f - Random.Range(0f, 0.1f), 0.05f - Random.Range(0f, 0.1f), 0);
         }
 
@@ -45,19 +43,18 @@ namespace Battle.Realtime.Ai
 
         private void update()
         {
-            var selfPosition = selfTransform.position;
-            var enemyPosition = enemy.transform.position;
-            var distance = (enemyPosition - selfPosition).magnitude;
-
-            var source = map.Ground.WorldToCell(selfPosition);
-            var direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
-            if (distance < surroundRange)
+            var distance = (enemy.transform.position - selfTransform.position).magnitude;
+            if (distance < attackRange)
             {
-                direction = (enemyPosition - selfPosition).normalized + direction * 0.2f;
+                if (IsActive)
+                {
+                    DoStop();
+                }
+                return;
             }
-            var position = enemyPosition + direction * surroundRange;
             
-            
+            var source = map.Ground.WorldToCell(selfTransform.position);
+            var position = enemy.transform.position;
             var dest = map.Ground.WorldToCell(position);
             var aRoute = SimplePoolManager.Get<AstarRoute>();
                 
@@ -76,12 +73,8 @@ namespace Battle.Realtime.Ai
             
             path.Dispose();
 
-            if (distance > surroundRange || !moveTask.IsRunning)
-            {
-                moveTask.Cancel();
-                moveTask.DoMove(destWorldPos, speed, -1);
-                moveTask.animator.SetAim(enemy.transform);
-            }
+            moveTask.Cancel();
+            moveTask.DoMove(destWorldPos, speed, -1);
         }
 
         protected override void DoStop()
@@ -90,11 +83,9 @@ namespace Battle.Realtime.Ai
             map = null;
             selfTransform = null;
             moveTask.Cancel();
-            moveTask.animator.SetAim(null);
             moveTask = null;
             Clock.RemoveTimer(update);
             Stopped(true);
         }
     }
-}
 }

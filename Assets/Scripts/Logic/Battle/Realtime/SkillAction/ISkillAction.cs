@@ -1,4 +1,4 @@
-namespace Battle.Realtime.Ai
+namespace Logic.Battle.Realtime.SkillAction
 {
     public interface ISkillAction
     {

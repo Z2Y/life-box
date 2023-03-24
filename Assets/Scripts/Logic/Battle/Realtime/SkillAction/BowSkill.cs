@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Battle.Realtime.Ai;
 using Controller;
 using HeroEditor.Common.Enums;
 using Logic.Enemy;
@@ -10,7 +9,7 @@ using Model;
 using UnityEngine;
 using Character = Assets.HeroEditor.Common.Scripts.CharacterScripts.Character;
 
-namespace Battle.Realtime
+namespace Logic.Battle.Realtime.SkillAction
 {
     [Serializable]
     public class BowSkillAction : ISkillAction
@@ -102,7 +101,7 @@ namespace Battle.Realtime
             skillState = 3;
             try
             {
-                battleResult = await skill.Effect.ExecuteExpressionAsync(SkillEnv) as BattleEffectResult;
+                // battleResult = await skill.Effect.ExecuteExpressionAsync(SkillEnv) as BattleEffectResult;
                 await YieldCoroutine.WaitForSeconds(skill.CoolDown);
                 skillState = 0;
             }
@@ -113,7 +112,7 @@ namespace Battle.Realtime
             
         }
 
-        private void OnHit(IHitResponder responder, Collider2D collider)
+        private void OnHit(IHitResponder responder, Collider2D _)
         {
             responder.onHit(self);
         }
