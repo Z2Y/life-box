@@ -1,5 +1,4 @@
-using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -38,7 +37,7 @@ namespace Controller
             return offset.magnitude < maxMoveSpeed;
         }
 
-        public async Task FollowTo(GameObject other, bool moveSmoothly = true, float duration = 0.5f)
+        public async UniTask FollowTo(GameObject other, bool moveSmoothly = true, float duration = 0.5f)
         {
             _followGameObject = other;
             isFollowing = false;

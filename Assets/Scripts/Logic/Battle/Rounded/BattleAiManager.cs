@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 using Model;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 public class BattleAIManager : Singleton<BattleAIManager>
 {
@@ -15,7 +14,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
     {
         AiCharacter = character;
     }
-    public async Task<BattleAIResult> GetAIResult(BattleCharacter character)
+    public async UniTask<BattleAIResult> GetAIResult(BattleCharacter character)
     {
         BattleAIResult result = new BattleAIResult();
         int maxScore = -1;
@@ -43,7 +42,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         return result;
     }
 
-    public async Task WaitForTurnComplete()
+    public async UniTask WaitForTurnComplete()
     {
         if (AiCharacter == null) return;
         BattleAIResult result = await GetAIResult(AiCharacter);
@@ -54,7 +53,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         }
     }
 
-    private async Task<AISelectResult> GetAISelectResult(BattleSkillAction skillAction, Vector3Int position, bool ignoreMove = false)
+    private async UniTask<AISelectResult> GetAISelectResult(BattleSkillAction skillAction, Vector3Int position, bool ignoreMove = false)
     {
         KeyValuePair<Skill, Vector3Int> cacheKey = new KeyValuePair<Skill, Vector3Int>(skillAction.skill, position);
     
@@ -150,7 +149,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         return new BattlePositionBlock(originPos).GetDistance(new BattlePositionBlock(targetPos));
     }
 
-    private async Task<int> GetBattleMoveScore(BattleSkillAction moveAction, BattleEffectResult result)
+    private async UniTask<int> GetBattleMoveScore(BattleSkillAction moveAction, BattleEffectResult result)
     {
         BattleMoveEffect moveEffect = result.effects.Find(effect => effect is BattleMoveEffect) as BattleMoveEffect;
         Vector3Int originPos = moveAction.position;
@@ -274,18 +273,21 @@ public class BattleAIResult
     public BattleSkillAction action;
     public AISelectResult aISelect;
 
-    public async Task DoAIAction()
+    public async UniTask DoAIAction()
     {
         if (action == null) return;
-        bool castable = action.isExecutable() && (action.battleCostResult == null || action.battleCostResult.CouldCost());
-        if (castable)
+        var couldCast = action.isExecutable() && (action.battleCostResult == null || action.battleCostResult.CouldCost());
+        if (couldCast)
         {
-            UnityEngine.Debug.Log($"AI Action {action.skill.ID} {action.selectResult.Position}");
+            Debug.Log($"AI Action {action.skill.ID} {action.selectResult.Position}");
             action.battleCostResult?.Cost();
-            await aISelect.effectResult?.DoEffect();
+            if (aISelect.effectResult != null)
+            {
+                await aISelect.effectResult.DoEffect();
+            }
             action.self.skills.Remove(action.skill);
             BattleLogConsole.Instance.LogBattleEffect(action, aISelect.effectResult);
         }
-        await YieldCoroutine.WaitForInstruction(new WaitForSeconds(0.05f));
+        await YieldCoroutine.WaitForSeconds(0.05f);
     }
 }

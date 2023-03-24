@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Model;
 using ModelContainer;
 
 [CommandResolverHandler("BackPlace")]
 public class RouteBackCommand : RouteCommand {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var place = await ExpressionCommandResolver.Resolve("CurrentPlace", arg, args, env) as Place;
 
@@ -17,7 +18,7 @@ public class RouteBackCommand : RouteCommand {
                 CurrentLife.Place = target;
                 CurrentLife.Next.Place = target;
                 RouteTrigger.Instance.Trigger().Coroutine();
-                LifeEngine.Instance?.AfterLifeChange?.Invoke();
+                LifeEngine.Instance.AfterLifeChange?.Invoke();
                 routeCompleteSource?.TrySetResult(target.ID);
             } else {
                 routeCompleteSource?.TrySetResult(0);

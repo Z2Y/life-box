@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace UI
 {
     public class UIManager : MonoBehaviour
     {
-        private readonly Dictionary<Type, Task> loadingTasks = new();
+        private readonly Dictionary<Type, object> loadingTasks = new();
         private readonly Dictionary<int, UIBase> _lookup = new();
         public static UIManager Instance { get; private set; }
 
@@ -84,7 +84,7 @@ namespace UI
             return UIFactory<T>.Create();
         }
         
-        public async Task<UIBase> FindOrCreateAsync<T>(bool useActive = false) where T : UIBase
+        public async UniTask<UIBase> FindOrCreateAsync<T>(bool useActive = false) where T : UIBase
         {
             var uiType = typeof(T);
             var exist = _lookup.Values.OfType<T>().FirstOrDefault(ui => (useActive || !ui.gameObject.activeSelf));
@@ -95,10 +95,10 @@ namespace UI
 
             if (useActive && loadingTasks.ContainsKey(uiType))
             {
-                return await (Task<T>)loadingTasks[uiType];
+                return await (UniTask<UIBase>)loadingTasks[uiType];
             }
 
-            var loading = UIFactory<T>.CreateAsync();
+            var loading = UIFactory<T>.CreateAsync().Preserve();
             loadingTasks.TryAdd(uiType, loading);
             var ui = await loading;
             loadingTasks.Remove(uiType);

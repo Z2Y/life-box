@@ -1,6 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using Controller;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Logic.Battle.Realtime.Ai
@@ -34,7 +34,7 @@ namespace Logic.Battle.Realtime.Ai
             }
         }
 
-        private async Task moveByRoutePath()
+        private async UniTask moveByRoutePath()
         {
             var movePath = path;
 

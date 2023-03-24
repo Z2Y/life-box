@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,7 +13,7 @@ public class CommandResolverHandler : Attribute {
 }
 
 public interface ICommandResolver {
-    Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env);
+    UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env);
 }
 
 public interface IInputCommandResolver
@@ -26,29 +26,35 @@ public abstract class CommandResolver : ICommandResolver {
     public GameCommandEvent onBeforeCommand;
     public GameCommandEvent onAfterCommand;
 
-    public async Task<object> Run(string arg, List<object> args, Dictionary<string, object> env) {
+    public async UniTask<object> Run(string arg, List<object> args, Dictionary<string, object> env) {
         onBeforeCommand?.Invoke();
         object result = await Resolve(arg, args, env);
         onAfterCommand?.Invoke();
         return result;
     }
-    public abstract Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env);
+    public abstract UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env);
 }
 
 public static class CommandHelper {
-    private static readonly TaskCompletionSource<object> doneSource;
+    private static readonly UniTaskCompletionSource<object> doneSource;
 
     static CommandHelper() {
-        doneSource = new TaskCompletionSource<object>();
+        doneSource = new UniTaskCompletionSource<object>();
         doneSource.TrySetResult(null);
     }
-    public static Task<object> Done(this CommandResolver resolver) {
+    public static UniTask<object> Done(this CommandResolver resolver) {
         return doneSource.Task;
     }
-
-    public static void Coroutine(this Task task) {
+    
+    public static void Coroutine(this UniTask task) {
         
     }
+
+    public static void Coroutine<T>(this UniTask<T> task)
+    {
+        
+    }
+
 }
 
 public class GameCommandEvent : UnityEvent {}

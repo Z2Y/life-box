@@ -1,11 +1,13 @@
 using Model;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+
 public interface IEventTrigger {
     Event GetEvent();
 }
 
 public static class EventTriggerHelper {
-    public static async Task<EventNode> Trigger(this IEventTrigger trigger)
+    public static async UniTask<EventNode> Trigger(this IEventTrigger trigger)
     {
         var lifeNode = LifeEngine.Instance.lifeData?.current;
         if (lifeNode == null) return null;

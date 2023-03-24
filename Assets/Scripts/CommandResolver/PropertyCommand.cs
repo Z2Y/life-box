@@ -1,14 +1,12 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using Model;
-using ModelContainer;
+using Cysharp.Threading.Tasks;
 
 [CommandResolverHandler("ChangeProperty")]
 public class ChangePropertyCommand : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         PropertyChangeResult result = new PropertyChangeResult();
         for (int i = 0; i < args.Count; i += 2)

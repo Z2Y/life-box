@@ -1,13 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Utils
 {
-    public static class PrefabLoader<T> where T : UnityEngine.Object
+    public static class PrefabLoader<T> where T : Object
     {
         public static T Create(Transform parent)
         {
@@ -31,7 +30,7 @@ namespace Utils
             return Object.Instantiate(prefab, parent).GetComponent<T>();
         }
 
-        public static async Task<T> CreateAsync(Transform parent)
+        public static async UniTask<T> CreateAsync(Transform parent)
         {
             var tType = typeof(T);
             if (!tType.IsDefined(typeof(PrefabResource)))
@@ -44,7 +43,7 @@ namespace Utils
             
             var request = Resources.LoadAsync<GameObject>($"{prefabResourceDefine.Path()}");
             
-            await YieldCoroutine.WaitForInstruction(request);
+            await request;
             
             if (request.asset == null)
             {
@@ -75,7 +74,7 @@ namespace Utils
     [AttributeUsage(AttributeTargets.Class)]
     public class PrefabResourceWithArgs : PrefabResource
     {
-        private string _basePath;
+        private readonly string _basePath;
 
         public string Path(object args)
         {
@@ -113,7 +112,7 @@ namespace Utils
             return Object.Instantiate(prefab, parent).GetComponent<T>();
         }
 
-        public static async Task<T> CreateAsync(T2 arg, Transform parent)
+        public static async UniTask<T> CreateAsync(T2 arg, Transform parent)
         {
             var tType = typeof(T);
             if (!tType.IsDefined(typeof(PrefabResourceWithArgs)))
@@ -126,7 +125,7 @@ namespace Utils
             
             var request = Resources.LoadAsync<GameObject>($"{prefabResourceDefine.Path(arg)}");
             
-            await YieldCoroutine.WaitForInstruction(request);
+            await request;
             
             if (request.asset == null)
             {

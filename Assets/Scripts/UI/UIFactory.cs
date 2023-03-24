@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Utils;
 
 namespace UI
@@ -15,7 +16,7 @@ namespace UI
             return ui;
         }
 
-        public static async Task<T> CreateAsync()
+        public static async UniTask<T> CreateAsync()
         {
             var ui = await PrefabLoader<T>.CreateAsync(UIManager.Instance.transform);
             if (!ReferenceEquals(ui, null))

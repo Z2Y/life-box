@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using UnityEngine;
 using MessagePack;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 public class ExpressionExcutor : MonoBehaviour
 {
@@ -16,7 +16,7 @@ public class ExpressionExcutor : MonoBehaviour
         Instance = this;
     }
 
-    public static async Task<object> Execute(string command, string data, List<object> listData, Dictionary<string, object> env)
+    public static async UniTask<object> Execute(string command, string data, List<object> listData, Dictionary<string, object> env)
     {
         return await ExpressionCommandResolver.Resolve(command, data, listData, env);
     }
@@ -164,14 +164,14 @@ public class ExpressionNode
         return expression;
     }
 
-    public async Task<object> ExecuteExpressionAsync()
+    public async UniTask<object> ExecuteExpressionAsync()
     {
         try
         {
             var result = ExecuteExpression();
-            if (result is Task<object>)
+            if (result is UniTask<object> task)
             {
-                result = await (result as Task<object>);
+                result = await task;
             }
             return result;
         }
@@ -231,7 +231,7 @@ public class ExpressionNode
         return null;
     }
 
-    public async Task<object> ExecuteAsync()
+    public async UniTask<object> ExecuteAsync()
     {
         if (expression == null && nodes.Count == 0)
         {
@@ -383,15 +383,15 @@ public class ExecuteResult
     public object value;
     public ExecuteResult(object value)
     {
-        if (value is Task<object> taskResult)
+        if (value is UniTask<object> taskResult)
         {
-            if (taskResult.IsCompleted)
+            if (taskResult.Status == UniTaskStatus.Succeeded)
             {
-                this.value = taskResult.Result;
+                this.value = taskResult.GetAwaiter().GetResult();
             }
             else
             {
-                Debug.LogWarning("ExecuteResult Task Not Completed!");
+                // Debug.LogWarning("ExecuteResult Task Not Completed!");
                 this.value = taskResult;
             }
         }
@@ -449,7 +449,7 @@ public static class ExpressionHelper
         return node.Execute();
     }
 
-    public static async Task<object> ExecuteExpressionAsync(this string expression, Dictionary<string, object> environments = null) {
+    public static async UniTask<object> ExecuteExpressionAsync(this string expression, Dictionary<string, object> environments = null) {
         if (expression.Length <= 0) { return null; }
         var node = ExpressionNode.ParseExpression(expression);
         if (environments == null) return await node.ExecuteAsync();

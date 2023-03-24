@@ -1,9 +1,8 @@
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine.Events;
 using ModelContainer;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class LifeNode
@@ -48,7 +47,7 @@ public class LifeNode
         }
     }
 
-    public async Task ProcessEvent()
+    public async UniTask ProcessEvent()
     {
         EventNode last = ProcessedCount > 0 ? Events[ProcessedCount - 1] : null;
         Processing = true;

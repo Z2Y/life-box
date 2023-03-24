@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,10 +30,10 @@ public class GameLoader : MonoBehaviour
 
     public void LoadGame()
     {
-        LoadGameAsync().Coroutine();
+        LoadGameAsync().Forget();
     }
 
-    public async Task LoadSceneWithAnimation(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
+    public async UniTask LoadSceneWithAnimation(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
     {
         await CrossFade(async () =>
         {
@@ -41,33 +41,33 @@ public class GameLoader : MonoBehaviour
         });
     }
 
-    public async Task LoadWithAnimation(Func<Task> action)
+    public async UniTask LoadWithAnimation(Func<UniTask> action)
     {
         await CrossFade(action);
     }
     
-    public async Task SwitchSceneWithAnimation(Scene origin, Scene current)
+    public async UniTask SwitchSceneWithAnimation(Scene origin, Scene current)
     {
         await CrossFade(async () =>
         {
             SceneManager.SetActiveScene(current);
-            await YieldCoroutine.WaitForInstruction(SceneManager.UnloadSceneAsync(origin));
+            await SceneManager.UnloadSceneAsync(origin);
         });
     }
 
-    public async Task LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
+    public async UniTask LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
     {
         var loadOp = SceneManager.LoadSceneAsync(sceneName, mode);
         while (!loadOp.isDone)
         {
             loadingText.text = $"载入中。。。 {(int)(loadOp.progress * 100)}%";
-            await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);;
         }
         loadingText.text = "载入中。。。 100%";
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
     }
 
-    private async Task LoadGameAsync()
+    private async UniTask LoadGameAsync()
     {
         if (isLoading) return;
         try
@@ -86,29 +86,29 @@ public class GameLoader : MonoBehaviour
         isLoading = false;
     }
 
-    private async Task CrossFade(Func<Task> action)
+    private async UniTask CrossFade(Func<UniTask> action)
     {
         await FadeIn(0.5f);
         await action();
         await FadeOut(0.5f);
     }
 
-    private async Task FadeOut(float duration)
+    private async UniTask FadeOut(float duration)
     {
         await YieldCoroutine.WaitForInstruction(loadingCanvas.DOFade(0f, duration).WaitForCompletion());
     }
 
-    private async Task FadeIn(float duration)
+    private async UniTask FadeIn(float duration)
     {
         await YieldCoroutine.WaitForInstruction(loadingCanvas.DOFade(1f, duration).WaitForCompletion());
     }
 
-    private async Task LoadModelData()
+    private async UniTask LoadModelData()
     {
         while (!(ModelLoader.Instance?.loaded ?? false))
         {
             loadingText.text = "读取数据。。。";
-            await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public static class ExpressionCommandResolver {
@@ -18,7 +18,7 @@ public static class ExpressionCommandResolver {
         }
     }
 
-    public static async Task<object> Resolve(string command, string arg, List<object> args,
+    public static async UniTask<object> Resolve(string command, string arg, List<object> args,
         Dictionary<string, object> env)
     {
         if (!Resolvers.TryGetValue(command, out var resolver))

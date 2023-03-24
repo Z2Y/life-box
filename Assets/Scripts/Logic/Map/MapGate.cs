@@ -1,5 +1,6 @@
 using System;
 using Controller;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Logic.Map
@@ -29,7 +30,7 @@ namespace Logic.Map
                 }
 
                 LifeEngine.Instance.lifeData.current.Location.MapID = targetMapID;
-            }).Coroutine();
+            }).Forget();
         }
 
         public bool Interactive()

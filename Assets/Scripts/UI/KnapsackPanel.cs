@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Model;
 using UI;
-using UnityEngine;
 using UnityEngine.UI;
 using Utils;
 
@@ -154,7 +152,7 @@ public class KnapsackPanel : UIBase
         }
     }
 
-    public static async Task<KnapsackPanel> Show(ItemInventory inventory)
+    public static async UniTask<KnapsackPanel> Show(ItemInventory inventory)
     {
         var panel = await UIManager.Instance.FindOrCreateAsync<KnapsackPanel>(true) as KnapsackPanel;
 

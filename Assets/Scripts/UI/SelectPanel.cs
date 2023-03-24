@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,7 +27,7 @@ public class SelectPanel : UIBase {
     public void SetDescription(string text) {
         description.text = text;
     }
-
+    
     public void SetOptions(List<string> options, Action<int> onSelect) {
         for (int i = 0; i < options.Count; i++)
         {
@@ -40,7 +40,7 @@ public class SelectPanel : UIBase {
             optionBtn.gameObject.SetActive(true);
         }
     }
-
+    
     public void SetCancelable(bool value, Action onCancel = null) {
         cancelButton.gameObject.SetActive(value);
         if (onCancel != null) {
@@ -48,7 +48,7 @@ public class SelectPanel : UIBase {
         }
     }
 
-    public static async Task<SelectPanel> Show(string description, List<string> options, Action<int> onSelect) {
+    public static async UniTask<SelectPanel> Show(string description, List<string> options, Action<int> onSelect) {
         var panel = await UIManager.Instance.FindOrCreateAsync<SelectPanel>() as SelectPanel;
         panel.SetDescription(description);
         panel.SetOptions(options, onSelect);

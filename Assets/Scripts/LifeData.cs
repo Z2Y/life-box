@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using ModelContainer;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Event = Model.Event;
 
 public class LifeData
@@ -16,7 +16,7 @@ public class LifeData
         current.Forecast(TimeTriggerContainer.Instance.GetTrigger(time.Time.Next()));
     }
 
-    public async Task DoNext()
+    public async UniTask DoNext()
     {
         current = current.Next;
         await current.ProcessEvent();

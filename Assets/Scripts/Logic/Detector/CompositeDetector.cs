@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using NPBehave;
 using UnityEngine;
 using UnityEngine.Events;
@@ -37,13 +38,13 @@ namespace Logic.Detector
             if (phase == DetectPhase.Enter)
             {
                 if (onDetectCallback == null) return;
-                await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
+                await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
                 onDetectCallback?.Invoke(this, collision);
             }
             else
             {
                 if (onEndDetectCallback == null) return;
-                await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
+                await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
                 onEndDetectCallback?.Invoke(this, collision);
             }
         }

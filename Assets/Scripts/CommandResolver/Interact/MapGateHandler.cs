@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Logic.Detector;
 using Logic.Map;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace Interact
     [CommandResolverHandler("InteractToGate")]
     public class MapGateHandler : CommandResolver
     {
-        public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+        public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
         {
             var activeDetectors = env["activeDetectors"] as HashSet<KeyValuePair<IDetector, Collider2D>>;
 

@@ -3,15 +3,15 @@ using System.Linq;
 using Model;
 using ModelContainer;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Controller;
+using Cysharp.Threading.Tasks;
 using Utils.Collision;
 
 
 [CommandResolverHandler("NearbyNPC")]
 public class NearbyNPCCommand : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         if (!LifeEngine.Instance.isReady) return 0;
         await this.Done();
@@ -27,7 +27,7 @@ public class NearbyNPCCommand : CommandResolver
 [CommandResolverHandler("CurrentPlace")]
 public class CurrentPlaceResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         await this.Done();
         return LifeEngine.Instance.lifeData?.current?.Place;
@@ -37,7 +37,7 @@ public class CurrentPlaceResolver : CommandResolver
 [CommandResolverHandler("TopLevelPlace")]
 public class CurrentCityResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var current = LifeEngine.Instance.lifeData?.current?.Place;
         while (current is { Parent: > 0 })
@@ -53,10 +53,10 @@ public class CurrentCityResolver : CommandResolver
 [CommandResolverHandler("SelectTalkToNearby")]
 public class SelectTalkToNearBy : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         if (!LifeEngine.Instance.isReady) return null;
-        var talkCompleteSource = new TaskCompletionSource<long>();
+        var talkCompleteSource = new UniTaskCompletionSource<long>();
         
         var character = LifeEngine.Instance.MainCharacter;
 
@@ -83,11 +83,11 @@ public class SelectTalkToNearBy : CommandResolver
 [CommandResolverHandler("SelectShopToNearby")]
 public class SelectShopToNearby : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
 
         if (!LifeEngine.Instance.isReady) return null;
-        var shopCompleteSource = new TaskCompletionSource<ShopResult>();
+        var shopCompleteSource = new UniTaskCompletionSource<ShopResult>();
         
         var character = LifeEngine.Instance.MainCharacter;
 
@@ -98,7 +98,7 @@ public class SelectShopToNearby : CommandResolver
 
         if (nearbyCharacters.Count == 0)
         {
-            shopCompleteSource.SetCanceled();
+            shopCompleteSource.TrySetCanceled();
         }
         else if (nearbyCharacters.Count == 1)
         {

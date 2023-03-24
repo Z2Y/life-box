@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UI;
 using UnityEngine.UI;
 using Utils;
@@ -31,10 +31,10 @@ public class ModalPanel : UIBase {
         }
     }
 
-    public static async Task Show(string description, Action onOk, Action onCancel) {
+    public static async UniTask<ModalPanel> Show(string description, Action onOk, Action onCancel) {
         var panel = await UIManager.Instance.FindOrCreateAsync<ModalPanel>() as ModalPanel;
         panel.SetDescription(description);
         panel.SetCallback(onOk, onCancel);
-        UIManager.Instance.PushUI(panel);
+        return panel;
     }
 }

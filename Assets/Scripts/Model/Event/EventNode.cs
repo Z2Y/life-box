@@ -1,6 +1,6 @@
 using Model;
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 public class EventNode
 {
@@ -20,7 +20,7 @@ public class EventNode
         }
     }
 
-    public async Task<object> DoEffect()
+    public async UniTask<object> DoEffect()
     {
         if (Event.Effect.Length > 0)
         {
@@ -31,11 +31,11 @@ public class EventNode
         return EffectResult;
     }
 
-    public async Task<int> DoBranch()
+    public async UniTask<int> DoBranch()
     {
         if (Event.BranchExpression.Length > 0 && Event.Branch.Length > 0)
         {
-            UnityEngine.Debug.Log(Event.BranchExpression);
+            // UnityEngine.Debug.Log(Event.BranchExpression);
             var node = new ExpressionNode(Event.BranchExpression, Life.Enviroments);
             node.SetEnv("$description", Description);
             node.SetEnv("$Effect", EffectResult);

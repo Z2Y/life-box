@@ -3,6 +3,7 @@ using DG.Tweening;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Model;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -85,7 +86,7 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
         BattleBlockManager.Instance.ShowBlocks(selectRange, BattleBlockType.Normal);        
     }
 
-    public async Task ExecuteSkillEffect()
+    public async UniTask ExecuteSkillEffect()
     {
         OnEndDrag(null);
 
@@ -95,10 +96,13 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
             skillAction.battleCostResult?.Cost();
             await BattleActionManager.Instance.UpdateCardStates();
             var SkillEnv = new Dictionary<string, object>() { {"Skill" , skillAction}};
-            var skillEffect = await Skill.Effect.ExecuteExpressionAsync(SkillEnv) as BattleEffectResult;
-            await skillEffect?.DoEffect();
+            if (await Skill.Effect.ExecuteExpressionAsync(SkillEnv) is BattleEffectResult skillEffect)
+            {
+                await skillEffect.DoEffect();
+                BattleLogConsole.Instance.LogBattleEffect(skillAction, skillEffect);
+            }
             Character.skills.Remove(Skill);
-            BattleLogConsole.Instance.LogBattleEffect(skillAction, skillEffect);
+            
         }
     }
 

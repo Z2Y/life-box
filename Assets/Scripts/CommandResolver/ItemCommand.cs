@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Model;
 using ModelContainer;
 
@@ -23,7 +23,7 @@ public class ItemCommandResult {
 [CommandResolverHandler("ReceiveItem")]
 public class ReceiveItemCommand : ItemCommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         ItemCommandResult received = new ItemCommandResult();
         for (int i = 0; i < args.Count; i += 2)
@@ -56,7 +56,7 @@ public class ReceiveItemCommand : ItemCommandResolver
 [CommandResolverHandler("LostItem")]
 public class LostItemCommand : ItemCommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var lost = new ItemCommandResult();
         for (var i = 0; i < args.Count; i += 2)
@@ -84,7 +84,7 @@ public class LostItemCommand : ItemCommandResolver
 [CommandResolverHandler("CountItem")]
 public class CountItemCommand : ItemCommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         await this.Done();
         return CountItem(Convert.ToInt64(args[0]));
@@ -100,7 +100,7 @@ public class CountItemCommand : ItemCommandResolver
 [CommandResolverHandler("OpenKnapsack")]
 public class OpenKnapsackCommand : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var knapsack = LifeEngine.Instance.lifeData?.knapsackInventory;
         await KnapsackPanel.Show(knapsack);

@@ -1,7 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using Controller;
-using HeroEditor.Common;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class LifeEngine : MonoBehaviour {
@@ -29,7 +28,7 @@ public class LifeEngine : MonoBehaviour {
         lifeTime.OnNextMonth += OnNextMonth;
     }
 
-    public async Task CreateNewGame() {
+    public async UniTask CreateNewGame() {
         lifeData = LifeData.CreateNew();
         var map = await WorldMapController.LoadMapAsync(lifeData.current.Location.MapID);
         var mainCharacter = await NPCController.LoadCharacterAsync(0);
@@ -40,7 +39,7 @@ public class LifeEngine : MonoBehaviour {
         // setup main character for player
         mainCharacter.SetLocation(lifeData.current.Location);
         mainCharacter.SetAsPlayer(true);
-        WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Coroutine();
+        WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Forget();
         isReady = true;
 
         lifeData.DoForecast(lifeTime);
@@ -52,9 +51,9 @@ public class LifeEngine : MonoBehaviour {
 
     public void GameEnd()
     {
-        WorldCameraController.Instance.FollowTo(null).Coroutine();
+        WorldCameraController.Instance.FollowTo(null).Forget();
         SwordSlashController.Pool.RecycleUsed();
-        GameLoader.Instance.LoadSceneWithAnimation("MainScene").Coroutine();
+        GameLoader.Instance.LoadSceneWithAnimation("MainScene").Forget();
     }
 
     private async void OnNextMonth() {

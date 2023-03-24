@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [CommandResolverHandler("BattlePropertyCost")]
 public class BattlePropertyCostResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         BattleSkillAction skillAction = env["Skill"] as BattleSkillAction;
         if (skillAction == null) return null;
@@ -25,7 +25,7 @@ public class BattlePropertyCostResolver : CommandResolver
 [CommandResolverHandler("BattleCost")]
 public class BattleCostResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var result = new BattleCostResult
         {

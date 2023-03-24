@@ -1,83 +1,51 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class YieldCoroutine : MonoBehaviour
 {
-    protected static readonly List<YieldTask> Tasks = new ();
-    
-    private void Update() {
-        if (Tasks.Count > 0)
-        {
-            DOWait();
-        }
-    }
 
-    public static async Task WaitForSeconds(float t)
+    private static YieldCoroutine instance;
+
+    private void Awake()
     {
-        var yieldTask = new YieldTask(new WaitForSeconds(t));
-        Tasks.Add(yieldTask);
-        await yieldTask.Wait();
+        instance = this;
     }
 
-    public static async Task WaitForInstruction(YieldInstruction instruction, CancellationTokenSource cancel = null)
+    public static async UniTask WaitForSeconds(float t)
     {
-        var yieldTask = new YieldTask(instruction, cancel);
-        Tasks.Add(yieldTask);
-        await yieldTask.Wait();
+        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
     }
 
-    public static async Task WaitForInstruction(CustomYieldInstruction instruction)
+    public static async UniTask WaitForInstruction(YieldInstruction instruction)
     {
         var yieldTask = new YieldTask(instruction);
-        Tasks.Add(yieldTask);
-        await yieldTask.Wait();
+        await DoTask(yieldTask).ToUniTask(instance);
     }
 
-    private void DOWait()
+    public static async UniTask WaitForInstruction(CustomYieldInstruction instruction)
     {
-        foreach(var task in Tasks)
-        {
-            StartCoroutine(DoTask(task));
-        }
-        Tasks.Clear();
+        var yieldTask = new YieldTask(instruction);
+        await DoTask(yieldTask).ToUniTask(instance);
     }
 
     private static IEnumerator DoTask(YieldTask task)
     {
         yield return task.instruction;
-        task.source.TrySetResult(true);
     }
 
-    protected class YieldTask
+    private class YieldTask
     {
         public readonly object instruction;
-        public readonly TaskCompletionSource<bool> source;
 
-        public YieldTask(YieldInstruction instruction, CancellationTokenSource cancel = null)
+        public YieldTask(YieldInstruction instruction)
         {
             this.instruction = instruction;
-            source = new TaskCompletionSource<bool>();
-            cancel?.Token.Register(Cancel);
         }
         
-        public YieldTask(CustomYieldInstruction instruction, CancellationTokenSource cancel = null)
+        public YieldTask(CustomYieldInstruction instruction)
         {
             this.instruction = instruction;
-            source = new TaskCompletionSource<bool>();
-            cancel?.Token.Register(Cancel);
-        }
-
-        private void Cancel()
-        {
-            source.TrySetCanceled();
-        }
-
-        public async Task Wait()
-        {
-            await source.Task;
         }
     }
 }

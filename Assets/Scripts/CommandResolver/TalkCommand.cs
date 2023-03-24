@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using ModelContainer;
 using UI;
 using UnityEngine;
@@ -9,7 +9,7 @@ using UnityEngine;
 [CommandResolverHandler("Talk")]
 public class TalkCommand : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var characterID = Convert.ToInt64(args[0]);
             var description = Convert.ToString(args[1]);

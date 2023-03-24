@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Controller;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Battle.RPGBattle
@@ -9,7 +8,7 @@ namespace Battle.RPGBattle
     [CommandResolverHandler("RPGBattle.NormalAttack")]
     public class BattleNormalAttack : CommandResolver
     {
-        public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+        public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
         {
             var characterID = int.Parse(arg);
             var character = await NPCController.LoadCharacterAsync(characterID);

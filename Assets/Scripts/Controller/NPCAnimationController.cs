@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using DG.Tweening;
+using Cysharp.Threading.Tasks;
 using HeroEditor.Common.Enums;
 using UnityEngine;
 using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;

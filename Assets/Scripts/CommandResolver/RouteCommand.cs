@@ -1,13 +1,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Model;
 using ModelContainer;
 
 [CommandResolverHandler("RoutePlace")]
 public class RouteCommand : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var routeCompleteSource = new TaskCompletionSource<long>();
         var nearbyPlaces = new List<Place>();
@@ -40,7 +41,7 @@ public class RouteCommand : CommandResolver
     {
         CurrentLife.Place = target;
         CurrentLife.Next.Place = target;
-        RouteTrigger.Instance.Trigger().Coroutine();
+        RouteTrigger.Instance.Trigger().Forget();
         LifeEngine.Instance.AfterLifeChange?.Invoke();
     }
 

@@ -1,5 +1,3 @@
-using System;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class LifePlacePanel : UIBase {
@@ -26,7 +24,7 @@ public class LifePlacePanel : UIBase {
         }        
     }
 
-    public void Refresh() {
+    private void Refresh() {
         text.text = LifeEngine.Instance.lifeData?.current.Next.Place.Name;
     }
 }

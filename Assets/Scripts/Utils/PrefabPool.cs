@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
 using Object = UnityEngine.Object;
@@ -89,7 +89,7 @@ namespace Utils
             return obj;
         }
 
-        public async Task<T> GetAsync()
+        public async UniTask<T> GetAsync()
         {
             if (pool.CountInactive <= 0)
             {
@@ -229,7 +229,7 @@ namespace Utils
             }
         }
 
-        public async Task<T> GetAsync(T2 arg)
+        public async UniTask<T> GetAsync(T2 arg)
         {
             if (!pool.TryGetValue(arg, out var poolWithArg))
             {

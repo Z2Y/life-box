@@ -2,13 +2,13 @@ using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [CommandResolverHandler("BattleMove")]
 public class BattleMove : CommandResolver
 {
-    public TaskCompletionSource<bool> moveTcs;
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public UniTaskCompletionSource<bool> moveTcs;
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         BattleSkillAction skillAction = env["Skill"] as BattleSkillAction;
         if (skillAction == null) return null;
@@ -23,7 +23,7 @@ public class BattleMove : CommandResolver
 [CommandResolverHandler("BattleEffect")]
 public class BattleEffectResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var result = new BattleEffectResult
         {
@@ -36,7 +36,7 @@ public class BattleEffectResolver : CommandResolver
 
 public interface IBattleEffect
 {
-    Task DoEffect();
+    UniTask DoEffect();
     string EffectDescription();
     int GetScore();
 }
@@ -45,7 +45,7 @@ public class BattleEffectResult
 {
     public List<IBattleEffect> effects = new ();
 
-    public async Task DoEffect()
+    public async UniTask DoEffect()
     {
         foreach(var effect in effects) {
             await effect.DoEffect();
@@ -67,17 +67,17 @@ public class BattleMoveEffect : IBattleEffect
 {
     private readonly BattleCharacter character;
     public Vector3Int position;
-    private TaskCompletionSource<bool> moveTcs;
+    private UniTaskCompletionSource<bool> moveTcs;
 
     public BattleMoveEffect(BattleCharacter character, Vector3Int position)
     {
         this.character = character;
         this.position = position;
     }
-    public async Task DoEffect()
+    public async UniTask DoEffect()
     {
-        moveTcs = new TaskCompletionSource<bool>();
-        Vector3 targetPos = BattleBlockManager.Instance.tilemap.CellToWorld(position);
+        moveTcs = new UniTaskCompletionSource<bool>();
+        var targetPos = BattleBlockManager.Instance.tilemap.CellToWorld(position);
         character.View.transform.DOMove(targetPos, 1f).OnComplete(() => moveTcs.TrySetResult(true));
         character.Position = position;
         await moveTcs.Task;

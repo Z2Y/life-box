@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Logic.Detector;
 using Logic.Detector.Config;
 using Logic.Detector.Scriptable;
@@ -120,7 +121,7 @@ namespace Controller
                 
                 while (tipUpdating)
                 {
-                    await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
+                    await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
                 }
                 tipUpdating = true;
                 if (ReferenceEquals(tip, null))

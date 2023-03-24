@@ -4,12 +4,13 @@ using Model;
 using ModelContainer;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [CommandResolverHandler("DoEvent")]
 public class DoEventResolver : CommandResolver, IEventTrigger
 {
     private Event currentEvent;
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         currentEvent = EventCollection.Instance.GetEvent(Convert.ToInt64(args[0]));
         await this.Trigger();
@@ -26,7 +27,7 @@ public class DoEventResolver : CommandResolver, IEventTrigger
 [CommandResolverHandler("LastEffectResult")]
 public class LastEffectResult : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var current = LifeEngine.Instance?.lifeData?.current;
         if (current == null) return null;
@@ -38,12 +39,12 @@ public class LastEffectResult : CommandResolver
 [CommandResolverHandler("Confirm")]
 public class ConformResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         return await Confirm(arg);
     }
 
-    private async Task<int> Confirm(string description)
+    private async UniTask<int> Confirm(string description)
     {
         var tcs = new TaskCompletionSource<int>();
         var onConfirm = new Action(() => tcs.SetResult(0));
@@ -57,7 +58,7 @@ public class ConformResolver : CommandResolver
 [CommandResolverHandler("Confirmed")]
 public class ConfirmedResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         if (args.Count < 2) return args.LastOrDefault();
         env.TryGetValue("$Effect", out var confirmed);
@@ -70,7 +71,7 @@ public class ConfirmedResolver : CommandResolver
 [CommandResolverHandler("RandomEvent")]
 public class RandomEventResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var events = args.Where((o, idx) => (idx % 2 == 0)).Select(Convert.ToInt64).ToArray();
         var weights = args.Where((o, idx) => (idx % 2 == 1)).Select(Convert.ToSingle).ToArray();
@@ -82,7 +83,7 @@ public class RandomEventResolver : CommandResolver
 [CommandResolverHandler("SelectEvent")]
 public class SelectEventResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var description = args[0] as string;
         var events = args.Skip(1).Select(Convert.ToInt64).ToArray();
@@ -91,10 +92,10 @@ public class SelectEventResolver : CommandResolver
         return await Select(description, options);
     }
 
-    private Task<int> Select(string description, List<string> options)
+    private UniTask<int> Select(string description, List<string> options)
     {
-        var tcs = new TaskCompletionSource<int>();
-        var onSelect = new Action<int>((idx) => tcs.SetResult(idx));
+        var tcs = new UniTaskCompletionSource<int>();
+        var onSelect = new Action<int>((idx) => tcs.TrySetResult(idx));
 
         SelectPanel.Show(description, options, onSelect).Coroutine();
         return tcs.Task;

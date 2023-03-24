@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Logic.Map;
+using Cysharp.Threading.Tasks;
 using Model;
 using ModelContainer;
 using UnityEngine;
@@ -62,20 +59,20 @@ namespace Controller
             lookup.Remove(placeID);
         }
 
-        public async Task Activate()
+        public async UniTask Activate()
         {
             // updateBounds();
             gameObject.SetActive(true);
         }
 
-        public async Task DeActivate()
+        public async UniTask DeActivate()
         {
             // throw new NotImplementedException();
             await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
             gameObject.SetActive(false);
         }
 
-        public static async Task UnloadPlaceAsync(long placeID)
+        public static async UniTask UnloadPlaceAsync(long placeID)
         {
             var place = GetPlaceController(placeID);
             if (place != null)
@@ -85,7 +82,7 @@ namespace Controller
             }
         }
 
-        public static async Task<PlaceController> LoadPlaceAsync(long placeID, Transform parent = null)
+        public static async UniTask<PlaceController> LoadPlaceAsync(long placeID, Transform parent = null)
         {
             var place = GetPlaceController(placeID);
             if (place != null)

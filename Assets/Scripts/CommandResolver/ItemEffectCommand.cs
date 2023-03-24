@@ -1,14 +1,12 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using Model;
-using ModelContainer;
+using Cysharp.Threading.Tasks;
 
 [CommandResolverHandler("ItemUsage")]
 public class ItemUsageResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var result = new ItemUsage
         {
@@ -24,7 +22,7 @@ public class ItemUsageResolver : CommandResolver
 [CommandResolverHandler("ChangePropertyEffect")]
 public class ChangePropertyEffectResolver : CommandResolver
 {
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         ItemChangePropertyEffect result = new ItemChangePropertyEffect();
         for (int i = 0; i < args.Count; i += 2)

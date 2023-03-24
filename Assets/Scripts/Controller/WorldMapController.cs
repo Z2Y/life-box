@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Logic.Map;
 using ModelContainer;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using Utils;
 
 namespace Controller
@@ -118,7 +117,7 @@ namespace Controller
         }
 
 
-        private async Task updateWorldPlaces()
+        private async UniTask updateWorldPlaces()
         {
             var placesInBounds = getPlacesInBounds();
 
@@ -128,15 +127,15 @@ namespace Controller
                 return;
             }
 
-            await Task.WhenAll(placesInBounds.Select((place) => place.Activate()));
+            await UniTask.WhenAll(placesInBounds.Select((place) => place.Activate()));
 
-            await Task.WhenAll((ActivePlaces.Count > 0 ? ActivePlaces : Places).Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
+            await UniTask.WhenAll((ActivePlaces.Count > 0 ? ActivePlaces : Places).Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
 
             ActivePlaces = placesInBounds;
             updateWorldBounds();
         }
         
-        public async Task InitMapWithPosition(Vector3 worldPosition)
+        public async UniTask InitMapWithPosition(Vector3 worldPosition)
         {
             mapUpdating = true;
             transform.position = worldPosition;
@@ -174,7 +173,7 @@ namespace Controller
             }
         }
         
-        public static async Task<WorldMapController> LoadMapAsync(long mapID)
+        public static async UniTask<WorldMapController> LoadMapAsync(long mapID)
         {
             var worldMap = GetWorldMapController(mapID);
             if (worldMap != null)
@@ -202,7 +201,7 @@ namespace Controller
 
             var placeRoot = worldMap.transform.Find("PlaceRoot");
             
-            worldMap.Places = (await Task.WhenAll(PlaceCollection.Instance.Places.
+            worldMap.Places = (await UniTask.WhenAll(PlaceCollection.Instance.Places.
                 Where((place) => place.MapID == mapID).
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID, placeRoot)))).
                 Where((p) => p != null).ToList();

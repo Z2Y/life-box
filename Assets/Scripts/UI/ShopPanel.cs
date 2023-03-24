@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Model;
 using UI;
 using UnityEngine;
@@ -203,7 +203,7 @@ public class ShopPanel : UIBase
         }
     }
 
-    public static async Task<ShopPanel> Show(ShopConfig config, Action<ShopResult> onShop)
+    public static async UniTask<ShopPanel> Show(ShopConfig config, Action<ShopResult> onShop)
     {
         var panel = await UIManager.Instance.FindOrCreateAsync<ShopPanel>() as ShopPanel;
         panel?.SetConfig(config, onShop);

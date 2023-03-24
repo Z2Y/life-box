@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -52,7 +53,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         BattleResultPanel.Show(state == BattleState.Win ? "胜利" : "失败", () =>
         {
-            GameLoader.Instance.SwitchSceneWithAnimation(SceneManager.GetActiveScene(), originScene).Coroutine();
+            GameLoader.Instance.SwitchSceneWithAnimation(SceneManager.GetActiveScene(), originScene).Forget();
         });
     }
 

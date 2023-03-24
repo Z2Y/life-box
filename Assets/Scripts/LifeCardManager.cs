@@ -1,4 +1,3 @@
-using System;
 using Model;
 using System.Linq;
 using UnityEngine;
@@ -13,7 +12,7 @@ public class LifeCardManager : MonoBehaviour
     private static LifeCardManager _instance;
     public static LifeCardManager Instance => _instance;
 
-    public LifeNode CurrentLife => LifeEngine.Instance?.lifeData.current;
+    public LifeNode CurrentLife => LifeEngine.Instance.lifeData.current;
 
     private void Awake()
     {

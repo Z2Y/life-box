@@ -1,6 +1,4 @@
-using System;
-using System.Threading.Tasks;
-using Logic.Detector.Config;
+using Cysharp.Threading.Tasks;
 using ModelContainer;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,7 +41,7 @@ namespace UI
             this.targetID = tID;
         }
 
-        public static async Task<InteractTip> Show(long menuID) {
+        public static async UniTask<InteractTip> Show(long menuID) {
             var panel = await UIManager.Instance.FindOrCreateAsync<InteractTip>() as InteractTip;
         
             if (!ReferenceEquals(panel, null))

@@ -1,15 +1,12 @@
-using System;
 using UnityEngine;
-using DG.Tweening;
 using Model;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [CommandResolverHandler("BattleNormalAttack")]
 public class BattleNormalAttack : CommandResolver
 {
-    public TaskCompletionSource<bool> moveTcs;
-    public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+    public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         BattleSkillAction skillAction = env["Skill"] as BattleSkillAction;
         if (skillAction == null || skillAction.target == null) return null;
@@ -49,7 +46,7 @@ public class BattleNormalAttackEffect : IBattleEffect
         this.self = self;
         this.target = target;
     }
-    public async Task DoEffect()
+    public async UniTask DoEffect()
     {
         int damage = skill.Attack;
         target.Hp.value -= damage;
@@ -58,7 +55,7 @@ public class BattleNormalAttackEffect : IBattleEffect
             Vector3 jumpDirection = target.View.transform.position - self.View.transform.position;
             target.View.ShowAttackInfo($"<color=#FD5C36>-{damage}</color>", jumpDirection.normalized);
         }
-        await YieldCoroutine.WaitForInstruction(new WaitForEndOfFrame());
+        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
     }
 
     public int GetScore()

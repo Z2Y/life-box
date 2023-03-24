@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Assets.HeroEditor.Common.Scripts.CharacterScripts;
+using Cysharp.Threading.Tasks;
 using Logic.Battle.Realtime;
 using Logic.Battle.Realtime.SkillAction;
 using ModelContainer;
@@ -137,7 +137,7 @@ namespace Controller
             Destroy(gameObject, 1f);
         }
 
-        public static async Task<NPCController> LoadCharacterAsync(long characterID)
+        public static async UniTask<NPCController> LoadCharacterAsync(long characterID)
         {
             var controller = GetCharacterController(characterID);
             if (controller != null)
@@ -155,7 +155,7 @@ namespace Controller
             }
             var loader = Resources.LoadAsync<GameObject>($"Prefabs/character/{character.ModelID}");
 
-            await YieldCoroutine.WaitForInstruction(loader);
+            await loader;
             
             if (loader.asset == null)
             {

@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using MessagePack;
 using UnityEngine;
 
@@ -34,7 +34,7 @@ public class ModelLoader : MonoBehaviour {
         Load().Coroutine();
     }
 
-    private async Task Load() {
+    private async UniTask Load() {
         if (loaded) {
             return ;
         }
@@ -46,7 +46,7 @@ public class ModelLoader : MonoBehaviour {
             var modelAttr = (ModelContainerOf)type.GetCustomAttribute(typeof(ModelContainerOf), false);
             var modelType = modelAttr.ModelType;
             var loader = Resources.LoadAsync($"{dir}{modelType.Name}");
-            await YieldCoroutine.WaitForInstruction(loader);
+            await loader;
             
             var asset = loader.asset as TextAsset;
             var modelListType = typeof(List<>).MakeGenericType(modelType);

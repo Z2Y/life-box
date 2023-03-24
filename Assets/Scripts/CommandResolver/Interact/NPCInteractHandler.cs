@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Controller;
+using Cysharp.Threading.Tasks;
 using Logic.Detector;
 using Model;
 using ModelContainer;
@@ -14,7 +15,7 @@ namespace Interact
     [CommandResolverHandler("InteractToNPC")]
     public class NPCInteractHandler : CommandResolver
     {
-        public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+        public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
         {
             var activeDetectors = env["activeDetectors"] as HashSet<KeyValuePair<IDetector, Collider2D>>;
             var self = LifeEngine.Instance.MainCharacter;
@@ -160,7 +161,7 @@ namespace Interact
     [CommandResolverHandler("StopInteractToNPC")]
     public class StopNPCInteractHandler : CommandResolver
     {
-        public override async Task<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
+        public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
         {
             var dialog = UIManager.Instance.FindByType<DialoguePanel>();
             if (dialog is { gameObject: { activeSelf: true } })

@@ -1,6 +1,5 @@
-using System.Threading.Tasks;
 using Controller;
-using ModelContainer;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -24,7 +23,7 @@ namespace Logic.Map
             return toPlaceIDs[Random.Range(0, toPlaceIDs.Length)];
         }
 
-        private async Task Jump()
+        private async UniTask Jump()
         {
             var nextPlaceID = GetNextPlaceID();
             nextPlace = map.Places.Find((place) => place.placeID == nextPlaceID);

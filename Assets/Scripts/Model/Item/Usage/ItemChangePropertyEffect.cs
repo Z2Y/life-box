@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Model;
 
 public class ItemChangePropertyEffect : ItemUsageEffect
@@ -16,7 +17,7 @@ public class ItemChangePropertyEffect : ItemUsageEffect
             args.Add(change.Value);
         }
 
-        ExpressionCommandResolver.Resolve("ChangeProperty", "", args, null).Coroutine();
+        ExpressionCommandResolver.Resolve("ChangeProperty", "", args, null).Forget();
     }
 
     public override string UsageDescription()

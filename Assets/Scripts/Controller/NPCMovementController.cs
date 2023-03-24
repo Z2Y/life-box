@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Logic.Map;
 using UnityEngine;
 using UnityEngine.Events;
@@ -108,7 +108,7 @@ namespace Controller
             }
         }
 
-        public async Task MoveTo(Vector3 target, Vector3 moveSpeed, long expectTime)
+        public async UniTask MoveTo(Vector3 target, Vector3 moveSpeed, long expectTime)
         {
             moveTask.Cancel(); // cancel previous move task;
 
@@ -143,13 +143,13 @@ namespace Controller
         private long startTime;
         private long moveTime;
         
-        private TaskCompletionSource<bool> tcs;
+        private UniTaskCompletionSource<bool> tcs;
         private Vector3 moveSpeed;
 
         private bool isComplete;
         public bool IsRunning => tcs != null && !isComplete;
 
-        public Task DoMove(Vector3 target, Vector3 speed, long expectTime)
+        public UniTask DoMove(Vector3 target, Vector3 speed, long expectTime)
         {
             targetPos = target;
             startPos = rigidbody.position;
@@ -160,7 +160,7 @@ namespace Controller
             if (distance < 0.001f)
             {
                 isComplete = true;
-                return Task.CompletedTask; // No need movement
+                return UniTask.CompletedTask; // No need movement
             }
 
             moveSpeed = (targetPos - startPos).normalized * speed.magnitude;
@@ -177,7 +177,7 @@ namespace Controller
                 moveTime = expectTime;
             }
 
-            tcs = new TaskCompletionSource<bool>();
+            tcs = new UniTaskCompletionSource<bool>();
 
             return tcs.Task;
         }

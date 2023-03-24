@@ -1,7 +1,6 @@
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UI;
-using UnityEngine;
 using UnityEngine.UI;
 using Utils;
 
@@ -27,10 +26,11 @@ public class BattleResultPanel : UIBase {
         }
     }
 
-    public static async Task Show(string description, Action onOk)
+    public static async UniTask<BattleResultPanel> Show(string description, Action onOk)
     {
         var panel = await UIManager.Instance.FindOrCreateAsync<BattleResultPanel>() as BattleResultPanel;
         panel?.SetDescription(description);
         panel?.SetCallback(onOk);
+        return panel;
     }
 }

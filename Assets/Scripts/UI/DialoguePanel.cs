@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Assets.HeroEditor.Common.Scripts.Common;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utils;
 
@@ -74,14 +71,14 @@ namespace UI
             await TypeTextAsync();
         }
 
-        private async Task LoadCharacterImageAsync(string imagePath)
+        private async UniTask LoadCharacterImageAsync(string imagePath)
         {
             var loader = Resources.LoadAsync<Sprite>(imagePath);
-            await YieldCoroutine.WaitForInstruction(loader);
+            await loader;
             characterImage.sprite = loader.asset as Sprite;
         }
 
-        private async Task TypeTextAsync()
+        private async UniTask TypeTextAsync()
         {
             dialogueText.text = "";
             isTyping = true;
@@ -149,7 +146,7 @@ namespace UI
             // Update dialogue
         }
 
-        public static async Task<DialoguePanel> Show(DialogueLine dialogue)
+        public static async UniTask<DialoguePanel> Show(DialogueLine dialogue)
         {
             if (await UIManager.Instance.FindOrCreateAsync<DialoguePanel>(true) is DialoguePanel panel)
             {
