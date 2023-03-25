@@ -282,6 +282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectors:
   - {fileID: 11400000, guid: 49143f4fde1fc497996d203e41311421, type: 2}
+  - {fileID: 11400000, guid: 857d1af5630d345d183a67b4955f499f, type: 2}
 --- !u!114 &2106484178445777394
 MonoBehaviour:
   m_ObjectHideFlags: 0

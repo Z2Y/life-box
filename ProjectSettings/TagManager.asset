@@ -8,6 +8,7 @@ TagManager:
   - Projectile_Player
   - Gate
   - Wall
+  - NPC
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - HitArea_Enemy
   - Gate
   - Wall
-  - 
+  - Player
   - 
   - 
   - 

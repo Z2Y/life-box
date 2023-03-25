@@ -18,7 +18,7 @@ namespace Logic.Battle.Realtime.Ai
         {
             ownBlackBoard = new Blackboard(null, UnityContext.GetClock());
             destinationFinder = new FindDestRD(10, transform.position );
-            enemyFinder = new FindEnemy(10, LayerMask.GetMask("Default"));
+            enemyFinder = new FindEnemy(10, LayerMask.GetMask("Player", "NPC"));
             behaviorTree = createBehaviorTree();
             ownBlackBoard.Set("self_transform", transform);
             ownBlackBoard.Set("move_task", moveTask = new NPCMoveTask());

@@ -136,6 +136,7 @@ namespace Controller
                 removeAllShortCuts();
                 LifeEngine.Instance.GameEnd();
             }
+            disableMove();
             Destroy(gameObject, 1f);
         }
 

@@ -1,6 +1,5 @@
 using System.Linq;
 using Assets.HeroEditor.Common.Scripts.Common;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Logic.Battle.Realtime.Ai
@@ -11,24 +10,34 @@ namespace Logic.Battle.Realtime.Ai
     {
         private readonly float radius;
         private readonly int enemyLayer;
+        private readonly string enemyTag;
+        private readonly Collider2D[] results;
 
-        public FindEnemy(float radius, int enemyLayer)
+        public FindEnemy(float radius, int enemyLayer, string enemyTag = "")
         {
             this.radius = radius;
             this.enemyLayer = enemyLayer;
+            this.enemyTag = enemyTag;
+            results = new Collider2D[32];
         }
 
-        public Collider2D GetResult(Vector3 position, [CanBeNull] Collider2D previous)
+        public Collider2D GetResult(Vector3 position,  Collider2D previous)
         {
-            var targets = Physics2D.OverlapCircleAll(position, radius, enemyLayer);
+            var size = Physics2D.OverlapCircleNonAlloc(position, radius, results, enemyLayer);
 
-            if (!ReferenceEquals(previous, null) && targets.Contains(previous))
+            if (size == 0) return null;
+
+            if (!ReferenceEquals(previous, null) && results.Take(size).Contains(previous))
             {
                 return previous;
             }
 
-            return targets.Random();
+            if (enemyTag.IsEmpty())
+            {
+                return results[Random.Range(0, size)];
+            }
 
+            return results.Where((collider) => collider.CompareTag(enemyTag)).ToList().Random();
         }
     }
 }
