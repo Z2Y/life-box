@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class YieldCoroutine : MonoBehaviour
 {
-
     private static YieldCoroutine instance;
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
     public static async UniTask WaitForSeconds(float t)
