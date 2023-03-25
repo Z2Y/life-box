@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Logic.Quest;
 using Model;
-using UnityEditor.Search;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 using Utils;
 
 namespace UI

@@ -11,6 +11,8 @@ public class GameRoot : MonoBehaviour
         if (Instance == null) {
             Instance = this;
         }
+
+        Application.targetFrameRate = 512;
     }
 
     public void NewGame() {
