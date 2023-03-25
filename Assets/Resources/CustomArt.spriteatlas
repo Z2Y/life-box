@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CustomArt
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: afdb23c236e6f17408aba4257074819d, type: 3}
+    - {fileID: 102900000, guid: 0f0df0a7a0008684c8a9a714cc60bcbe, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: e2bede11f3c7047dba77a2d940a91d7c, type: 3}
+  - {fileID: 1802459005, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
+  - {fileID: 507549437, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
+  - {fileID: 1130076741, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
+  - {fileID: -1885567557, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
+  - {fileID: 1336906701, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
+  - {fileID: -2014805301, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
+  - {fileID: -26086281, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
+  - {fileID: -1487320371, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
+  - {fileID: -2027593475, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
+  - {fileID: -1850122809, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
+  - {fileID: 1455809507, guid: 5fa64ec32d37a4d798d769721cb62fe3, type: 3}
+  - {fileID: -756086403, guid: 5fa64ec32d37a4d798d769721cb62fe3, type: 3}
+  - {fileID: 1683185659, guid: 5fa64ec32d37a4d798d769721cb62fe3, type: 3}
+  - {fileID: 1892710437, guid: 5fa64ec32d37a4d798d769721cb62fe3, type: 3}
+  - {fileID: -192220870, guid: 5fa64ec32d37a4d798d769721cb62fe3, type: 3}
+  - {fileID: 1510778813, guid: 5fa64ec32d37a4d798d769721cb62fe3, type: 3}
+  - {fileID: -2054977391, guid: 5fa64ec32d37a4d798d769721cb62fe3, type: 3}
+  - {fileID: 21300000, guid: 6ec797d3c33364ea4b7f8eacdbb60611, type: 3}
+  - {fileID: 21300000, guid: 28d29684376824126b21f05b595e0446, type: 3}
+  - {fileID: 1639841433, guid: db134ba4a61f043fbbe7930633df9ace, type: 3}
+  - {fileID: -1482932148, guid: db134ba4a61f043fbbe7930633df9ace, type: 3}
+  - {fileID: 21300000, guid: 5ddd4336fdd3d476abdf91de7538b242, type: 3}
+  - {fileID: 21300000, guid: d5e221f7a6513419cb3ef6fe8c694c74, type: 3}
+  - {fileID: 1869607585, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
+  - {fileID: 932674830, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
+  - {fileID: -409197418, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
+  - {fileID: -2050731079, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
+  - {fileID: 948825324, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
+  - {fileID: 799254491, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
+  - {fileID: 21300000, guid: 7108149e6b3e047b88540f9793b2f6e3, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - tree-3
+  - Hyena_death_4
+  - Hyena_death_5
+  - Hyena_death_2
+  - Hyena_death_3
+  - Hyena_death_0
+  - Hyena_death_1
+  - Hyena_idle_0
+  - Hyena_idle_1
+  - Hyena_idle_2
+  - Hyena_idle_3
+  - Hyena_attack_6
+  - Hyena_attack_4
+  - Hyena_attack_5
+  - Hyena_attack_2
+  - Hyena_attack_3
+  - Hyena_attack_0
+  - Hyena_attack_1
+  - tree-5
+  - tree-2 1
+  - Hyena_hurt_1
+  - Hyena_hurt_0
+  - Hyena
+  - tree-4
+  - Hyena_walk_5
+  - Hyena_walk_4
+  - Hyena_walk_1
+  - Hyena_walk_0
+  - Hyena_walk_3
+  - Hyena_walk_2
+  - tree1
+  m_RenderDataMap: {}
+  m_Tag: CustomArt
+  m_IsVariant: 0

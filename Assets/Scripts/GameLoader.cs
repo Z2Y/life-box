@@ -30,7 +30,7 @@ public class GameLoader : MonoBehaviour
 
     public void LoadGame()
     {
-        LoadGameAsync().Forget();
+        CrossFade(LoadGameAsync).Coroutine();
     }
 
     public async UniTask LoadSceneWithAnimation(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)

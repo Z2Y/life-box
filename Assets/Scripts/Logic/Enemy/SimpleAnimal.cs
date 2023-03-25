@@ -86,6 +86,7 @@ namespace Logic.Enemy
 
         private async void onDeath()
         {
+            if (isDeath) return;
             isDeath = true;
             animator.Play("Death");
             ai.StopAI();

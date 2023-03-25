@@ -25,14 +25,9 @@ namespace Logic.Projectile
             SpRender = GetComponent<SpriteRenderer>();
         }
 
-        public void OnEnable()
-        {
-            _hitArea.AddListener(Bang);
-        }
-
         public void OnDisable()
         {
-            _hitArea.RemoveListener(Bang);
+            _hitArea.RemoveAllListener();
             foreach (var tr in Trail.GetComponents<TrailRenderer>())
             {
                 tr.Clear();
@@ -47,7 +42,6 @@ namespace Logic.Projectile
 
         public void Fire(Transform from, Sprite arrowSprite, Vector3 velocity, float maxAlive = 5f, UnityAction<Collider2D> onHit = null)
         {
-            gameObject.SetActive(true);
             transform.SetParent(from);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
@@ -55,10 +49,12 @@ namespace Logic.Projectile
             SpRender.sprite = arrowSprite;
             Rigidbody.velocity = velocity;
             transform.right = velocity.normalized;
+            _hitArea.AddListener(Bang);
             if (onHit != null)
             {
                 _hitArea.AddListener(onHit);
             }
+            
             StartCoroutine(autoRecycle(maxAlive));
         }
 
@@ -70,7 +66,6 @@ namespace Logic.Projectile
 
         private void Bang(Collider2D other)
         {
-            _hitArea.RemoveAllListener();
             Pool.Return(this);
         }
 
