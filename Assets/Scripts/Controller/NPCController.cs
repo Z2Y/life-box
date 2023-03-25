@@ -100,6 +100,8 @@ namespace Controller
                 Destroy(battleSkill);
             }
             skillShortCuts.Clear();
+            // ReSharper disable once Unity.NoNullPropagation
+            Interact?.removeInteract();
         }
 
         public void disableMove()
@@ -131,7 +133,7 @@ namespace Controller
             Animator.SetState(CharacterState.DeathF);
             if (character.ID == 0)
             {
-                disableAllShortCuts();
+                removeAllShortCuts();
                 LifeEngine.Instance.GameEnd();
             }
             Destroy(gameObject, 1f);

@@ -1,6 +1,7 @@
 using System;
 using Controller;
 using Cysharp.Threading.Tasks;
+using Logic.Loot;
 using UnityEngine;
 
 public class LifeEngine : MonoBehaviour {
@@ -53,6 +54,7 @@ public class LifeEngine : MonoBehaviour {
     {
         WorldCameraController.Instance.FollowTo(null).Forget();
         SwordSlashController.Pool.RecycleUsed();
+        WorldLootObject.Pool.RecycleUsed();
         GameLoader.Instance.LoadSceneWithAnimation("MainScene").Forget();
     }
 

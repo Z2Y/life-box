@@ -160,6 +160,13 @@ namespace Controller
             if (ReferenceEquals(tip, null)) return;
             InputCommandResolver.Instance.EnableKeyCode(tip.keyCode);
         }
+        
+        public void removeInteract()
+        {
+            if (ReferenceEquals(tip, null)) return;
+            InputCommandResolver.Instance.UnRegister(tip.keyCode);
+        }
+
 
         private void hideInteractMenu()
         {

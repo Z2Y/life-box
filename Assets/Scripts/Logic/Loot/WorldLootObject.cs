@@ -14,7 +14,7 @@ namespace Logic.Loot
 
         private SpriteRenderer spriteRenderer;
 
-        private static readonly PrefabPool<WorldLootObject> pool = new ();
+        public static readonly PrefabPool<WorldLootObject> Pool = new ();
 
         private void Awake()
         {
@@ -44,7 +44,7 @@ namespace Logic.Loot
 
         public static async UniTask<WorldLootObject> CreateAsync(ItemStack lootItems)
         {
-            var lootObj = await pool.GetAsync();
+            var lootObj = await Pool.GetAsync();
             await lootObj.loadItem(lootItems);
 
             return lootObj;
@@ -60,7 +60,7 @@ namespace Logic.Loot
             transform.DOMove(by.transform.position, 0.5f);
             spriteRenderer.DOFade(0, 0.5f).OnComplete(() =>
             {
-                pool.Return(this);
+                Pool.Return(this);
             });
         }
     }
