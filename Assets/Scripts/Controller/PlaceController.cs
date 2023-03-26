@@ -94,7 +94,7 @@ namespace Controller
 
             if (place != null)
             {
-                lookup.TryAdd(placeID, place);
+                lookup[placeID] = place;
                 place.OnLoaded(placeID);
             }
 

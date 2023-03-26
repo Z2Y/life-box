@@ -84,6 +84,7 @@ namespace Logic.Battle.Realtime.Ai
         private void onBeforeStart()
         {
             ownBlackBoard.UpdateClock(UnityContext.GetClock());
+            Debug.Log(LifeEngine.Instance.Map);
             ownBlackBoard.Set("word_map", LifeEngine.Instance.Map);
             behaviorTree.UpdateClock();
         }

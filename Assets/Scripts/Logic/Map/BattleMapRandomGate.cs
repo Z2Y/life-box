@@ -73,7 +73,9 @@ namespace Logic.Map
                 await YieldCoroutine.WaitForSeconds(0.125f);
             }
             await fromPlace.DeActivate();
-            nextPlace.GetComponent<BattlePlaceController>().EnableAllGate();
+            var battleController = nextPlace.GetComponent<BattlePlaceController>();
+            battleController.Prepare();
+            battleController.BeginProcedure();
         }
         private enum ConnectDirection
         {

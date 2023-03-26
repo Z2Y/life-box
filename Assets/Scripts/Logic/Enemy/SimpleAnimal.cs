@@ -16,13 +16,14 @@ namespace Logic.Enemy
         public string animalType;
         public float animalHeight;
         private AnimationController animator;
-        private SimpleAnimalBornPlace bornPlace;
         private SimpleAI ai;
         private PropertyValue hp;
         private SimpleAttackInfo info;
         private ItemStack lootItem;
 
         public bool isDeath;
+
+        private Action<SimpleAnimal> _onDeath;
 
         private void Awake()
         {
@@ -37,9 +38,14 @@ namespace Logic.Enemy
             ai.StopAI();
         }
 
-        public void SetBornPlace(SimpleAnimalBornPlace place)
+        public void AddDeathListener(Action<SimpleAnimal> onDeath)
         {
-            bornPlace = place;
+            _onDeath += onDeath;
+        }
+
+        public void RemoveDeathListener(Action<SimpleAnimal> onDeath)
+        {
+            _onDeath -= onDeath;
         }
 
         public void OnLoaded(string arg)
@@ -100,7 +106,7 @@ namespace Logic.Enemy
             lootObj.JumpOut(transform.position, Random.insideUnitCircle);
 
             await YieldCoroutine.WaitForSeconds(0.5f);
-            bornPlace.OnAnimalDeath(this);
+            _onDeath?.Invoke(this);
 
         }
     }

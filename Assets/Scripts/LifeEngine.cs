@@ -52,10 +52,10 @@ public class LifeEngine : MonoBehaviour {
 
     public void GameEnd()
     {
-        WorldCameraController.Instance.FollowTo(null).Forget();
+        WorldCameraController.Instance.FollowTo(null).Coroutine();
         SwordSlashController.Pool.RecycleUsed();
         WorldLootObject.Pool.RecycleUsed();
-        GameLoader.Instance.LoadSceneWithAnimation("MainScene").Forget();
+        GameLoader.Instance.LoadSceneWithAnimation("MainScene").Coroutine();
     }
 
     private async void OnNextMonth() {

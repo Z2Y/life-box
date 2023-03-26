@@ -198,6 +198,8 @@ namespace Controller
                 Debug.LogWarning($"Load Map {mapID} Failed, Resource Not Found.");
                 return null;
             }
+            
+            lookup[worldMap.mapID] = worldMap;
 
             var placeRoot = worldMap.transform.Find("PlaceRoot");
             
@@ -205,8 +207,6 @@ namespace Controller
                 Where((place) => place.MapID == mapID).
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID, placeRoot)))).
                 Where((p) => p != null).ToList();
-            
-            lookup[worldMap.mapID] = worldMap;
 
             return worldMap;
         }

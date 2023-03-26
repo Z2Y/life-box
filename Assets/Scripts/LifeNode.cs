@@ -96,7 +96,7 @@ public class LifeNode
     public static LifeNode CreateBornNode()
     {
         var node = new LifeNode();
-        var bornPlace = PlaceCollection.Instance.RandomPlace(Model.PlaceType.City);
+        var bornPlace = PlaceCollection.Instance.GetPlace(10002);
         var bornEvent = TimeTriggerContainer.Instance.GetTrigger(new TimeSpan(0, 0)).GetEvent();
         node.Place = bornPlace;
         node.Location = new Location() {MapID = bornPlace.MapID, PlaceID = bornPlace.ID};
