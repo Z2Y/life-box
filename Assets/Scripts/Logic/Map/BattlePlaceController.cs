@@ -1,6 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Assets.HeroEditor.Common.Scripts.Common;
+using Controller;
 using Logic.Map.MapProcedure;
+using Model;
+using ModelContainer;
 using UnityEngine;
 
 namespace Logic.Map
@@ -10,7 +15,9 @@ namespace Logic.Map
         private BattleMapRandomGate[] gates;
 
         [SerializeField]
-        private BattleMapProcedure[] procedures;
+        private List<BattleMapProcedure> procedures;
+
+        private PlaceController root;
 
         private BattleMapProcedure currentProcedure;
 
@@ -20,7 +27,7 @@ namespace Logic.Map
         private void Awake()
         {
             gates = transform.Find("Gate").GetComponentsInChildren<BattleMapRandomGate>(true);
-
+            root = GetComponent<PlaceController>();
         }
 
         private void OnDestroy()
@@ -59,12 +66,28 @@ namespace Logic.Map
 
         public void Prepare()
         {
-            currentProcedure = procedures.Random();
+            var events = PlaceTriggerContainer.Instance.GetPlaceTrigger(root.placeID).GetValidEvents();
+
+            if (events.Count > 0)
+            {
+                procedures = events.Select((@event) =>
+                {
+                    var mapEvent = ScriptableObject.CreateInstance<BattleMapEvent>();
+                    mapEvent.mapEvent = @event;
+                    return (BattleMapProcedure)mapEvent;
+                }).ToList();
+                currentProcedure = procedures.First();
+            }
+            else
+            {
+                currentProcedure = procedures.Random();
+            }
         }
 
         public void BeginProcedure()
         {
             DisableAllGate();
+            Debug.Log($"Start Procedure {currentProcedure}");
             currentProcedure.StartProcedure(this);
             currentProcedure.OnProcedureFinish(() =>
             {

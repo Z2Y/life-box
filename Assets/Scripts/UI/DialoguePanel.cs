@@ -34,7 +34,7 @@ namespace UI
             // 继承原先对话的取消回调
             if (dialogue.onCancel == null && gameObject.activeSelf)
             {
-                dialogue.onCancel = currentDialogue.onCancel;
+                dialogue.onCancel = currentDialogue?.onCancel;
             }
             
             Show();

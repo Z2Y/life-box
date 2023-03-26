@@ -34,7 +34,7 @@ namespace ModelContainer
     public class TalkTriggerContainer
     {
         private readonly Dictionary<long, TalkTrigger> lookup = new ();
-        private List<TalkTrigger> triggers = new ();
+        private readonly List<TalkTrigger> triggers = new ();
         private static TalkTriggerContainer _instance;
         private TalkTriggerContainer() { }
 

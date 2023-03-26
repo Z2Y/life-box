@@ -198,8 +198,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96df291d04d6402eb69fde66c7378ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalTypes:
-  - Hyena
   MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
@@ -384,8 +382,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96df291d04d6402eb69fde66c7378ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalTypes:
-  - Hyena
   MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
@@ -486,8 +482,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96df291d04d6402eb69fde66c7378ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalTypes:
-  - Hyena
   MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
@@ -588,8 +582,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96df291d04d6402eb69fde66c7378ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalTypes:
-  - Hyena
   MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
@@ -11102,8 +11094,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96df291d04d6402eb69fde66c7378ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalTypes:
-  - Hyena
   MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
@@ -11204,8 +11194,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96df291d04d6402eb69fde66c7378ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalTypes:
-  - Hyena
   MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
@@ -11306,8 +11294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96df291d04d6402eb69fde66c7378ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalTypes:
-  - Hyena
   MaxAliveInstance: 1
   SpawnRange: 2
   SpawnInterval: 2
@@ -11812,6 +11798,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1d5b909397c490cbb2c19fcf5e13125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  procedures:
+  - {fileID: 11400000, guid: 322e1279b11aa42ba800f38861e0ec76, type: 2}
+  beginOnStart: 0
 --- !u!1 &9099103889398338290
 GameObject:
   m_ObjectHideFlags: 0

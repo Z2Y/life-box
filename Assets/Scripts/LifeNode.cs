@@ -97,10 +97,8 @@ public class LifeNode
     {
         var node = new LifeNode();
         var bornPlace = PlaceCollection.Instance.GetPlace(10002);
-        var bornEvent = TimeTriggerContainer.Instance.GetTrigger(new TimeSpan(0, 0)).GetEvent();
         node.Place = bornPlace;
         node.Location = new Location() {MapID = bornPlace.MapID, PlaceID = bornPlace.ID};
-        node.Events.Add(new EventNode(node, bornEvent));
         return node;
     }
 }
