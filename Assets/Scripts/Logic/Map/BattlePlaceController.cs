@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.HeroEditor.Common.Scripts.Common;
 using Controller;
+using Cysharp.Threading.Tasks;
 using Logic.Map.MapProcedure;
 using Model;
 using ModelContainer;
@@ -39,10 +40,11 @@ namespace Logic.Map
             }
         }
 
-        private void Start()
+        private async void Start()
         {
             if (beginOnStart)
             {
+                await YieldCoroutine.WaitForSeconds(0.125f);
                 Prepare();
                 BeginProcedure();
             }

@@ -42,9 +42,7 @@ public class LifeEngine : MonoBehaviour {
         mainCharacter.SetAsPlayer(true);
         WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Forget();
         isReady = true;
-
-        lifeData.DoForecast(lifeTime);
-        lifeData.current.ProcessEvent().Coroutine();
+        
         // LifeCardManager.Instance.UpdateCardActions();
         OnLifeStart?.Invoke();
         AfterLifeChange?.Invoke();

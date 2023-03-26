@@ -25,6 +25,6 @@ public class LifePlacePanel : UIBase {
     }
 
     private void Refresh() {
-        text.text = LifeEngine.Instance.lifeData?.current.Next.Place.Name;
+        text.text = LifeEngine.Instance.lifeData?.current.Place.Name;
     }
 }
