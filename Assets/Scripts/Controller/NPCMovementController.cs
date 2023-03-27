@@ -111,15 +111,8 @@ namespace Controller
         public async UniTask MoveTo(Vector3 target, Vector3 moveSpeed, long expectTime)
         {
             moveTask.Cancel(); // cancel previous move task;
-
-            try
-            {
-                await moveTask.DoMove(target, moveSpeed, expectTime);
-            }
-            catch (OperationCanceledException)
-            {
-                Debug.Log("Move To Canceled");
-            }
+            
+            await moveTask.DoMove(target, moveSpeed, expectTime);
         }
 
         public void OnEnter(long mapID, long placeID)
@@ -194,7 +187,7 @@ namespace Controller
                 Complete();
                 return;
             }
-            
+
             rigidbody.velocity = moveSpeed;
         }
 

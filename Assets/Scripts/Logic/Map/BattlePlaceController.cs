@@ -22,6 +22,8 @@ namespace Logic.Map
 
         private BattleMapProcedure currentProcedure;
 
+        private int currentProcedureIndex;
+
         [SerializeField]
         private bool beginOnStart;
 
@@ -29,6 +31,7 @@ namespace Logic.Map
         {
             gates = transform.Find("Gate").GetComponentsInChildren<BattleMapRandomGate>(true);
             root = GetComponent<PlaceController>();
+            currentProcedureIndex = 0;
         }
 
         private void OnDestroy()
@@ -78,11 +81,23 @@ namespace Logic.Map
                     mapEvent.mapEvent = @event;
                     return (BattleMapProcedure)mapEvent;
                 }).ToList();
-                currentProcedure = procedures.First();
+            }
+            
+            currentProcedure = procedures[currentProcedureIndex];
+        }
+
+        private void NextProcedure()
+        {
+            if (currentProcedureIndex + 1 < procedures.Count)
+            {
+                currentProcedureIndex += 1;
+                currentProcedure = procedures[currentProcedureIndex];
+                currentProcedure.StartProcedure(this);
             }
             else
             {
-                currentProcedure = procedures.Random();
+                Debug.Log("End Procedures");
+                EnableAllGate();
             }
         }
 
@@ -91,11 +106,7 @@ namespace Logic.Map
             DisableAllGate();
             Debug.Log($"Start Procedure {currentProcedure}");
             currentProcedure.StartProcedure(this);
-            currentProcedure.OnProcedureFinish(() =>
-            {
-                Debug.Log("Procedure End");
-                EnableAllGate();
-            });
+            currentProcedure.OnProcedureFinish(NextProcedure);
         }
     }
 }

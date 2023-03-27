@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -24,7 +26,11 @@ namespace Logic.Enemy.Scriptable
         private Action _onDeathAll;
 
         private Action _onDeathSingle;
-        
+
+        private Action _onTerminate;
+
+        private string[] animalTypesOverride;
+
         public override int CurrentAlive()
         {
             return currentAliveInstance;
@@ -33,10 +39,11 @@ namespace Logic.Enemy.Scriptable
         public override async void Spawn(int count, Vector3 position, float range, float interval)
         {
             isSpawning = true;
+            var usedAnimalTypes = animalTypesOverride ?? animalTypes;
             for (var i = 0; i < count; i++)
             {
                 
-                var animalType = animalTypes[Random.Range(0, animalTypes.Length)];
+                var animalType = usedAnimalTypes[Random.Range(0, usedAnimalTypes.Length)];
                 var animal = await Pool.GetAsync(animalType);
 
                 if (!isSpawning)
@@ -57,6 +64,13 @@ namespace Logic.Enemy.Scriptable
                 await YieldCoroutine.WaitForSeconds(Mathf.Max(0, interval + Random.Range(-SpawnVariance, SpawnVariance)));
             }
             isSpawning = false;
+            animalTypesOverride = null;
+        }
+
+        public override void Spawn(string variant, int count, Vector3 position, float range, float interval)
+        {
+            animalTypesOverride = new[] { variant };
+            Spawn(count, position, range, interval);
         }
 
         private void _onAnimalDeath(SimpleAnimal animal)
@@ -72,18 +86,27 @@ namespace Logic.Enemy.Scriptable
                 _onDeathAll?.Invoke();
                 _onDeathAll = null;
                 _onDeathSingle = null;
+                _onTerminate = null;
             }
+        }
+
+        public override void OnTerminate(Action onTerminate)
+        {
+            _onTerminate += onTerminate;
         }
 
         public override void Clear()
         {
             isSpawning = false;
-            foreach (var animal in activeAnimals)
+            if (currentAliveInstance > 0)
             {
-                if (animal != null)
-                {
-                    Pool.Return(animal, animal.animalType);
-                }
+                _onTerminate?.Invoke();
+                _onTerminate = null;
+            }
+
+            foreach (var animal in activeAnimals.Where(animal => animal != null))
+            {
+                Pool.Return(animal, animal.animalType);
             }
 
             currentAliveInstance = 0;
@@ -98,6 +121,11 @@ namespace Logic.Enemy.Scriptable
         public override void OnDeathAll(Action onEnemyAllDeath)
         {
             _onDeathAll += onEnemyAllDeath;
+        }
+
+        private void OnDestroy()
+        {
+            Clear();
         }
     }
 }

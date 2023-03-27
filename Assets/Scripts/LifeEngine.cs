@@ -13,10 +13,8 @@ public class LifeEngine : MonoBehaviour {
     public bool isReady;
 
     public WorldMapController Map => WorldMapController.GetWorldMapController(lifeData.current.Location.MapID);
-
     public PlaceController Place => PlaceController.GetPlaceController(lifeData.current.Location.PlaceID);
-
-    public NPCController MainCharacter => NPCController.GetCharacterController(0); 
+    public NPCController MainCharacter => NPCController.GetCharacterController(0);
 
     public Action AfterLifeChange;
     public Action OnLifeStart;

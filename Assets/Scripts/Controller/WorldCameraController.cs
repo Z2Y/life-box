@@ -30,6 +30,11 @@ namespace Controller
             transform.position = tarGetPosition();
         }
 
+        public GameObject GetFollowTarget()
+        {
+            return _followGameObject;
+        }
+
         public bool isNearFollowTarget()
         {
             var targetPos = tarGetPosition();
@@ -58,7 +63,7 @@ namespace Controller
                 transform.position = tarGetPosition();
             }
 
-            isFollowing = true;
+            isFollowing = _followGameObject != null;
         }
 
         private Vector3 tarGetPosition()

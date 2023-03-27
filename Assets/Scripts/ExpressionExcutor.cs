@@ -184,12 +184,12 @@ public class ExpressionNode
 
     public object ExecuteExpression()
     {
-        string injectedExpression = InjectEnv();
+        var injectedExpression = InjectEnv();
         var match = Regex.Match(injectedExpression, @"[><\!\?\@=]");
-        string command = injectedExpression.Substring(0, match.Index);
-        string op = injectedExpression.Substring(match.Index, (match.Index + 1) < injectedExpression.Length && injectedExpression[match.Index + 1] == '=' ? 2 : 1);
-        string data = injectedExpression.Substring(match.Index + op.Length);
-        List<object> listData = new List<object>();
+        var command = injectedExpression[..match.Index];
+        var op = injectedExpression.Substring(match.Index, (match.Index + 1) < injectedExpression.Length && injectedExpression[match.Index + 1] == '=' ? 2 : 1);
+        var data = injectedExpression[(match.Index + op.Length)..];
+        var listData = new List<object>();
         if (data.Length > 0 && data[0] == '[')
         {
             try
@@ -331,10 +331,12 @@ public class ExpressionNode
         if (!raw.StartsWith("(")) {
             return new ExpressionNode(raw);
         }
+
         int cursor = 0;
         Stack<ExpressionNode> stack = new Stack<ExpressionNode>();
         stack.Push(new ExpressionNode());
-        Action<int> GetExpression = (int idx) =>
+
+        void GetExpression(int idx)
         {
             string sub = raw.Substring(cursor, idx - cursor).Trim();
             cursor = idx;
@@ -342,7 +344,7 @@ public class ExpressionNode
             {
                 stack.Peek().nodes.Add(new ExpressionNode(sub));
             }
-        };
+        }
 
         for (int i = 0; i < raw.Length; i++)
         {

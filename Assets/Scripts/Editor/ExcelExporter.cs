@@ -123,7 +123,7 @@ public static class ExcelExporter
                 jsonValue = value;
                 break;
         }
-        UnityEngine.Debug.Log(jsonValue);
+        // UnityEngine.Debug.Log(jsonValue);
         return MessagePackSerializer.Deserialize(fieldInfo.FieldType, MessagePackSerializer.ConvertFromJson(jsonValue));
     }
 
