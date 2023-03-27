@@ -41,11 +41,23 @@ public class TalkCommand : CommandResolver
                 uninterruptible = uninterruptible == 1
             };
 
+            if (dialogue.uninterruptible)
+            {
+                LifeEngine.Instance.MainCharacter.disableMove();
+                LifeEngine.Instance.MainCharacter.disableAllShortCuts();
+            }
+
             await DialoguePanel.Show(dialogue);
 
             if (dialogue.uninterruptible)
             {
                 await YieldCoroutine.WaitForSeconds(0.5f);
+            }
+            
+            if (dialogue.uninterruptible)
+            {
+                LifeEngine.Instance.MainCharacter.enableMove();
+                LifeEngine.Instance.MainCharacter.enableAllShortCuts();
             }
 
             return await this.Done();

@@ -71,13 +71,12 @@ namespace Interact
             var npcController = collider.gameObject.GetComponent<NPCController>();
             if (ReferenceEquals(npcController, null)) return;
             var character = npcController.character;
-            Debug.Log("Character leave");
-            var dialoguePanel = UIManager.Instance.FindByType<DialoguePanel>();
-            if (dialoguePanel is DialoguePanel panel && panel.CurrentDialogue.speakerName == character.Name)
+            // Debug.Log("Character leave");
+            var panel = UIManager.Instance.FindByType<DialoguePanel>();
+            if (panel != null && panel.CurrentDialogue.speakerName == character.Name)
             {
-                UIManager.Instance.Hide(dialoguePanel.GetInstanceID());
+                UIManager.Instance.Hide(panel.GetInstanceID());
             }
-            
         }
         
         void onLeave()
