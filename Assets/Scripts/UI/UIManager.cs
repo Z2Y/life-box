@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -95,10 +96,10 @@ namespace UI
 
             if (useActive && loadingTasks.ContainsKey(uiType))
             {
-                return await (UniTask<UIBase>)loadingTasks[uiType];
+                return await (Task<T>)loadingTasks[uiType];
             }
-
-            var loading = UIFactory<T>.CreateAsync().Preserve();
+            
+            var loading = UIFactory<T>.CreateAsync().AsTask();
             loadingTasks.TryAdd(uiType, loading);
             var ui = await loading;
             loadingTasks.Remove(uiType);

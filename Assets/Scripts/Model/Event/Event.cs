@@ -50,8 +50,8 @@ namespace ModelContainer
     [ModelContainerOf(typeof(Event), "events")]
     public class EventCollection
     {
-        private Dictionary<long, Event> lookup = new Dictionary<long, Event>();
-        private List<Event> events = new List<Event>();
+        private readonly Dictionary<long, Event> lookup = new ();
+        private List<Event> events = new ();
         private static EventCollection _instance;
         private EventCollection() { }
 
@@ -72,18 +72,18 @@ namespace ModelContainer
             return events.Where((evt) => evt.EventType == eventType);
         }
 
-        public static EventCollection Instance => _instance ?? (_instance = new EventCollection());
+        public static EventCollection Instance => _instance ??= new EventCollection();
 
         public static IEnumerable<int> GetValidEventIndex(IEnumerable<long> events) {
-            return events.Select((long id, int idx) =>
+            return events.Select((id, idx) =>
             {
-                Model.Event e = Instance.GetEvent(id);
+                var e = Instance.GetEvent(id);
                 if (e == null) return -1;
                 if (e.Exclude.ExecuteExpression() is true) return -1;
                 if (e.Include.ExecuteExpression() is bool isInclude)
                 {
-                    UnityEngine.Debug.Log($"isInclude {(bool?)isInclude}");
-                    return (bool)isInclude ? idx : -1;
+                    // UnityEngine.Debug.Log($"isInclude {(bool?)isInclude}");
+                    return isInclude ? idx : -1;
                 }
                 return idx;
             }).Where((int v) => v >= 0);            
@@ -93,10 +93,10 @@ namespace ModelContainer
             return GetValidEventIndex(events).Select((idx) => Instance.GetEvent(events[idx]));
         }
 
-        public static int RandomEventIndex(long[] events, float[] weights) {
-            List<int> validEvents = GetValidEventIndex(events).ToList();
+        public static int RandomEventIndex(IEnumerable<long> events, float[] weights) {
+            var validEvents = GetValidEventIndex(events).ToList();
             if (validEvents.Count == 0) { return -1; }
-            float targetW = UnityEngine.Random.Range(0, validEvents.Select((int idx) => weights[idx]).Sum());
+            var targetW = UnityEngine.Random.Range(0, validEvents.Select((int idx) => weights[idx]).Sum());
             float currentW = 0;
             return validEvents.FirstOrDefault((int idx) => {
                 currentW += weights[idx];

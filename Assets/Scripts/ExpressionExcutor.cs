@@ -198,7 +198,7 @@ public class ExpressionNode
             }
             catch (Exception e)
             {
-                Debug.LogWarning(e.ToString());
+                // Debug.LogWarning(e.ToString());
             }
         }
 
@@ -291,7 +291,7 @@ public class ExpressionNode
         }
 
         int resultIndex = 0;
-        ExecuteResult excuteResult = new ExecuteResult(null);
+        ExecuteResult executeResult = new ExecuteResult(null);
         string op = "&";
 
         for (int i = 0; i < nodes.Count; i++)
@@ -305,24 +305,24 @@ public class ExpressionNode
                     break;
                 default:
                     subNode.environments = new Dictionary<string, object>(environments);
-                    ExecuteResult reuslt = new ExecuteResult(subNode.Execute());
+                    ExecuteResult result = new ExecuteResult(subNode.Execute());
                     subNode.environments.Clear();
                     if (op == "|")
                     {
-                        excuteResult |= reuslt;
+                        executeResult |= result;
                     }
                     else
                     {
-                        excuteResult &= reuslt;
+                        executeResult &= result;
                     }
-                    SetEnv($"${resultIndex++}", reuslt.value);
+                    SetEnv($"${resultIndex++}", result.value);
                     break;
             }
         }
 
-        Debug.Log($"Expression Result: {excuteResult.value}");
+        Debug.Log($"Expression Result: {executeResult.value}");
 
-        return excuteResult.value;
+        return executeResult.value;
     }
 
     public static ExpressionNode ParseExpression(string raw)

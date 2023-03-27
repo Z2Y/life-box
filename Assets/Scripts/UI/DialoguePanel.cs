@@ -15,7 +15,7 @@ namespace UI
         public Image characterImage;
         public GameObject choicesPanel;
         public GameObject choiceButtonPrefab;
-        public float typingSpeed = 0.02f;
+        public float typingSpeed = 0.05f;
 
         private DialogueLine currentDialogue;
         private bool isDialogueActive;
@@ -29,7 +29,7 @@ namespace UI
             transform.SetParent(UIManager.Instance.worldRoot);
         }
 
-        public void StartDialogue(DialogueLine dialogue)
+        public async UniTask StartDialogue(DialogueLine dialogue)
         {
             // 继承原先对话的取消回调
             if (dialogue.onCancel == null && gameObject.activeSelf)
@@ -46,10 +46,10 @@ namespace UI
             // Load first line of dialogue
             currentDialogue = dialogue;
 
-            LoadCurrentLine();
+            await LoadCurrentLine();
         }
 
-        private async void LoadCurrentLine()
+        private async UniTask LoadCurrentLine()
         {
             // Clear previous text
             dialogueText.text = "";
@@ -117,12 +117,15 @@ namespace UI
             {
                 Destroy(child.gameObject);
             }
-            
-            choices.Add(new DialogueChoice()
+
+            if (!currentDialogue.uninterruptible)
             {
-                text = "结束对话",
-                onSelect = onCancel
-            });
+                choices.Add(new DialogueChoice()
+                {
+                    text = "结束对话",
+                    onSelect = onCancel
+                });
+            }
 
             // Create choice buttons
             foreach (var choice in choices)
@@ -150,7 +153,7 @@ namespace UI
         {
             if (await UIManager.Instance.FindOrCreateAsync<DialoguePanel>(true) is DialoguePanel panel)
             {
-                panel.StartDialogue(dialogue);
+                await panel.StartDialogue(dialogue);
                 return panel;
             }
 

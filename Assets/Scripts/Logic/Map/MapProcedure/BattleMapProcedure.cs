@@ -8,7 +8,7 @@ namespace Logic.Map.MapProcedure
     {
         protected BattlePlaceController place;
         
-        public abstract void StartProcedure(BattlePlaceController place);
+        public abstract void StartProcedure(BattlePlaceController from);
 
         public abstract void OnProcedureFinish(Action onFinish);
 

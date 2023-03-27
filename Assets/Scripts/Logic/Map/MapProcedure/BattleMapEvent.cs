@@ -13,8 +13,9 @@ namespace Logic.Map.MapProcedure
         private Action _onFinish;
 
         private CancellationTokenSource cancelTokenSource;
-        public override void StartProcedure(BattlePlaceController place)
+        public override void StartProcedure(BattlePlaceController from)
         {
+            place = from;
             cancelTokenSource = new CancellationTokenSource();
             mapEvent.Trigger().AttachExternalCancellation(cancelTokenSource.Token).ContinueWith(finish).Coroutine();
         }

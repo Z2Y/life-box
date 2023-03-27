@@ -17,7 +17,7 @@ public static class ExpressionFieldResolver {
 
     public static object Resolve(string name) {
         if (!resolvers.ContainsKey(name)) {
-            Debug.LogWarning($"Resolver Not Found {name} {resolvers.Count}");
+            // Debug.LogWarning($"Resolver Not Found {name} {resolvers.Count}");
             return null;
         } else {
             return resolvers[name].Invoke();

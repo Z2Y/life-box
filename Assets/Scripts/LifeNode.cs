@@ -8,11 +8,11 @@ using UnityEngine;
 public class LifeNode
 {
     public Model.Place Place;
-    public List<EventNode> Events = new ();
+    public readonly List<EventNode> Events = new ();
     public LifeNode Next;
     public LifeNode Prev;
     public Location Location;
-    private Dictionary<string, object> enviroments = new ();
+    private readonly Dictionary<string, object> environment = new ();
 
     public LifeNodeEvent OnLifeNodeChange = new ();
 
@@ -37,30 +37,31 @@ public class LifeNode
         return node;
     }
 
-    public Dictionary<string, object> Enviroments
+    public Dictionary<string, object> Environment
     {
         get
         {
-            enviroments["$Place"] = Place?.Name;
-            enviroments["$Age"] = 18;
-            return enviroments;
+            environment["$Place"] = Place?.Name;
+            environment["$Age"] = 18;
+            return environment;
         }
     }
 
     public async UniTask ProcessEvent()
     {
-        EventNode last = ProcessedCount > 0 ? Events[ProcessedCount - 1] : null;
+        // EventNode last = ProcessedCount > 0 ? Events[ProcessedCount - 1] : null;
         Processing = true;
-        for (int i = ProcessedCount; i < Events.Count; i++)
+        for (var i = ProcessedCount; i < Events.Count; i++)
         {
             var e = Events[i];
             Debug.Log($"Process Event {e.Event.ID} {e.Event.Effect}");
+            LifeEngine.Instance.lifeData.AddNodeEvent(e.Event);
             await e.DoEffect();
-            int branch = await e.DoBranch();
+            var branch = await e.DoBranch();
             if (branch >= 0 && branch < e.Event.Branch.Length)
             {
                 Debug.Log($"EventBranch {branch} {e.Event.Branch[branch]} {EventCollection.Instance.GetEvent(e.Event.Branch[branch])}");
-                Model.Event branchEvent = EventCollection.Instance.GetEvent(e.Event.Branch[branch]);
+                var branchEvent = EventCollection.Instance.GetEvent(e.Event.Branch[branch]);
                 if (branchEvent != null)
                 {
                     Events.Insert(i + 1, new EventNode(this, branchEvent));
@@ -68,7 +69,6 @@ public class LifeNode
 
             }
             ProcessedCount = i + 1;
-            LifeEngine.Instance.lifeData.AddNodeEvent(e.Event);
         }
         Processing = false;
         OnLifeNodeChange?.Invoke();

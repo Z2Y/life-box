@@ -41,7 +41,12 @@ public class TalkCommand : CommandResolver
                 uninterruptible = uninterruptible == 1
             };
 
-            DialoguePanel.Show(dialogue).Coroutine();
+            await DialoguePanel.Show(dialogue);
+
+            if (dialogue.uninterruptible)
+            {
+                await YieldCoroutine.WaitForSeconds(0.5f);
+            }
 
             return await this.Done();
     }

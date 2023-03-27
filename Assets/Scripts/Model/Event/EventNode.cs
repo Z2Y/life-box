@@ -1,6 +1,7 @@
-using Model;
 using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Event = Model.Event;
 
 public class EventNode
 {
@@ -24,7 +25,7 @@ public class EventNode
     {
         if (Event.Effect.Length > 0)
         {
-            var node = new ExpressionNode(Event.Effect, Life.Enviroments);
+            var node = new ExpressionNode(Event.Effect, Life.Environment);
             node.SetEnv("$description", Event.Description);
             EffectResult = await Event.Effect.ExecuteExpressionAsync(node.environments);
         }
@@ -36,7 +37,7 @@ public class EventNode
         if (Event.BranchExpression.Length > 0 && Event.Branch.Length > 0)
         {
             // UnityEngine.Debug.Log(Event.BranchExpression);
-            var node = new ExpressionNode(Event.BranchExpression, Life.Enviroments);
+            var node = new ExpressionNode(Event.BranchExpression, Life.Environment);
             node.SetEnv("$description", Description);
             node.SetEnv("$Effect", EffectResult);
             var result = await Event.BranchExpression.ExecuteExpressionAsync(node.environments);
@@ -52,7 +53,7 @@ public class EventNode
     {
         get
         {
-            var environments = Life.Enviroments;
+            var environments = Life.Environment;
             environments["$Effect"] = EffectResult;
             return Event.Description.InjectedExpression(environments);
         }
