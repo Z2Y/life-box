@@ -48,18 +48,13 @@ public class NPCMoveToNearGate : CommandResolver
             return false;
         }
 
-        var gates = place.transform.Find("Gate").GetComponentsInChildren<IMapGate>();
+        var gates = place.transform.Find("Gate").GetComponentsInChildren<IMapGate>(true);
 
         var distance = float.MaxValue;
         Component targetGate = null;
 
         foreach (var gate in gates)
         {
-            if (!gate.Interactive())
-            {
-                continue;
-            }
-
             var gateDis = (((Component)gate).transform.position - npc.transform.position).magnitude;
 
             if (gateDis  < distance)
@@ -116,7 +111,7 @@ public class HideNPC : CommandResolver
             return null;
         }
         
-        // npc.gameObject.SetActive(false);
+        npc.gameObject.SetActive(false);
         return await this.Done();
     }
 }

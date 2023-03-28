@@ -45,7 +45,10 @@ namespace Controller
 
         private void FixedUpdate()
         {
-            updatePositionBySpeed();
+            if (isPlayer)
+            {
+                updatePositionBySpeed();
+            }
         }
 
         public void SetAsPlayer(bool player = true)
