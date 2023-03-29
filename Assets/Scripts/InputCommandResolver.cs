@@ -49,6 +49,7 @@ public class InputCommandResolver : MonoBehaviour
     public void UnRegister(KeyCode code)
     {
         Resolvers.Remove(code);
+        keyDisabled.Remove(code);
     }
     
     private void RegisterCommandResolver() {

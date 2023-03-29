@@ -1,5 +1,3 @@
-using System;
-using Assets.HeroEditor.Common.Scripts.Common;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -14,6 +12,9 @@ namespace Logic.Loot
 
         private SpriteRenderer spriteRenderer;
 
+        [SerializeField]
+        private bool isAutoLoot;
+
         public static readonly PrefabPool<WorldLootObject> Pool = new ();
 
         private void Awake()
@@ -25,7 +26,7 @@ namespace Logic.Loot
         {
             items = otherItem;
             var spritePath = items.item.WorldSprite ?? items.item.IconSprite;
-            if (spritePath.IsEmpty()) return;
+            if (spritePath.Length <= 0) return;
             var request = Resources.LoadAsync<Sprite>(spritePath);
             await request;
 
@@ -48,6 +49,11 @@ namespace Logic.Loot
             await lootObj.loadItem(lootItems);
 
             return lootObj;
+        }
+
+        public bool IsAutoLoot()
+        {
+            return isAutoLoot;
         }
 
         public ItemStack GetLootItemStack()

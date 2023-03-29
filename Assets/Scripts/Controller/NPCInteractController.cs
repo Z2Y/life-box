@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -28,6 +27,8 @@ namespace Controller
         public ScriptableLootItemDetector lootDetector;
 
         private bool tipUpdating;
+
+        private bool interactDisabled;
 
         private InteractTip tip;
 
@@ -70,8 +71,15 @@ namespace Controller
             var items = loot?.GetLootItemStack();
             if (items is { Empty: false })
             {
-                LifeEngine.Instance.lifeData.knapsackInventory.StoreItem(items.item, items.Count);
-                loot.OnLoot(gameObject);
+                if (loot.IsAutoLoot())
+                {
+                    LifeEngine.Instance.lifeData.knapsackInventory.StoreItem(items.item, items.Count);
+                    loot.OnLoot(gameObject);
+                }
+                else
+                {
+                    // loot by interact button pressed
+                }
             }
         }
 
@@ -138,9 +146,19 @@ namespace Controller
                 }
 
                 var menuConfig = InteractMenuConfigCollection.Instance.GetConfig(menuID);
-
+                
                 InputCommandResolver.Instance.Register(tip.keyCode,
                     new InteractMenuHandler(this, menuConfig.MenuResolver));
+
+                if (interactDisabled)
+                {
+                    tip.Hide();
+                    InputCommandResolver.Instance.DisableKeyCode(tip.keyCode);
+                }
+                else
+                {
+                    InputCommandResolver.Instance.EnableKeyCode(tip.keyCode);
+                }
             }
             catch (Exception e)
             {
@@ -151,13 +169,20 @@ namespace Controller
 
         public void disableInteract()
         {
+            interactDisabled = true;
             if (ReferenceEquals(tip, null)) return;
+            tip.Hide();
             InputCommandResolver.Instance.DisableKeyCode(tip.keyCode);
         }
 
         public void enableInteract()
         {
+            interactDisabled = false;
             if (ReferenceEquals(tip, null)) return;
+            if (!tip.gameObject.activeSelf)
+            {
+                tip.Show();
+            }
             InputCommandResolver.Instance.EnableKeyCode(tip.keyCode);
         }
         
@@ -172,6 +197,7 @@ namespace Controller
         {
             if (ReferenceEquals(tip, null)) return;
             UIManager.Instance.Hide(tip.GetInstanceID());
+            tip.Hide();
             InputCommandResolver.Instance.UnRegister(tip.keyCode);
             tip = null;
         }
