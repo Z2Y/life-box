@@ -26,7 +26,7 @@ namespace Logic.Loot
         {
             items = otherItem;
             var spritePath = items.item.WorldSprite ?? items.item.IconSprite;
-            if (spritePath.Length <= 0) return;
+            if (string.IsNullOrEmpty(spritePath)) return;
             var request = Resources.LoadAsync<Sprite>(spritePath);
             await request;
 
