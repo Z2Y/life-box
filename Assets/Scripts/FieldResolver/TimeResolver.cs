@@ -3,7 +3,7 @@ public class TimeYear : FieldResolver
 {
     public override object Resolve()
     {
-        return LifeEngine.Instance?.lifeTime?.Time.Year;
+        return LifeEngine.Instance.lifeTime?.Time.Year;
     }
 }
 
@@ -12,6 +12,6 @@ public class TimeMonth : FieldResolver
 {
     public override object Resolve()
     {
-        return LifeEngine.Instance?.lifeTime?.Time.Month;
+        return LifeEngine.Instance.lifeTime?.Time.Month;
     }
 }

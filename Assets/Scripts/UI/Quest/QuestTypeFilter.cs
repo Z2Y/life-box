@@ -9,8 +9,6 @@ namespace UI
     {
         public QuestType QuestType;
         public QuestPanel questPanel;
-    
-
         public void OnPointerClick(PointerEventData eventData)
         {
             if (questPanel != null && questPanel.activeQuestType != QuestType) {

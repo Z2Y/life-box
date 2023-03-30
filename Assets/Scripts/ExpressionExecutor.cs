@@ -7,9 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
-public class ExpressionExcutor : MonoBehaviour
+public class ExpressionExecutor : MonoBehaviour
 {
-    public static ExpressionExcutor Instance { get; private set; }
+    public static ExpressionExecutor Instance { get; private set; }
 
     private void Awake()
     {
@@ -26,7 +26,7 @@ public class ExpressionExcutor : MonoBehaviour
         int fieldValue;
 
         if (field.StartsWith("#")) {
-            object resolved = ExpressionFieldResolver.Resolve(field.Substring(1));
+            var resolved = ExpressionFieldResolver.Resolve(field[1..]);
             if (resolved == null) { return false; }
             fieldValue = Convert.ToInt32(resolved);
         } else {
@@ -53,10 +53,10 @@ public class ExpressionExcutor : MonoBehaviour
         }
     }
 
-    public bool Contains(string name, List<object> data)
+    public bool Contains(string fieldName, List<object> data)
     {
-        var container = name.ToUpper();
-        var resolved = ExpressionFieldResolver.Resolve(name.StartsWith("#") ? name.Substring(1) : name);
+        // var container = fieldName.ToUpper();
+        var resolved = ExpressionFieldResolver.Resolve(fieldName.StartsWith("#") ? fieldName[1..] : fieldName);
         if (resolved == null) return false;
 
         try
@@ -113,9 +113,9 @@ public class ExpressionExcutor : MonoBehaviour
 
 public class ExpressionNode
 {
-    public string expression;
-    public List<ExpressionNode> nodes = new List<ExpressionNode>();
-    public Dictionary<string, object> environments = new Dictionary<string, object>();
+    private string expression;
+    private readonly List<ExpressionNode> nodes = new ();
+    public Dictionary<string, object> environments = new ();
 
     public void SetEnv(string key, object value)
     {
@@ -129,7 +129,7 @@ public class ExpressionNode
         }
     }
 
-    public ExpressionNode()
+    private ExpressionNode()
     {
         expression = null;
     }
@@ -207,7 +207,7 @@ public class ExpressionNode
         switch (op)
         {
             case "@":
-                return ExpressionExcutor.Execute(command, data, listData, environments);
+                return ExpressionExecutor.Execute(command, data, listData, environments);
             case ">":
             case ">=":
             case "<":
@@ -216,13 +216,13 @@ public class ExpressionNode
             case "==":
                 if (int.TryParse(data, out var rightValue))
                 {
-                    return ExpressionExcutor.Compare(command, op, rightValue);
+                    return ExpressionExecutor.Compare(command, op, rightValue);
                 }
                 break;
             case "?":
                 if (data[0] == '[')
                 {
-                    return ExpressionExcutor.Instance.Contains(command, listData);
+                    return ExpressionExecutor.Instance.Contains(command, listData);
                 }
                 break;
             default:
@@ -238,13 +238,13 @@ public class ExpressionNode
             return null;
         }
 
-        if (nodes.Count == 0 && expression.Length > 0)
+        if (nodes.Count == 0 && !string.IsNullOrEmpty(expression))
         {
             return await ExecuteExpressionAsync();
         }
 
         int resultIndex = 0;
-        ExecuteResult excuteResult = new ExecuteResult(null);
+        ExecuteResult executeResult = new ExecuteResult(null);
         string op = "&";
 
         for (int i = 0; i < nodes.Count; i++)
@@ -262,11 +262,11 @@ public class ExpressionNode
                     subNode.environments.Clear();
                     if (op == "|")
                     {
-                        excuteResult |= new ExecuteResult(value);
+                        executeResult |= new ExecuteResult(value);
                     }
                     else
                     {
-                        excuteResult &= new ExecuteResult(value);
+                        executeResult &= new ExecuteResult(value);
                     }
                     SetEnv($"${resultIndex++}", value);
                     break;
@@ -275,7 +275,7 @@ public class ExpressionNode
 
         // Debug.Log($"Expression Result: {excuteResult.value}");
 
-        return excuteResult.value;
+        return executeResult.value;
     }
 
     public object Execute()
@@ -285,7 +285,7 @@ public class ExpressionNode
             return null;
         }
 
-        if (nodes.Count == 0 && expression.Length > 0)
+        if (nodes.Count == 0 && !string.IsNullOrEmpty(expression))
         {
             return ExecuteExpression();
         }
@@ -402,26 +402,22 @@ public class ExecuteResult
             this.value = value;
         }
     }
-    public static ExecuteResult operator |(ExecuteResult left, ExecuteResult right)
+    public static ExecuteResult operator | (ExecuteResult left, ExecuteResult right)
     {
-        bool? l = left.value as bool?;
-        bool? r = right.value as bool?;
-        if (l == null || r == null)
+        if (left.value is not bool l || right.value is not bool r)
         {
             return right;
         }
-        return new ExecuteResult((bool)l | (bool)r);
+        return new ExecuteResult(l | r);
     }
 
-    public static ExecuteResult operator &(ExecuteResult left, ExecuteResult right)
+    public static ExecuteResult operator & (ExecuteResult left, ExecuteResult right)
     {
-        bool? l = left.value as bool?;
-        bool? r = right.value as bool?;
-        if (l == null || r == null)
+        if (left.value is not bool l || right.value is not bool r)
         {
             return right;
         }
-        return new ExecuteResult((bool)l & (bool)r);
+        return new ExecuteResult(l & r);
     }
 }
 

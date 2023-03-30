@@ -47,7 +47,7 @@ public class LifeTime : MonoBehaviour {
 
     public Action OnNextMonth;
     
-    public string timeStr => string.Format("{0}年 {1}月", Time.Year + 1, Time.Month + 1);
+    public string timeStr => $"{Time.Year + 1}年 {Time.Month + 1}月";
 
     public void NextMonth() {
         _time = _time.Next();

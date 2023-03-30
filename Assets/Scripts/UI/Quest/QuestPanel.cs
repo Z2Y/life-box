@@ -66,7 +66,6 @@ namespace UI
         {
             // 显示任务详情面板
             questDetailPanel.ShowQuestDetail(quest);
-            
         }
 
         public static async Task<QuestPanel> ShowPanel()

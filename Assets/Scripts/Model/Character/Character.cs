@@ -23,7 +23,7 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Model.Character), "characters", 1)]
+    [ModelContainerOf(typeof(Character), "characters", 1)]
     public class CharacterCollection
     {
         private readonly Dictionary<long, Character> lookup = new ();
@@ -37,10 +37,10 @@ namespace ModelContainer
             LoadPlayerCharacter();
             foreach(Character character in characters) {
                 lookup.Add(character.ID, character);
-                Place initialPlace = PlaceCollection.Instance.GetPlace(character.PlaceID);
+                var initialPlace = PlaceCollection.Instance.GetPlace(character.PlaceID);
                 initialPlace?.Characters.Add(character.ID, character);
                 if (character.RelationID.Length != character.RelationValue.Length) continue;
-                for(int i = 0; i < character.RelationID.Length; i++) {
+                for(var i = 0; i < character.RelationID.Length; i++) {
                     character.Relations.Add(character.RelationID[i], character.RelationValue[i]);
                 }
             }

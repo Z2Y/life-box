@@ -5,20 +5,9 @@ using ModelContainer;
 
 public abstract class PlaceResolver : FieldResolver
 {
-    public LifeNode CurrentLife
-    {
-        get
-        {
-            return LifeEngine.Instance?.lifeData.current;
-        }
-    }
-    public Place CurrentPlace
-    {
-        get
-        {
-            return CurrentLife?.Place;
-        }
-    }
+    private LifeNode CurrentLife => LifeEngine.Instance.lifeData.current;
+
+    protected Place CurrentPlace => CurrentLife?.Place;
 }
 
 [FieldResolverHandler("NearbyPlaceCount")]

@@ -105,9 +105,8 @@ namespace ModelContainer
         }
 
         public static Event RandomEvent(long[] events, float[] weights) {
-            int index = RandomEventIndex(events, weights);
-            if (index < 0) return null;
-            return Instance.GetEvent(events[index]);
+            var index = RandomEventIndex(events, weights);
+            return index < 0 ? null : Instance.GetEvent(events[index]);
         }
     }
 }
