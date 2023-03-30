@@ -554,6 +554,7 @@ GameObject:
   - component: {fileID: 1495752314}
   - component: {fileID: 1495752313}
   - component: {fileID: 1495752315}
+  - component: {fileID: 1495752316}
   m_Layer: 0
   m_Name: CoroutineRunner
   m_TagString: Untagged
@@ -601,6 +602,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uniq: 1
+--- !u!114 &1495752316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1495752312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e4d81a87ce14ae0b889b7241744a611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1647104367 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 139740, guid: 0abab5bb77339e4428787a870eb31bd3,

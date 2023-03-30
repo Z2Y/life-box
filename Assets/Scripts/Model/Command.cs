@@ -13,6 +13,7 @@ namespace Model
     [Serializable]
     public partial class Command : IRealmObject
     {
+        [PrimaryKey]
         public long ID { get; set; }
         public string Name { get; set; }
         public int Global { get; set; }
@@ -29,7 +30,7 @@ namespace ModelContainer
 
         public static Command GetCommand(long id)
         {
-            return RealmDBController.Realm.Find<Command>(id);
+            return RealmDBController.Db.Find<Command>(id);
         }
 
         public static IEnumerable<int> GetValidCommandIndex(IEnumerable<long> ids)
@@ -49,7 +50,7 @@ namespace ModelContainer
 
         public static IEnumerable<Command> GetValidGlobalCommands()
         {
-            return RealmDBController.Realm.All<Command>().Where((command) => command.Global > 0).ToList().Where((command) => (command.Condition.ExecuteExpression() is true));
+            return RealmDBController.Db.All<Command>().Where((command) => command.Global > 0).ToList().Where((command) => (command.Condition.ExecuteExpression() is true));
         }
 
         public static IEnumerable<Command> GetValidCommands(IList<long> ids)

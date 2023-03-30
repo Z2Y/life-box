@@ -10,7 +10,7 @@ namespace Model
     [Serializable]
     public partial class Character : IRealmObject
     {
-        [Indexed]
+        [PrimaryKey]
         public long ID { get; set; }
         public string Name { get; set; }
         public long PlaceID { get; set; }
@@ -41,16 +41,16 @@ namespace ModelContainer
                 Name = "xxx",
                 ModelID = 1
             };
-            RealmDBController.Realm.Write(() =>
+            RealmDBController.Db.Write(() =>
             {
-                RealmDBController.Realm.Add(player, true);
-                RealmDBController.Realm.Add(enemy, true);
+                RealmDBController.Db.Add(player, true);
+                RealmDBController.Db.Add(enemy, true);
             });
         }
 
         public static Character GetCharacter(long id)
         {
-            return RealmDBController.Realm.Find<Character>(id);
+            return RealmDBController.Db.Find<Character>(id);
         }
         
     }

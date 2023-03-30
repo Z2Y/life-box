@@ -20,8 +20,12 @@ public static class ExcelExporter
     
     public static void Export()
     {
-        Debug.Log(Application.streamingAssetsPath);
-        var config  = new RealmConfiguration(Application.streamingAssetsPath + "/db.realm");
+        Debug.Log(Application.persistentDataPath);
+        var config  = new RealmConfiguration(Application.persistentDataPath + "/db.realm")
+        {
+            ShouldDeleteIfMigrationNeeded = true
+        };
+        
         m_realm_export = Realm.GetInstance(config);
 
         m_realm_export.Write(() => m_realm_export.RemoveAll());
@@ -86,20 +90,20 @@ public static class ExcelExporter
                 foreach (ClassField field in fields)
                 {
                     var value = GetRowFieldValue(sheet, field, row);
+                    Debug.Log($"{field.FieldName} {value is IList} {value.ToJson()}");
                     if (field.FieldInfo.CanWrite)
                     {
                         field.FieldInfo.SetValue(obj, GetRowFieldValue(sheet, field, row));
                     } else if (field.FieldInfo.PropertyType.Name.StartsWith("IList") && value is IList list)
                     {
-                        foreach (var listObj in list)
+                        foreach (var item in list)
                         {
-                            field.FieldInfo.PropertyType.GetMethod("Add")?.Invoke(obj, new[] {listObj});
+                            var objList = field.FieldInfo.GetMethod.Invoke(obj, null);
+                            objList.GetType().GetMethod("Add")?.Invoke(objList, new[] {item});
                         }
                         
                     }
                 }
-                
-                Debug.Log(obj.ToJson());
 
                 m_realm_export.Add(obj as IRealmObject);
             }
@@ -128,6 +132,7 @@ public static class ExcelExporter
         string jsonValue;
 
 
+        
         if (fieldInfo.PropertyType.Name.StartsWith("IList"))
         {
             jsonValue = $"[{value}]";
@@ -143,7 +148,8 @@ public static class ExcelExporter
                     break;
             }
         }
-        // UnityEngine.Debug.Log(jsonValue);
+        //Debug.Log(fieldInfo.PropertyType.Name);
+        // Debug.Log(jsonValue);
         return MessagePackSerializer.Deserialize(fieldInfo.PropertyType, MessagePackSerializer.ConvertFromJson(jsonValue));
     }
 

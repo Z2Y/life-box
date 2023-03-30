@@ -80,7 +80,7 @@ public class GameLoader : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log($"Load Game Failed! ${e.StackTrace} ");
+            Debug.Log($"Load Game Failed! ${e.Message} ${e.StackTrace} ");
         }
 
         isLoading = false;

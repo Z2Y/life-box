@@ -56,7 +56,7 @@ namespace ModelContainer
     {
         public static Skill GetSkill(long id)
         {
-            return RealmDBController.Realm.Find<Skill>(id);
+            return RealmDBController.Db.Find<Skill>(id);
         }
     }
 }

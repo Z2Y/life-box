@@ -47,12 +47,12 @@ namespace ModelContainer
 
         public static ShopConfig GetShopConfig(long id)
         {
-            return RealmDBController.Realm.Find<ShopConfig>(id);
+            return RealmDBController.Db.Find<ShopConfig>(id);
         }
 
         public static IQueryable<ShopConfig> GetShopConfigsByCharacter(long characterID)
         {
-            return RealmDBController.Realm.All<ShopConfig>().Where((config) => config.CharacterID == characterID);
+            return RealmDBController.Db.All<ShopConfig>().Where((config) => config.CharacterID == characterID);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Loot;
+using ModelContainer;
 using UnityEngine;
 
 public class LifeEngine : MonoBehaviour {
@@ -29,6 +30,7 @@ public class LifeEngine : MonoBehaviour {
 
     public async UniTask CreateNewGame() {
         lifeData = LifeData.CreateNew();
+        CharacterCollection.LoadPlayerCharacter();
 
         var (mainCharacter, enemy, map) = await UniTask.WhenAll(
             NPCController.LoadCharacterAsync(0),

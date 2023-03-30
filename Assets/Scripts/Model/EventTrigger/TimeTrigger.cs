@@ -31,7 +31,7 @@ namespace ModelContainer
     {
         public static TimeTrigger GetTrigger(TimeSpan timeSpan)
         {
-            return RealmDBController.Realm.All<TimeTrigger>().Filter($"Year == {timeSpan.Year} && Month == {timeSpan.Month}").FirstOrDefault();
+            return RealmDBController.Db.All<TimeTrigger>().Filter($"Year == {timeSpan.Year} && Month == {timeSpan.Month}").FirstOrDefault();
         }
     }
 }

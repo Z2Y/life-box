@@ -22,7 +22,9 @@ namespace Model
     [Serializable]
     public partial class Item : IRealmObject
     {
+        [PrimaryKey]
         public long ID { get; set; }
+        [Indexed]
         public int ItemType { get; set; }
         public int SubItemType { get; set; }
         public string Description { get; set; }
@@ -45,17 +47,17 @@ namespace ModelContainer
 
         public static Item GetItem(long id)
         {
-            return RealmDBController.Realm.Find<Item>(id);
+            return RealmDBController.Db.Find<Item>(id);
         }
 
         public static IQueryable<Item> GetItemsByType(ItemType itemType)
         {
-            return RealmDBController.Realm.All<Item>().Where((item) => item.ItemType == (int)itemType);
+            return RealmDBController.Db.All<Item>().Where((item) => item.ItemType == (int)itemType);
         }
 
         private static IEnumerable<long> GetValidItemIndex(IEnumerable<long> ids)
         {
-            return RealmDBController.Realm.All<Item>().Filter("ID IN {%@}", string.Join(",", ids)).ToList()
+            return RealmDBController.Db.All<Item>().Filter("ID IN {%@}", string.Join(",", ids)).ToList()
                 .Select((item) => item.ID);
         }
 

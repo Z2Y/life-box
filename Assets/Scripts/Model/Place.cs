@@ -21,9 +21,11 @@ namespace Model
     [Serializable]
     public partial class Place : IRealmObject
     {
+        [PrimaryKey]
         public long ID { get; set; }
         public PlaceType PlaceType;
         public string Name { get; set; }
+        [Indexed]
         public long MapID { get; set; }
         public IList<long> Commands { get; }
         public IList<long> Child { get;  }
@@ -46,7 +48,7 @@ namespace ModelContainer
 
         public static Model.Place GetPlace(long id)
         {
-            return RealmDBController.Realm.Find<Model.Place>(id);
+            return RealmDBController.Db.Find<Model.Place>(id);
         }
     }
 }

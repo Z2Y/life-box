@@ -41,7 +41,7 @@ namespace ModelContainer
     {
         public static Quest GetQuest(long id)
         {
-            return RealmDBController.Realm.Find<Quest>(id);
+            return RealmDBController.Db.Find<Quest>(id);
         }
     }
 }

@@ -204,8 +204,8 @@ namespace Controller
 
             var placeRoot = worldMap.transform.Find("PlaceRoot");
             
-            worldMap.Places = (await UniTask.WhenAll(RealmDBController.Realm.All<Place>().
-                Where((place) => place.MapID == mapID).
+            worldMap.Places = (await UniTask.WhenAll(RealmDBController.Db.All<Place>().
+                Where((place) => place.MapID == mapID).ToList().
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID, placeRoot)))).
                 Where((p) => p != null).ToList();
 

@@ -7,13 +7,14 @@ namespace Controller
     public class RealmDBController : MonoBehaviour
     {
         
-        private readonly RealmConfiguration config = new (Application.streamingAssetsPath + "/db.realm");
+        private RealmConfiguration config;
         
-        public static Realm Realm { get; private set; }
+        public static Realm Db { get; private set; }
 
         private void Awake()
         {
-            Realm = Realm.GetInstance(config);
+            config = new(Application.persistentDataPath + "/db.realm");
+            Db = Realm.GetInstance(config);
         }
     }
 }

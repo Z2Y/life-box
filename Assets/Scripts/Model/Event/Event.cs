@@ -54,12 +54,12 @@ namespace ModelContainer
     {
         public static Event GetEvent(long id)
         {
-            return RealmDBController.Realm.Find<Event>(id);
+            return RealmDBController.Db.Find<Event>(id);
         }
 
         public static IEnumerable<Event> GetEventByType(EventType eventType)
         {
-            return RealmDBController.Realm.All<Event>().Where((evt) => evt.EventType == (int)eventType);
+            return RealmDBController.Db.All<Event>().Where((evt) => evt.EventType == (int)eventType);
         }
 
         private static IEnumerable<int> GetValidEventIndex(IEnumerable<long> events) {

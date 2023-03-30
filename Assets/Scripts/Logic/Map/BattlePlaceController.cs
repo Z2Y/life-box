@@ -71,7 +71,7 @@ namespace Logic.Map
 
         public void Prepare()
         {
-            var events = PlaceTriggerContainer.Instance.GetPlaceTrigger(root.placeID)?.GetValidEvents();
+            var events = PlaceTriggerContainer.GetPlaceTrigger(root.placeID)?.GetValidEvents();
 
             if (events is { Count: > 0 })
             {

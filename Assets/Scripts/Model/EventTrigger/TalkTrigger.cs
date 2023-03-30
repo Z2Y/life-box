@@ -37,7 +37,7 @@ namespace ModelContainer
     {
         public static TalkTrigger GetTalkConfig(long characterID)
         {
-            return RealmDBController.Realm.Find<TalkTrigger>(characterID);
+            return RealmDBController.Db.Find<TalkTrigger>(characterID);
         }
     }
 }

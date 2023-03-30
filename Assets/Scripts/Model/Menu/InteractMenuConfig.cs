@@ -26,7 +26,7 @@ namespace ModelContainer
     {
         public static InteractMenuConfig GetConfig(long id)
         {
-            return RealmDBController.Realm.Find<InteractMenuConfig>(id);
+            return RealmDBController.Db.Find<InteractMenuConfig>(id);
         }
     }
 }
