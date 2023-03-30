@@ -17,7 +17,7 @@ public class PlaceNearbyCount : PlaceResolver
     {
         if (CurrentPlace == null) return 0;
         UnityEngine.Debug.Log(CurrentPlace.Child);
-        return CurrentPlace.Child.Count((pid) => PlaceCollection.Instance.GetPlace(pid) != null);
+        return CurrentPlace.Child.Count((pid) => PlaceCollection.GetPlace(pid) != null);
     }
 }
 

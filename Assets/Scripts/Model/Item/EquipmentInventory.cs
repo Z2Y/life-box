@@ -67,7 +67,7 @@ public class EquipmentInventory : ItemInventory<Item, EquipmentItemStack>
 
     public ItemStack FindEquipStack(Item item)
     {
-        if (item == null || item.ItemType != ItemType.Equipment)
+        if (item == null || item.ItemType != (int)ItemType.Equipment)
         {
             return null;
         }

@@ -27,7 +27,7 @@ namespace UI
 
         public void UpdateMenu(long id)
         {
-            var config = InteractMenuConfigCollection.Instance.GetConfig(id);
+            var config = InteractMenuConfigCollection.GetConfig(id);
             tip.text = config.Name;
             keyCode = (KeyCode)config.keyCode;
             keyCodeText.text = keyCode.ToString();

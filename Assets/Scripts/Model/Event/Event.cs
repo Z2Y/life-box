@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Controller;
 using MessagePack;
 using Model;
+using Realms;
 
 public abstract class GameEvent
 {
@@ -25,18 +27,19 @@ namespace Model
 
     [MessagePackObject(true)]
     [Serializable]
-    public class Event : IEventTrigger
+    public partial class Event : IEventTrigger, IRealmObject
     {
-        public long ID;
-        public EventType EventType;
-        public string Name;
-        public long Unique;
-        public string Description;
-        public string Effect;
-        public string BranchExpression;
-        public long[] Branch;
-        public string Include;
-        public string Exclude;
+        [PrimaryKey]
+        public long ID { get; set; }
+        public int EventType { get; set; }
+        public string Name { get; set; }
+        public long Unique { get; set; }
+        public string Description { get; set; }
+        public string Effect { get; set; }
+        public string BranchExpression { get; set; }
+        public IList<long> Branch { get; }
+        public string Include { get; set; }
+        public string Exclude { get; set; }
         
         public Event GetEvent()
         {
@@ -47,37 +50,22 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Event), "events")]
-    public class EventCollection
+    public static class EventCollection
     {
-        private readonly Dictionary<long, Event> lookup = new ();
-        private List<Event> events = new ();
-        private static EventCollection _instance;
-        private EventCollection() { }
-
-        private void OnLoad() {
-            lookup.Clear();
-            foreach(Event evt in events) {
-                lookup.Add(evt.ID, evt);
-            }
-        }
-
-        public Event GetEvent(long id)
+        public static Event GetEvent(long id)
         {
-            return lookup.TryGetValue(id, out var value) ? value : null;
+            return RealmDBController.Realm.Find<Event>(id);
         }
 
-        public IEnumerable<Model.Event> GetEventByType(Model.EventType eventType)
+        public static IEnumerable<Event> GetEventByType(EventType eventType)
         {
-            return events.Where((evt) => evt.EventType == eventType);
+            return RealmDBController.Realm.All<Event>().Where((evt) => evt.EventType == (int)eventType);
         }
 
-        public static EventCollection Instance => _instance ??= new EventCollection();
-
-        public static IEnumerable<int> GetValidEventIndex(IEnumerable<long> events) {
+        private static IEnumerable<int> GetValidEventIndex(IEnumerable<long> events) {
             return events.Select((id, idx) =>
             {
-                var e = Instance.GetEvent(id);
+                var e = GetEvent(id);
                 if (e == null) return -1;
                 if (e.Exclude.ExecuteExpression() is true) return -1;
                 if (e.Include.ExecuteExpression() is bool isInclude)
@@ -89,11 +77,11 @@ namespace ModelContainer
             }).Where((int v) => v >= 0);            
         }
 
-        public static IEnumerable<Model.Event> GetValidEvents(long[] events) {
-            return GetValidEventIndex(events).Select((idx) => Instance.GetEvent(events[idx]));
+        public static IEnumerable<Event> GetValidEvents(IList<long> events) {
+            return GetValidEventIndex(events).Select((idx) => GetEvent(events[idx]));
         }
 
-        public static int RandomEventIndex(IEnumerable<long> events, float[] weights) {
+        public static int RandomEventIndex(IEnumerable<long> events, IList<float> weights) {
             var validEvents = GetValidEventIndex(events).ToList();
             if (validEvents.Count == 0) { return -1; }
             var targetW = UnityEngine.Random.Range(0, validEvents.Select((int idx) => weights[idx]).Sum());
@@ -104,9 +92,9 @@ namespace ModelContainer
             });
         }
 
-        public static Event RandomEvent(long[] events, float[] weights) {
+        public static Event RandomEvent(IList<long> events, IList<float> weights) {
             var index = RandomEventIndex(events, weights);
-            return index < 0 ? null : Instance.GetEvent(events[index]);
+            return index < 0 ? null : GetEvent(events[index]);
         }
     }
 }

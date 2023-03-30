@@ -1,56 +1,42 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Controller;
 using MessagePack;
 using Model;
+using Realms;
 
 namespace Model
 {
 
     [MessagePackObject(true)]
     [Serializable]
-    public class Command
+    public partial class Command : IRealmObject
     {
-        public long ID;
-        public string Name;
-        public int Global;
-        public string Description;
-        public string Expression;
-        public string Condition;
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public int Global { get; set; }
+        public string Description { get; set; }
+        public string Expression { get; set; }
+        public string Condition { get; set; }
     }
 }
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Command), "commands")]
-    public class CommandCollection
+    public static class CommandCollection
     {
-        private Dictionary<long, Command> lookup = new ();
-        private List<Command> commands = new ();
-        private static CommandCollection _instance;
-        private CommandCollection() { }
 
-        private void OnLoad()
+        public static Command GetCommand(long id)
         {
-            lookup.Clear();
-            foreach (Command command in commands)
-            {
-                lookup.Add(command.ID, command);
-            }
+            return RealmDBController.Realm.Find<Command>(id);
         }
-
-        public Command GetCommand(long id)
-        {
-            return lookup.TryGetValue(id, out var value) ? value : null;
-        }
-
-        public static CommandCollection Instance => _instance ??= new CommandCollection();
 
         public static IEnumerable<int> GetValidCommandIndex(IEnumerable<long> ids)
         {
             return ids.Select((long id, int idx) =>
             {
-                var command = Instance.GetCommand(id);
+                var command = GetCommand(id);
                 if (command == null) return -1;
                 if (command.Condition.ExecuteExpression() is bool isValid)
                 {
@@ -61,20 +47,14 @@ namespace ModelContainer
             }).Where((int v) => v >= 0);
         }
 
-        public static IEnumerable<Model.Command> GetValidGlobalCommands()
+        public static IEnumerable<Command> GetValidGlobalCommands()
         {
-            return Instance.commands.Where((command) => command.Global > 0).Where((command) => {
-                if (command.Condition.ExecuteExpression() is bool isValid)
-                {
-                    return isValid;
-                }
-                return true;
-            });
+            return RealmDBController.Realm.All<Command>().Where((command) => command.Global > 0).ToList().Where((command) => (command.Condition.ExecuteExpression() is true));
         }
 
-        public static IEnumerable<Command> GetValidCommands(long[] ids)
+        public static IEnumerable<Command> GetValidCommands(IList<long> ids)
         {
-            return GetValidCommandIndex(ids).Select((idx) => Instance.GetCommand(ids[idx]));
+            return GetValidCommandIndex(ids).Select((idx) => GetCommand(ids[idx]));
         }
 
     }

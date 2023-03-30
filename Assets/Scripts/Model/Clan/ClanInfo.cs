@@ -1,15 +1,16 @@
 using System;
 using MessagePack;
+using Realms;
 
 namespace Model
 {
     [Serializable]
-    [MessagePackObject(true)]
-    public class ClanInfo
+    public partial class ClanInfo : IRealmObject
     {
-        public long ID;
-        public string Name;
-        public string Description;
-        public long HomePlaceID;
+        [PrimaryKey]
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public long HomePlaceID { get; set; }
     }
 }

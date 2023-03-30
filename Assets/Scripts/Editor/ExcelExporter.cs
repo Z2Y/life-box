@@ -4,17 +4,28 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using MessagePack;
+using MongoDB.Bson;
 using OfficeOpenXml;
+using Realms;
 using UnityEditor;
+using UnityEngine;
 
 public static class ExcelExporter
 {
     private const string excelDir = "./Excels";
-    private const string outputDir = "./Assets/Resources/Models/";
 
-    [MenuItem("Tools/导出Excels数据")]
+    private static Realm m_realm_export;
+    
+    [MenuItem("Tools/导出Excels数据")] 
+    
     public static void Export()
     {
+        Debug.Log(Application.streamingAssetsPath);
+        var config  = new RealmConfiguration(Application.streamingAssetsPath + "/db.realm");
+        m_realm_export = Realm.GetInstance(config);
+
+        m_realm_export.Write(() => m_realm_export.RemoveAll());
+
         foreach (string path in Directory.GetFiles(excelDir, "*.xlsx"))
         {
             using (Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -40,7 +51,7 @@ public static class ExcelExporter
             string[] fieldHead = sheet.Cells[headRow, col].Text.Split('$');
             string fieldName = fieldHead.Length == 2 ? fieldHead[0] : fieldHead[1];
             string fieldType = fieldHead.Length == 2 ? fieldHead[1] : fieldHead[2];
-            FieldInfo fieldInfo = classType?.GetField(fieldName);
+            PropertyInfo fieldInfo = classType?.GetProperty(fieldName);
             if (fieldInfo != null) {
                 ClassField previous = fields.Find((ClassField field) => (field.FieldName == fieldName && field.FieldType == fieldType));
                 if (previous != null) {
@@ -62,30 +73,37 @@ public static class ExcelExporter
             UnityEngine.Debug.LogWarning($"Model.{sheet.Name} Not Exist!");
             return;
         }
-
-        IList list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(classType));
+        
         List<ClassField> fields = ExportClassField(sheet);
 
-        for (int row = 2; row <= sheet.Dimension.End.Row; ++row)
+        m_realm_export.Write(() =>
         {
-            var obj = Activator.CreateInstance(classType);
-            foreach (ClassField field in fields)
+            for (int row = 2; row <= sheet.Dimension.End.Row; ++row)
             {
-                field.FieldInfo.SetValue(obj, GetRowFieldValue(sheet, field, row));
+                var obj = Activator.CreateInstance(classType);
+                
+                Debug.Log(fields.Count);
+                foreach (ClassField field in fields)
+                {
+                    var value = GetRowFieldValue(sheet, field, row);
+                    if (field.FieldInfo.CanWrite)
+                    {
+                        field.FieldInfo.SetValue(obj, GetRowFieldValue(sheet, field, row));
+                    } else if (field.FieldInfo.PropertyType.Name.StartsWith("IList") && value is IList list)
+                    {
+                        foreach (var listObj in list)
+                        {
+                            field.FieldInfo.PropertyType.GetMethod("Add")?.Invoke(obj, new[] {listObj});
+                        }
+                        
+                    }
+                }
+                
+                Debug.Log(obj.ToJson());
+
+                m_realm_export.Add(obj as IRealmObject);
             }
-
-            list.Add(obj);
-        }
-
-        string outputPath = $"{outputDir}{sheet.Name}.bytes";
-        if (Directory.Exists(outputPath))
-        {
-            Directory.Delete(outputPath);
-        }
-
-        using(FileStream fs = new FileStream(outputPath, FileMode.OpenOrCreate)) {
-            MessagePackSerializer.Serialize(list.GetType(), fs, list);
-        }
+        });
         // string value = MessagePackSerializer.ConvertToJson(MessagePackSerializer.Serialize(list.GetType(), list));
     }
 
@@ -96,44 +114,46 @@ public static class ExcelExporter
             List<string> values = new List<string>();
             foreach(int col in field.FieldColumn) {
                 string value = sheet.Cells[row, col].Text.Trim();
-                if (field.FieldInfo.FieldType.Name == "String[]") {
+                if (field.FieldInfo.PropertyType.Name == "String[]") {
                     values.Add($"\"{value.Replace("\"", "\\\"")}\"");
                 } else if (value.Length > 0) {
                     values.Add(value);
                 }
             }
-            return Convert(field.FieldInfo, String.Join(",", values));
+            return Convert(field.FieldInfo, string.Join(",", values));
         }
     }
 
-    static object Convert(FieldInfo fieldInfo, string value) {
+    static object Convert(PropertyInfo fieldInfo, string value) {
         string jsonValue;
-        switch (fieldInfo.FieldType.Name) {
-            case "Int64[]":
-            case "Int32[]":
-            case "int[]":
-            case "Single[]":
-            case "String[]":
-                jsonValue = $"[{value}]";
-                break;
-            case "String":
-                jsonValue = $"\"{value.Replace("\"", "\\\"")}\"";
-                break;
-            default:
-                jsonValue = value;
-                break;
+
+
+        if (fieldInfo.PropertyType.Name.StartsWith("IList"))
+        {
+            jsonValue = $"[{value}]";
+        }
+        else
+        {
+            switch (fieldInfo.PropertyType.Name) {
+                case "String":
+                    jsonValue = $"\"{value.Replace("\"", "\\\"")}\"";
+                    break;
+                default:
+                    jsonValue = value;
+                    break;
+            }
         }
         // UnityEngine.Debug.Log(jsonValue);
-        return MessagePackSerializer.Deserialize(fieldInfo.FieldType, MessagePackSerializer.ConvertFromJson(jsonValue));
+        return MessagePackSerializer.Deserialize(fieldInfo.PropertyType, MessagePackSerializer.ConvertFromJson(jsonValue));
     }
 
     class ClassField {
         public string FieldName;
         public string FieldType;
-        public FieldInfo FieldInfo;
+        public PropertyInfo FieldInfo;
         public List<int> FieldColumn = new List<int>();
 
-        public ClassField(string name, string type, FieldInfo info, int column) {
+        public ClassField(string name, string type, PropertyInfo info, int column) {
             FieldName = name;
             FieldType = type;
             FieldInfo = info;

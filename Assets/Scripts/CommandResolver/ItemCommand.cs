@@ -39,12 +39,12 @@ public class ReceiveItemCommand : ItemCommandResolver
 
     private ItemStack ReceiveItem(long itemId, int count)
     {
-        Item item = ItemCollection.Instance.GetItem(itemId);
+        Item item = ItemCollection.GetItem(itemId);
         if (item == null) return null;
         ItemStack received = new InfiniteItemStack();
         received.StoreItem(item, count);
         bool success = false;
-        if (item.ItemType == ItemType.Money) {
+        if (item.ItemType == (int)ItemType.Money) {
             success = Wallet.StoreItem(item, count);
         } else {
             success = Knapsack.StoreItem(item, count);
@@ -72,11 +72,11 @@ public class LostItemCommand : ItemCommandResolver
 
     private ItemStack LostItem(long itemId, int count)
     {
-        var item = ItemCollection.Instance.GetItem(itemId);
+        var item = ItemCollection.GetItem(itemId);
         if (item == null) return null;
         ItemStack lost = new InfiniteItemStack();
         lost.StoreItem(item, count);
-        var success = item.ItemType == ItemType.Money ? Wallet.DiscardItem(item, count) : Knapsack.DiscardItem(item, count);
+        var success = item.ItemType == (int)ItemType.Money ? Wallet.DiscardItem(item, count) : Knapsack.DiscardItem(item, count);
         return success ? lost : null;
     }
 }
@@ -91,9 +91,9 @@ public class CountItemCommand : ItemCommandResolver
     }
 
     private int CountItem(long itemId) {
-        var item = ItemCollection.Instance.GetItem(itemId);
+        var item = ItemCollection.GetItem(itemId);
         if (item == null) return 0;
-        return item.ItemType == ItemType.Money ? Wallet.CountItem(item) : Knapsack.CountItem(item);        
+        return item.ItemType == (int)ItemType.Money ? Wallet.CountItem(item) : Knapsack.CountItem(item);        
     }
 }
 

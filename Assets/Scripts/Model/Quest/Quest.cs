@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Controller;
 using MessagePack;
 using Model;
+using Realms;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,19 +11,21 @@ namespace Model
 {
     [MessagePackObject(true)]
     [Serializable]
-    public class Quest
+    public partial class Quest : IRealmObject
     {
-        public long ID;
-        public QuestType QuestType;
-        public string Title;
-        public string Description;
-        public string Requirement;
-        public string Award;
-        public string StartEffect;
-        public string TerminateEffect;
-        public string CompleteEffect;
-        public long StartEventID;
-        public long[] EndEventIDs;
+        [PrimaryKey]
+        public long ID { get; set; }
+        public QuestType QuestType => (QuestType)IQuestType;
+        public int IQuestType { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Requirement { get; set; }
+        public string Award { get; set; }
+        public string StartEffect { get; set; }
+        public string TerminateEffect { get; set; }
+        public string CompleteEffect { get; set; }
+        public long StartEventID { get; set; }
+        public IList<long> EndEventIDs { get;  }
     }
     
     public enum QuestType {
@@ -33,24 +37,11 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Quest), "quests")]
-    public class QuestCollection
+    public static class QuestCollection
     {
-        private readonly Dictionary<long, Quest> lookup = new ();
-        private readonly List<Quest> quests = new ();
-        private static QuestCollection _instance;
-        public static QuestCollection Instance => _instance ??= new QuestCollection();
-
-        private void OnLoad() {
-            lookup.Clear();
-            foreach(var quest in quests) {
-                lookup.Add(quest.ID, quest);
-            }
-        }
-        
-        public Quest GetQuest(long id)
+        public static Quest GetQuest(long id)
         {
-            return lookup.TryGetValue(id, out var value) ? value : null;
+            return RealmDBController.Realm.Find<Quest>(id);
         }
     }
 }

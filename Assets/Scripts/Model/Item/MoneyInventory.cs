@@ -6,7 +6,7 @@ using ModelContainer;
 public class MoneyStack : InfiniteItemStack {
     public override bool StoreItem(Item other, int num)
     {
-        if (other.ItemType == ItemType.Money)
+        if (other.ItemType == (int)ItemType.Money)
         {
             return base.StoreItem(other, num);
         }
@@ -21,7 +21,7 @@ public class MoneyInventory : ItemInventory<Item, MoneyStack>
 {
     public Item DefaultMoneyItem { get; set;}
     public MoneyInventory() : base(5) {
-        List<Item> moneyItems = ItemCollection.Instance.GetItemsByType(ItemType.Money);
+        var moneyItems = ItemCollection.GetItemsByType(ItemType.Money);
         if (moneyItems != null) {
             DefaultMoneyItem = moneyItems.FirstOrDefault();
         }

@@ -16,12 +16,12 @@ public class RouteCommand : CommandResolver
 
         if (currentPlace.Parent > 0)
         {
-            var parent = PlaceCollection.Instance.GetPlace(currentPlace.Parent);
+            var parent = PlaceCollection.GetPlace(currentPlace.Parent);
             if (parent != null) nearbyPlaces.Add(parent);
         }
         foreach (var place in currentPlace.Child)
         {
-            var child = PlaceCollection.Instance.GetPlace(place);
+            var child = PlaceCollection.GetPlace(place);
             if (child != null) nearbyPlaces.Add(child);
         }
 

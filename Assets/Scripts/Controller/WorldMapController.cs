@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Logic.Map;
+using Model;
 using ModelContainer;
 using UnityEngine;
 using Utils;
@@ -203,7 +204,7 @@ namespace Controller
 
             var placeRoot = worldMap.transform.Find("PlaceRoot");
             
-            worldMap.Places = (await UniTask.WhenAll(PlaceCollection.Instance.Places.
+            worldMap.Places = (await UniTask.WhenAll(RealmDBController.Realm.All<Place>().
                 Where((place) => place.MapID == mapID).
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID, placeRoot)))).
                 Where((p) => p != null).ToList();

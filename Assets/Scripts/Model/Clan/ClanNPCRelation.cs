@@ -1,26 +1,26 @@
 using System;
 using MessagePack;
+using Realms;
 
 namespace Model
 {
     [Serializable]
-    [MessagePackObject(true)]
-    public class ClanNPCRelation
+    public partial class ClanNPCRelation : IRealmObject
     {
-        public long ClanID;
-        public long CharacterID;
-        public long Relation;
-        public long RelationTitleID;
+        public long ClanID { get; set; }
+        public long CharacterID { get; set; }
+        public long Relation { get; set; }
+        public long RelationTitleID { get; set; }
     }
 
     [Serializable]
     [MessagePackObject(true)]
-    public class ClanRelationTitle
+    public partial class ClanRelationTitle : IRealmObject
     {
-        public long ID;
-        public long ClanID;
-        public long MinRelation;
-        public string ExtraRule;
-        public string Title;
+        public long ID { get; set; }
+        public long ClanID { get; set; }
+        public long MinRelation { get; set; }
+        public string ExtraRule { get; set; }
+        public string Title { get; set; }
     }
 }

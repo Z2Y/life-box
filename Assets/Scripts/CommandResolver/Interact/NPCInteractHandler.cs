@@ -93,7 +93,7 @@ namespace Interact
             {
                 if (detector is TalkableNPCDetector)
                 {
-                    var talks = TalkTriggerContainer.Instance.GetTalkConfig(character.ID).GetTalks();
+                    var talks = TalkTriggerContainer.GetTalkConfig(character.ID).GetTalks();
                     foreach (var talkEvent in talks)
                     {
                         choices.Add(new DialogueChoice()
@@ -110,7 +110,7 @@ namespace Interact
 
                 if (detector is ShopableNPCDetector)
                 {
-                    var shops = ShopConfigCollection.Instance.GetShopConfigsByCharacter(character.ID);
+                    var shops = ShopConfigCollection.GetShopConfigsByCharacter(character.ID);
                     foreach (var shopConfig in shops)
                     {
                         async void OnSelect()

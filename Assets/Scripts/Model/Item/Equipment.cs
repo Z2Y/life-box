@@ -25,7 +25,7 @@ public class EquipmentItemStack : UniqueItemStack
 
     public override bool StoreItem(Item other, int num)
     {
-        if (other.ItemType == ItemType.Equipment && (EquipmentType)other.SubItemType == equipmentType)
+        if (other.ItemType == (int)ItemType.Equipment && (EquipmentType)other.SubItemType == equipmentType)
         {
             return base.StoreItem(other, num);
         }

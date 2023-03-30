@@ -11,7 +11,7 @@ public class StartQuestCommand : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var quest = QuestCollection.Instance.GetQuest(Convert.ToInt64(args.First()));
+        var quest = QuestCollection.GetQuest(Convert.ToInt64(args.First()));
         Debug.Log(quest);
         if (quest == null) return null;
 
@@ -24,7 +24,7 @@ public class TerminateQuest : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var quest = QuestCollection.Instance.GetQuest(Convert.ToInt64(args.First()));
+        var quest = QuestCollection.GetQuest(Convert.ToInt64(args.First()));
         if (quest == null) return null;
 
         return await QuestManager.Instance.TerminateQuest(quest);
@@ -36,7 +36,7 @@ public class CompleteQuest : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var quest = QuestCollection.Instance.GetQuest(Convert.ToInt64(args.First()));
+        var quest = QuestCollection.GetQuest(Convert.ToInt64(args.First()));
         if (quest == null) return null;
 
         return await QuestManager.Instance.CompleteQuest(quest);
@@ -48,7 +48,7 @@ public class IsQuestActive : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var quest = QuestCollection.Instance.GetQuest(Convert.ToInt64(args.First()));
+        var quest = QuestCollection.GetQuest(Convert.ToInt64(args.First()));
         if (quest == null) return false;
 
         await this.Done();
@@ -61,7 +61,7 @@ public class IsQuestComplete : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var quest = QuestCollection.Instance.GetQuest(Convert.ToInt64(args.First()));
+        var quest = QuestCollection.GetQuest(Convert.ToInt64(args.First()));
         if (quest == null) return false;
 
         await this.Done();
@@ -74,7 +74,7 @@ public class IsQuestTerminated : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var quest = QuestCollection.Instance.GetQuest(Convert.ToInt64(args.First()));
+        var quest = QuestCollection.GetQuest(Convert.ToInt64(args.First()));
         if (quest == null) return false;
 
         await this.Done();
@@ -87,7 +87,7 @@ public class IsQuestStarted : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var quest = QuestCollection.Instance.GetQuest(Convert.ToInt64(args.First()));
+        var quest = QuestCollection.GetQuest(Convert.ToInt64(args.First()));
         if (quest == null) return false;
 
         await this.Done();

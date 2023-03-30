@@ -13,11 +13,11 @@ public class RouteTrigger : Singleton<RouteTrigger>, IEventTrigger
     {
         if (routeEvent == null)
         {
-            routeEvent = EventCollection.Instance.GetEventByType(EventType.Route).FirstOrDefault();
+            routeEvent = EventCollection.GetEventByType(EventType.Route).FirstOrDefault();
         }
         LifeNode lifenode = LifeEngine.Instance.lifeData?.current;
         EventNode lastEvent = lifenode?.Events?.LastOrDefault();
-        if (lastEvent != null && lastEvent.Event.EventType == EventType.Route) {
+        if (lastEvent != null && lastEvent.Event.EventType == (int)EventType.Route) {
             lastEvent.DoEffect().Forget();
             return null;
         }

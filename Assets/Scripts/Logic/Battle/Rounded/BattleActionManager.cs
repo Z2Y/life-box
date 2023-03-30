@@ -105,7 +105,7 @@ public class BattleActionManager : MonoBehaviour, IDropHandler
     public void ShuffleNewSkills(BattleCharacter character, int count)
     {
         List<Skill> currentSkills = character.skills;
-        List<Skill> skills = character.character.Skills.Select(SkillCollection.Instance.GetSkill).ToList();
+        List<Skill> skills = character.character.Skills.Select(SkillCollection.GetSkill).ToList();
         skills.Shuffle();
         for (int i = 0; i < skills.Count; i++)
         {

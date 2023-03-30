@@ -9,18 +9,17 @@ public interface ICharacterState {
 public class Talkable : Singleton<Talkable>, ICharacterState {
     public bool IsState(Character character) {
         if (character == null) return false;
-        var trigger = TalkTriggerContainer.Instance.GetTalkConfig(character.ID);
-
-        character.Relations.TryGetValue(0, out var relation); // 0 for player
-        return trigger != null && trigger.Event.Length > 0 && relation >= trigger.RelationLimit;
+        var trigger = TalkTriggerContainer.GetTalkConfig(character.ID);
+        var relation = 0;
+        return trigger != null && trigger.Event.Count > 0 && relation >= trigger.RelationLimit;
     }
 }
 
 public class Shopable : Singleton<Shopable>, ICharacterState {
     public bool IsState(Character character) {
         if (character == null) return false;
-        ShopConfig config = ShopConfigCollection.Instance.GetShopConfigsByCharacter(character.ID)?.FirstOrDefault();
-        return config != null && config.Item.Length > 0;
+        ShopConfig config = ShopConfigCollection.GetShopConfigsByCharacter(character.ID)?.FirstOrDefault();
+        return config != null && config.Item.Count > 0;
     }
 }
 

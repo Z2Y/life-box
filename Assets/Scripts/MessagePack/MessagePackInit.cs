@@ -12,7 +12,7 @@ public class MessagePackInit
         if (!serializerRegistered)
         {
             StaticCompositeResolver.Instance.Register(
-                MessagePack.Resolvers.GeneratedResolver.Instance,
+                //MessagePack.Resolvers.GeneratedResolver.Instance,
                  MessagePack.Resolvers.StandardResolver.Instance
             );
 

@@ -13,7 +13,7 @@ public class RouteBackCommand : RouteCommand {
         if (place != null && place.Parent > 0)
         {
             var routeCompleteSource = new TaskCompletionSource<long>();
-            var target = PlaceCollection.Instance.GetPlace(place.Parent);
+            var target = PlaceCollection.GetPlace(place.Parent);
             if (target != null) {
                 CurrentLife.Place = target;
                 CurrentLife.Next.Place = target;

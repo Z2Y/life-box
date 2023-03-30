@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Controller;
 using MessagePack;
+using Realms;
 using Utils.Shuffle;
 
 namespace Model
@@ -17,15 +19,15 @@ namespace Model
 
     [MessagePackObject(true)]
     [Serializable]
-    public class Place
+    public partial class Place : IRealmObject
     {
-        public long ID;
+        public long ID { get; set; }
         public PlaceType PlaceType;
-        public string Name;
-        public long MapID;
-        public long[] Commands;
-        public long[] Child;
-        public long Parent;
+        public string Name { get; set; }
+        public long MapID { get; set; }
+        public IList<long> Commands { get; }
+        public IList<long> Child { get;  }
+        public long Parent { get; set; }
         public Dictionary<long, Character> Characters = new ();
 
         public override string ToString()
@@ -39,31 +41,12 @@ namespace Model
 namespace ModelContainer
 {
     [ModelContainerOf(typeof(Model.Place), "places")]
-    public class PlaceCollection
+    public static class PlaceCollection
     {
-        private readonly Dictionary<long, Model.Place> lookup = new ();
-        private readonly List<Model.Place> places = new ();
-        private static PlaceCollection _instance;
-        private PlaceCollection() { }
 
-        private void OnLoad() {
-            lookup.Clear();
-            foreach(var place in places) {
-                lookup.Add(place.ID, place);
-            }
-        }
-
-        public static PlaceCollection Instance => _instance ??= new PlaceCollection();
-
-        public Model.Place GetPlace(long id)
+        public static Model.Place GetPlace(long id)
         {
-            return lookup.TryGetValue(id, out var value) ? value : null;
-        }
-
-        public List<Model.Place> Places => places;
-
-        public Model.Place RandomPlace(Model.PlaceType placeType) {
-            return places.Where((place) => place.PlaceType == placeType).ToList().Shuffle().FirstOrDefault();
+            return RealmDBController.Realm.Find<Model.Place>(id);
         }
     }
 }

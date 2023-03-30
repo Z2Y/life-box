@@ -1,27 +1,30 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Controller;
 using MessagePack;
 using Model;
+using Realms;
 
 namespace Model
 {
 
     [MessagePackObject(true)]
     [Serializable]
-    public class ShopConfig
+    public partial class ShopConfig : IRealmObject
     {
-        public long ID;
-        public string Name;
-        public long CharacterID;
-        public long Currency;
-        public int MaxItemCount;
-        public string ShopCondition;
-        public long[] Item;
-        public int[] RefreshCount;
-        public string[] Condition;
-        public int[] Recycle;
-        public int[] Price;
+        [PrimaryKey]
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public long CharacterID { get; set; }
+        public long Currency { get; set; }
+        public int MaxItemCount { get; set; }
+        public string ShopCondition { get; set; }
+        public IList<long> Item { get; }
+        public IList<int> RefreshCount { get; }
+        public IList<string> Condition { get; }
+        public IList<int> Recycle { get; }
+        public IList<int> Price { get; }
 
         public bool isOpen {
             get {
@@ -35,42 +38,21 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(ShopConfig), "configs")]
-    public class ShopConfigCollection
+    public static class ShopConfigCollection
     {
-        private readonly Dictionary<long, ShopConfig> lookup = new ();
-        private Dictionary<long, List<ShopConfig>> lookupByCharacter = new ();
-        private List<ShopConfig> configs = new ();
-        private static ShopConfigCollection _instance;
-        private ShopConfigCollection() { }
-
-        private void OnLoad() {
-            lookup.Clear();
-            foreach(ShopConfig config in configs) {
-                if (isValidConfig(config)) {
-                    lookup.TryAdd(config.ID, config);
-                } else {
-                    UnityEngine.Debug.LogWarning($"Invalid Shop Config Found. Check {config.ID}");
-                }
-            }
-            lookupByCharacter = lookup.Values.GroupBy((config) => config.CharacterID).ToDictionary((group) => group.Key, (group) => group.ToList());
+        public static bool IsValid(this ShopConfig config) {
+            int itemCount = config.Item.Count;
+            return config.Price.Count == itemCount && config.Condition.Count >= itemCount && config.Recycle.Count == itemCount;
         }
 
-        private bool isValidConfig(Model.ShopConfig config) {
-            int itemCount = config.Item.Length;
-            return config.Price.Length == itemCount && config.Condition.Length >= itemCount && config.Recycle.Length == itemCount;
-        }
-
-        public Model.ShopConfig GetShopConfig(long id)
+        public static ShopConfig GetShopConfig(long id)
         {
-            return lookup.TryGetValue(id, out var value) ? value : null;
+            return RealmDBController.Realm.Find<ShopConfig>(id);
         }
 
-        public List<ShopConfig> GetShopConfigsByCharacter(long characterID)
+        public static IQueryable<ShopConfig> GetShopConfigsByCharacter(long characterID)
         {
-            return lookupByCharacter.TryGetValue(characterID, out var shopConfigs) ? shopConfigs : null;
+            return RealmDBController.Realm.All<ShopConfig>().Where((config) => config.CharacterID == characterID);
         }
-
-        public static ShopConfigCollection Instance => _instance ??= new ShopConfigCollection();
     }
 }

@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Controller;
 using MessagePack;
 using Model;
+using Realms;
 
 namespace Model
 {
@@ -18,68 +20,46 @@ namespace Model
 
     [MessagePackObject(true)]
     [Serializable]
-    public class Item
+    public partial class Item : IRealmObject
     {
-        public long ID;
-        public ItemType ItemType;
-        public int SubItemType;
-        public string Description;
-        public string Name;
-        public float Wealth;
-        public long Unique;
-        public int StackCount;
-        public string Effect;
-        public string EffectDescription;
-        public string WorldSprite;
-        public string IconSprite;
+        public long ID { get; set; }
+        public int ItemType { get; set; }
+        public int SubItemType { get; set; }
+        public string Description { get; set; }
+        public string Name { get; set; }
+        public float Wealth { get; set; }
+        public long Unique { get; set; }
+        public int StackCount { get; set; }
+        public string Effect { get; set; }
+        public string EffectDescription { get; set; }
+        public string WorldSprite { get; set; }
+        public string IconSprite { get; set; }
     }
 }
 
 namespace ModelContainer
 {
     [ModelContainerOf(typeof(Item), "items")]
-    public class ItemCollection
+    public static class ItemCollection
     {
-        private readonly Dictionary<long, Item> lookup = new ();
-        private Dictionary<ItemType, List<Item>> lookupByType = new ();
-        private List<Item> items = new ();
-        private static ItemCollection _instance;
-        private ItemCollection() { }
 
-        private void OnLoad() {
-            lookup.Clear();
-            foreach(var evt in items) {
-                lookup.Add(evt.ID, evt);
-            }
-            lookupByType = items.GroupBy((item) => item.ItemType).ToDictionary((group) => group.Key, (group) => group.ToList());
-        }
-
-        public Item GetItem(long id)
+        public static Item GetItem(long id)
         {
-            return lookup.TryGetValue(id, out var value) ? value : null;
+            return RealmDBController.Realm.Find<Item>(id);
         }
 
-        public List<Item> GetItemsByType(ItemType itemType)
+        public static IQueryable<Item> GetItemsByType(ItemType itemType)
         {
-            return lookupByType.TryGetValue(itemType, out var byType) ? byType : null;
+            return RealmDBController.Realm.All<Item>().Where((item) => item.ItemType == (int)itemType);
         }
 
-        public static ItemCollection Instance => _instance ??= new ItemCollection();
-
-        public static IEnumerable<int> GetValidItemIndex(IEnumerable<long> events) {
-            return events.Select((id, idx) =>
-            {
-                var e = Instance.GetItem(id);
-                if (e == null) return -1;
-                return idx;
-            }).Where((v) => v >= 0);            
+        private static IEnumerable<long> GetValidItemIndex(IEnumerable<long> ids)
+        {
+            return RealmDBController.Realm.All<Item>().Filter("ID IN {%@}", string.Join(",", ids)).ToList()
+                .Select((item) => item.ID);
         }
 
-        public static IEnumerable<Item> GetValidItems(long[] ids) {
-            return GetValidItemIndex(ids).Select((idx) => Instance.GetItem(ids[idx]));
-        }
-
-        public static int RandomItemIndex(long[] ids, float[] weights) {
+        private static long RandomItemIndex(long[] ids, float[] weights) {
             var validItems = GetValidItemIndex(ids).ToList();
             if (!validItems.Any()) { return -1; }
             float targetW = UnityEngine.Random.Range(0, validItems.Select((idx) => weights[idx]).Sum());
@@ -91,9 +71,9 @@ namespace ModelContainer
         }
 
         public static Item RandomItem(long[] ids, float[] weights) {
-            int index = RandomItemIndex(ids, weights);
+            var index = RandomItemIndex(ids, weights);
             if (index < 0) return null;
-            return Instance.GetItem(ids[index]);
+            return GetItem(ids[index]);
         }
     }
 }

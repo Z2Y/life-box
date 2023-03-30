@@ -13,7 +13,7 @@ public class LifeData
 
     public void DoForecast(LifeTime time)
     {
-        current.Forecast(TimeTriggerContainer.Instance.GetTrigger(time.Time.Next()));
+        current.Forecast(TimeTriggerContainer.GetTrigger(time.Time.Next()));
     }
 
     public async UniTask DoNext()

@@ -1,20 +1,23 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Controller;
 using MessagePack;
 using Model;
 using ModelContainer;
+using Realms;
 
 namespace Model
 {
     [MessagePackObject(true)]
     [Serializable]
-    public class TalkTrigger
+    public partial class TalkTrigger : IRealmObject
     {
-        public long ID;
-        public long RelationLimit;
-        public long[] Event;
-        public float[] Weight;
+        [PrimaryKey]
+        public long ID { get; set; }
+        public long RelationLimit { get; set; }
+        public IList<long> Event { get;  }
+        public IList<float> Weight { get; }
 
         public Event GetEvent()
         {
@@ -30,28 +33,11 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(TalkTrigger), "triggers")]
-    public class TalkTriggerContainer
+    public static class TalkTriggerContainer
     {
-        private readonly Dictionary<long, TalkTrigger> lookup = new ();
-        private readonly List<TalkTrigger> triggers = new ();
-        private static TalkTriggerContainer _instance;
-        private TalkTriggerContainer() { }
-
-        private void OnLoad()
+        public static TalkTrigger GetTalkConfig(long characterID)
         {
-            lookup.Clear();
-            foreach (var trigger in triggers)
-            {
-                lookup.Add(trigger.ID, trigger);
-            }
-        }
-
-        public static TalkTriggerContainer Instance => _instance ??= new TalkTriggerContainer();
-
-        public TalkTrigger GetTalkConfig(long characterID)
-        {
-            return lookup.TryGetValue(characterID, out var value) ? value : null;
+            return RealmDBController.Realm.Find<TalkTrigger>(characterID);
         }
     }
 }

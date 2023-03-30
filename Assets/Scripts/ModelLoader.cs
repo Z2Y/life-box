@@ -31,7 +31,7 @@ public class ModelLoader : MonoBehaviour {
         if (Instance == null) {
             Instance = this;
         }
-        Load().Coroutine();
+        // Load().Coroutine();
     }
 
     private async UniTask Load() {

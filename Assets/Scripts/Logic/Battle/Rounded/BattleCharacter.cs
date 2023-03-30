@@ -22,7 +22,7 @@ public class BattleCharacter {
     public Vector3Int Position {get; set;}
 
     public BattleCharacter(long characterID, int team = 0, bool ai = true) {
-        character = CharacterCollection.Instance.GetCharacter(characterID);
+        character = CharacterCollection.GetCharacter(characterID);
         Property = LifePropertyFactory.Random(40);
         ActedTurn = -1;
         TeamID = team;

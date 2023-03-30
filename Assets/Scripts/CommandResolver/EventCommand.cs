@@ -12,7 +12,7 @@ public class DoEventResolver : CommandResolver, IEventTrigger
     private Event currentEvent;
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        currentEvent = EventCollection.Instance.GetEvent(Convert.ToInt64(args[0]));
+        currentEvent = EventCollection.GetEvent(Convert.ToInt64(args[0]));
         await this.Trigger();
         currentEvent = null;
         return currentEvent;

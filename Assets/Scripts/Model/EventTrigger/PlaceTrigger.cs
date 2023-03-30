@@ -4,22 +4,24 @@ using System.Linq;
 using Model;
 using MessagePack;
 using ModelContainer;
+using Realms;
 
 namespace Model
 {
     [MessagePackObject(true)]
     [Serializable]
-    public class PlaceTrigger
-    {
-        public long ID;
-        public long[] Event;
-        public long[] Priority;
-        public string[] Stage;
+    public partial class PlaceTrigger : IRealmObject
 
-        public List<Event> GetValidEvents()
-        {
-            return EventCollection.GetValidEvents(Event).ToList();
-        }
+    {
+    public long ID { get; set; }
+    public IList<long> Event { get; }
+    public IList<long> Priority { get;  }
+    public IList<string> Stage { get; }
+
+    public List<Event> GetValidEvents()
+    {
+        return EventCollection.GetValidEvents(Event).ToList();
+    }
     }
 }
 namespace ModelContainer

@@ -28,13 +28,12 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
     public ShopInventory(ShopConfig config) : base(0)
     {
         Config = config;
-        Capacity = config.Item.Length;
+        Capacity = config.Item.Count;
     }
 
     public bool StoreItem(Item other, int num, int price, int resycle)
     {
-        ShopItemStack stack = GetStack(other.ID) as ShopItemStack;
-        if (stack != null && stack.Recycle == resycle && stack.Price == price) {
+        if (GetStack(other.ID) is ShopItemStack stack && stack.Recycle == resycle && stack.Price == price) {
             return stack.StoreItem(other, num);
         } else {
             stack = InitializeNewStack() as ShopItemStack;
@@ -59,7 +58,7 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
         isStoring = true;
         for (int i = 0; i < validItemIndex.Count; i++)
         {
-            Item item = ItemCollection.Instance.GetItem(Config.Item[validItemIndex[i]]);
+            Item item = ItemCollection.GetItem(Config.Item[validItemIndex[i]]);
             int RefreshCount = Config.RefreshCount[validItemIndex[i]];
             int Price = Config.Price[validItemIndex[i]];
             int Resycle = Config.Recycle[validItemIndex[i]];
@@ -87,7 +86,7 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
         return (bool)result;
     }
 
-    public Item Currency => ItemCollection.Instance.GetItem(Config.Currency);
+    public Item Currency => ItemCollection.GetItem(Config.Currency);
 }
 
 public class ShopInventoryCollection : Singleton<ShopInventoryCollection> {

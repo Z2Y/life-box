@@ -21,7 +21,7 @@ namespace Logic.Quest
                 return Enumerable.Empty<Model.Quest>();
             }
 
-            return questsByType[questType].Select((qID) => QuestCollection.Instance.GetQuest(qID));
+            return questsByType[questType].Select((qID) => QuestCollection.GetQuest(qID));
         }
 
         public async Task<object> AddQuest(Model.Quest quest)

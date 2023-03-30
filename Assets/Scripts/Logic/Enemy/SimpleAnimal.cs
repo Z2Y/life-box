@@ -31,7 +31,7 @@ namespace Logic.Enemy
             animator = GetComponent<AnimationController>();
             hp = new PropertyValue(SubPropertyType.HitPoint, 20,null);
             lootItem = new ItemStack();
-            lootItem.StoreItem(ItemCollection.Instance.GetItem(10016), 1);
+            lootItem.StoreItem(ItemCollection.GetItem(10016), 1);
         }
         private void OnDisable()
         {

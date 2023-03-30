@@ -34,7 +34,7 @@ public class EventNode
 
     public async UniTask<int> DoBranch()
     {
-        if (Event.BranchExpression.Length > 0 && Event.Branch.Length > 0)
+        if (Event.BranchExpression.Length > 0 && Event.Branch.Count > 0)
         {
             // UnityEngine.Debug.Log(Event.BranchExpression);
             var node = new ExpressionNode(Event.BranchExpression, Life.Environment);

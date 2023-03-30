@@ -21,7 +21,7 @@ namespace Controller
 
         private Tilemap[] tilemaps;
 
-        public Place Place => PlaceCollection.Instance.GetPlace(placeID);
+        public Place Place => PlaceCollection.GetPlace(placeID);
 
         private void Awake()
         {

@@ -1,46 +1,32 @@
 using System;
 using System.Collections.Generic;
+using Controller;
 using MessagePack;
+using Realms;
 using InteractMenuConfig = Model.InteractMenuConfig;
 
 namespace Model
 {
     [MessagePackObject(true)]
     [Serializable]
-    public class InteractMenuConfig
+    public partial class InteractMenuConfig : IRealmObject
     {
-        public long ID;
-        public string Name;
-        public string IconPath;
-        public string MenuResolver;
-        public long keyCode;
+        [PrimaryKey]
+        public long ID { get; set; }
+        public string Name  { get; set; }
+        public string IconPath  { get; set; }
+        public string MenuResolver  { get; set; }
+        public long keyCode  { get; set; }
     }
 }
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(InteractMenuConfig), "items")]
-    public class InteractMenuConfigCollection
+    public static class InteractMenuConfigCollection
     {
-        private readonly Dictionary<long, InteractMenuConfig> lookup = new ();
-        private readonly List<InteractMenuConfig> items = new ();
-        private static InteractMenuConfigCollection _instance;
-        private InteractMenuConfigCollection() { }
-
-        private void OnLoad() {
-            lookup.Clear();
-            foreach(var evt in items) {
-                lookup.Add(evt.ID, evt);
-            }
-        }
-
-        public InteractMenuConfig GetConfig(long id)
+        public static InteractMenuConfig GetConfig(long id)
         {
-            return lookup.TryGetValue(id, out var value) ? value : null;
+            return RealmDBController.Realm.Find<InteractMenuConfig>(id);
         }
-
-        public static InteractMenuConfigCollection Instance => _instance ??= new InteractMenuConfigCollection();
-        
-        
     }
 }

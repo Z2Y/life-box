@@ -28,7 +28,7 @@ namespace Controller
 
         private void Awake()
         {
-            character = CharacterCollection.Instance.GetCharacter(characterID);
+            character = CharacterCollection.GetCharacter(characterID);
             Animator = gameObject.AddComponent<NPCAnimationController>();
             Movement = gameObject.AddComponent<NPCMovementController>();
             Interact = gameObject.GetComponent<NPCInteractController>();
@@ -52,7 +52,7 @@ namespace Controller
             {
                 addSkillShortCuts(KeyCode.Mouse0, new SwordSkillAction()
                 {
-                    skill = SkillCollection.Instance.GetSkill(3),
+                    skill = SkillCollection.GetSkill(3),
                     self = gameObject,
                     meleeSwordType = "Sword_1"
                 });
@@ -62,7 +62,7 @@ namespace Controller
                 });
                 addSkillShortCuts(KeyCode.Mouse1, new BowSkillAction()
                 {
-                    skill = SkillCollection.Instance.GetSkill(3),
+                    skill = SkillCollection.GetSkill(3),
                     self = gameObject
                 });
                 Property = LifeEngine.Instance.lifeData.property;
@@ -148,7 +148,7 @@ namespace Controller
                 return controller;
             }
 
-            var character = CharacterCollection.Instance.GetCharacter(characterID);
+            var character = CharacterCollection.GetCharacter(characterID);
             
             
 

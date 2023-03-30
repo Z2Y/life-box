@@ -100,7 +100,7 @@ public class KnapsackPanel : UIBase
     public void FilterItemByType(ItemType type)
     {
         if (knapsack == null) return;
-        List<int> stackIdx = knapsack.Stacks.Select((_, idx) => idx).Where((idx) => !knapsack.Stacks[idx].Empty && knapsack.Stacks[idx].item.ItemType == type).ToList();
+        List<int> stackIdx = knapsack.Stacks.Select((_, idx) => idx).Where((idx) => !knapsack.Stacks[idx].Empty && knapsack.Stacks[idx].item.ItemType == (int)type).ToList();
         for (int i = 0; i < stackIdx.Count; i++)
         {
             stackData[i].ItemStack = knapsack.Stacks[stackIdx[i]];

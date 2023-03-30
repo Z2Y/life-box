@@ -42,7 +42,7 @@ public class CurrentCityResolver : CommandResolver
         var current = LifeEngine.Instance.lifeData?.current?.Place;
         while (current is { Parent: > 0 })
         {
-            current = PlaceCollection.Instance.GetPlace(current.Parent);
+            current = PlaceCollection.GetPlace(current.Parent);
         }
 
         await this.Done();
@@ -73,7 +73,7 @@ public class SelectTalkToNearBy : CommandResolver
 
     private void OnTalk(Character character)
     {
-        var trigger = TalkTriggerContainer.Instance.GetTalkConfig(character.ID);
+        var trigger = TalkTriggerContainer.GetTalkConfig(character.ID);
         if (trigger == null) return;
         trigger.GetEvent().Trigger().Coroutine();
         UnityEngine.Debug.Log($"Talk to {character.ID}");
@@ -117,7 +117,7 @@ public class SelectShopToNearby : CommandResolver
 
     private async void OnShop(Character character, Action<ShopResult> onComplete, Action OnCancel)
     {
-        var configs = ShopConfigCollection.Instance.GetShopConfigsByCharacter(character.ID)
+        var configs = ShopConfigCollection.GetShopConfigsByCharacter(character.ID)
             .Where((config) => config.isOpen).ToList();
 
         if (configs.Count <= 0)
@@ -141,7 +141,7 @@ public class SelectShopToNearby : CommandResolver
         async void onShop(ShopResult result)
         {
             var node = await ShopTrigger.Instance.WithConfig(config).Trigger();
-            if (node != null && node.Event.EventType == EventType.Shop)
+            if (node != null && node.Event.EventType == (int)EventType.Shop)
             {
                 result.Merge(node.EffectResult as ShopResult);
                 node.SetEffectResult(result);

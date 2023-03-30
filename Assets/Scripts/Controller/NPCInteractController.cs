@@ -145,7 +145,7 @@ namespace Controller
                     tip.SetPosition(target.transform.position + offset, target.GetInstanceID());
                 }
 
-                var menuConfig = InteractMenuConfigCollection.Instance.GetConfig(menuID);
+                var menuConfig = InteractMenuConfigCollection.GetConfig(menuID);
                 
                 InputCommandResolver.Instance.Register(tip.keyCode,
                     new InteractMenuHandler(this, menuConfig.MenuResolver));

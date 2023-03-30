@@ -16,13 +16,13 @@ public class TalkCommand : CommandResolver
         var uninterruptible = Convert.ToInt32(args[2]);
         var options = args.Skip(3);
 
-        var character = CharacterCollection.Instance.GetCharacter(characterID);
+        var character = CharacterCollection.GetCharacter(characterID);
 
         var dialogueOptions = new List<DialogueChoice>();
 
         foreach (var option in options)
         {
-            var optionEvent = EventCollection.Instance.GetEvent(Convert.ToInt64(option));
+            var optionEvent = EventCollection.GetEvent(Convert.ToInt64(option));
             dialogueOptions.Add(new DialogueChoice()
             {
                 text = optionEvent.Description,

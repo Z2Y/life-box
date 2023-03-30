@@ -19,11 +19,11 @@ public class ShopTrigger : Singleton<ShopTrigger>, IEventTrigger
     {
         if (shopEvent == null)
         {
-            shopEvent = EventCollection.Instance.GetEventByType(EventType.Shop).FirstOrDefault();
+            shopEvent = EventCollection.GetEventByType(EventType.Shop).FirstOrDefault();
         }
         LifeNode lifenode = LifeEngine.Instance.lifeData?.current;
         EventNode lastEvent = lifenode?.Events?.LastOrDefault();
-        if (lastEvent != null && lastEvent.Event.EventType == EventType.Shop) {
+        if (lastEvent != null && lastEvent.Event.EventType == (int)EventType.Shop) {
             ShopResult lastShopResult = lastEvent.EffectResult as ShopResult;
             return (lastShopResult == null || lastShopResult.Sells.Config != Config) ? shopEvent : null;
         }

@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Controller;
 using HeroEditor.Common.Enums;
 using MessagePack;
 using Model;
+using Realms;
 
 namespace Model
 {
@@ -23,49 +25,38 @@ namespace Model
 
     [MessagePackObject(true)]
     [Serializable]
-    public class Skill
+    public partial class Skill : IRealmObject
     {
-        public long ID;
-        public SkillType SkillType;
-        public SelectType SelectType;
-        public WeaponType WeaponType;
-        public string Name;
-        public string Effect;
-        public string Cost;
-        public float CoolDown;
-        public long Suit;
-        public int Attack;
-        public int SelectRange;
-        public int AttackRange;
-        public int Level;
+        [PrimaryKey]
+        public long ID { get; set; }
+        public SkillType SkillType => (SkillType)ISkillType;
+        public SelectType SelectType => (SelectType)ISelectType;
+        public WeaponType WeaponType => (WeaponType)IWeaponType;
+        
+        public int ISkillType { get; set; }
+        public int ISelectType { get; set; }
+        public int IWeaponType { get; set; }
+        public string Name { get; set; }
+        public string Effect { get; set; }
+        public string Cost { get; set; }
+        public float CoolDown { get; set; }
+        
+        public long Suit { get; set; }
+        public int Attack { get; set; }
+        public int SelectRange { get; set; }
+        public int AttackRange { get; set; }
+        public int Level { get; set; }
 
     }
 }
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Model.Skill), "skills")]
-    public class SkillCollection
+    public static class SkillCollection
     {
-        private readonly Dictionary<long, Model.Skill> lookup = new ();
-        private readonly List<Model.Skill> skills = new ();
-        private static SkillCollection _instance;
-        private SkillCollection() { }
-
-        private void OnLoad() {
-            lookup.Clear();
-            foreach(var skill in skills) {
-                lookup.Add(skill.ID, skill);
-            }
-        }
-
-        public static SkillCollection Instance => _instance ??= new SkillCollection();
-
-        public Skill GetSkill(long id)
+        public static Skill GetSkill(long id)
         {
-            return lookup.TryGetValue(id, out var value) ? value : null;
+            return RealmDBController.Realm.Find<Skill>(id);
         }
-
-        public List<Skill> Skills => skills;
     }
 }

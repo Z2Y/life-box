@@ -58,10 +58,10 @@ public class LifeNode
             LifeEngine.Instance.lifeData.AddNodeEvent(e.Event);
             await e.DoEffect();
             var branch = await e.DoBranch();
-            if (branch >= 0 && branch < e.Event.Branch.Length)
+            if (branch >= 0 && branch < e.Event.Branch.Count)
             {
-                Debug.Log($"EventBranch {branch} {e.Event.Branch[branch]} {EventCollection.Instance.GetEvent(e.Event.Branch[branch])}");
-                var branchEvent = EventCollection.Instance.GetEvent(e.Event.Branch[branch]);
+                Debug.Log($"EventBranch {branch} {e.Event.Branch[branch]} {EventCollection.GetEvent(e.Event.Branch[branch])}");
+                var branchEvent = EventCollection.GetEvent(e.Event.Branch[branch]);
                 if (branchEvent != null)
                 {
                     Events.Insert(i + 1, new EventNode(this, branchEvent));
@@ -83,7 +83,7 @@ public class LifeNode
     {
         get
         {
-            return Events.Exists(e => e.Event.EventType == Model.EventType.Death);
+            return Events.Exists(e => e.Event.EventType == (int)Model.EventType.Death);
         }
     }
 
@@ -96,7 +96,7 @@ public class LifeNode
     public static LifeNode CreateBornNode()
     {
         var node = new LifeNode();
-        var bornPlace = PlaceCollection.Instance.GetPlace(10002);
+        var bornPlace = PlaceCollection.GetPlace(10002);
         node.Place = bornPlace;
         node.Location = new Location() {MapID = bornPlace.MapID, PlaceID = bornPlace.ID};
         return node;
