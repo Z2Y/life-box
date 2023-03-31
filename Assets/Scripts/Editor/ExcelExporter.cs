@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using MessagePack;
-using MongoDB.Bson;
 using OfficeOpenXml;
 using Realms;
 using UnityEditor;
@@ -38,7 +37,7 @@ public static class ExcelExporter
                 {
                     foreach (ExcelWorksheet sheet in package.Workbook.Worksheets)
                     {
-                        UnityEngine.Debug.Log(sheet.Name);
+                        Debug.Log(sheet.Name);
                         ExportClassJSON(sheet);
                     }
                 }
@@ -86,11 +85,9 @@ public static class ExcelExporter
             {
                 var obj = Activator.CreateInstance(classType);
                 
-                Debug.Log(fields.Count);
                 foreach (ClassField field in fields)
                 {
                     var value = GetRowFieldValue(sheet, field, row);
-                    Debug.Log($"{field.FieldName} {value is IList} {value.ToJson()}");
                     if (field.FieldInfo.CanWrite)
                     {
                         field.FieldInfo.SetValue(obj, GetRowFieldValue(sheet, field, row));
@@ -104,11 +101,9 @@ public static class ExcelExporter
                         
                     }
                 }
-
                 m_realm_export.Add(obj as IRealmObject);
             }
         });
-        // string value = MessagePackSerializer.ConvertToJson(MessagePackSerializer.Serialize(list.GetType(), list));
     }
 
     static object GetRowFieldValue(ExcelWorksheet sheet, ClassField field, int row) {
@@ -149,7 +144,6 @@ public static class ExcelExporter
             }
         }
         //Debug.Log(fieldInfo.PropertyType.Name);
-        // Debug.Log(jsonValue);
         return MessagePackSerializer.Deserialize(fieldInfo.PropertyType, MessagePackSerializer.ConvertFromJson(jsonValue));
     }
 

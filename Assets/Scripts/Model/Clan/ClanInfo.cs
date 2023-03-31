@@ -1,5 +1,4 @@
 using System;
-using MessagePack;
 using Realms;
 
 namespace Model

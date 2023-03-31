@@ -8,6 +8,7 @@ using Realms;
 namespace Model
 {
     [Serializable]
+    [MessagePackObject(true)]
     public partial class Character : IRealmObject
     {
         [PrimaryKey]
