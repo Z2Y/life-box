@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.HeroEditor.Common.Scripts.Common;
 using Controller;
-using Cysharp.Threading.Tasks;
 using Logic.Map.MapProcedure;
-using Model;
 using ModelContainer;
 using UnityEngine;
 
@@ -17,15 +14,24 @@ namespace Logic.Map
 
         [SerializeField]
         private List<BattleMapProcedure> procedures;
+        
+        [SerializeField]
+        private bool beginOnStart;
+
+        [SerializeField] 
+        private string endRule;
 
         private PlaceController root;
 
         private BattleMapProcedure currentProcedure;
 
+        [SerializeField] public int battleDepth;
+
         private int currentProcedureIndex;
 
-        [SerializeField]
-        private bool beginOnStart;
+        private bool completeOnProcedureEnd;
+
+        private Action onComplete;
 
         private void Awake()
         {
@@ -69,7 +75,17 @@ namespace Logic.Map
             }
         }
 
-        public void Prepare()
+        private void OnCompleteBattle()
+        {
+            var prevNode = LifeEngine.Instance.lifeData.current.Prev;
+
+            if (prevNode != null)
+            {
+                MapGate.JumpTo(prevNode.Location.MapID, prevNode.Location.Position);
+            }
+        }
+
+        public void Prepare(int depth = 0)
         {
             var events = PlaceTriggerContainer.GetPlaceTrigger(root.placeID)?.GetValidEvents();
 
@@ -84,6 +100,7 @@ namespace Logic.Map
             }
             
             currentProcedure = procedures[currentProcedureIndex];
+            battleDepth = depth;
         }
 
         private void NextProcedure()
@@ -96,8 +113,18 @@ namespace Logic.Map
             }
             else
             {
-                Debug.Log("End Procedures");
-                EnableAllGate();
+                var result = endRule.ExecuteExpression();
+                Debug.Log($"is Battle End {result}");
+                if (result is true)
+                {
+                    var endProcedure = ScriptableObject.CreateInstance<BattleMapFinish>();
+                    endProcedure.StartProcedure(this);
+                    endProcedure.OnProcedureFinish(OnCompleteBattle);
+                }
+                else
+                {
+                    EnableAllGate();
+                }
             }
         }
 

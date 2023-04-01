@@ -3,7 +3,9 @@ using Assets.HeroEditor.Common.Scripts.CharacterScripts;
 using Cysharp.Threading.Tasks;
 using Logic.Battle.Realtime;
 using Logic.Battle.Realtime.SkillAction;
+using Logic.Message;
 using ModelContainer;
+using UniTaskPubSub;
 using UnityEngine;
 using Character = Model.Character;
 
@@ -134,9 +136,14 @@ namespace Controller
             if (character.ID == 0)
             {
                 removeAllShortCuts();
-                LifeEngine.Instance.GameEnd();
             }
             disableMove();
+
+            var deathMsg = new CharacterDeath { characterID = character.ID };
+            
+            AsyncMessageBus.Default.Publish<CharacterMessage>(deathMsg);
+            AsyncMessageBus.Default.Publish(deathMsg);
+            
             Destroy(gameObject, 1f);
         }
 

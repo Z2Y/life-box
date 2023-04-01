@@ -11889,6 +11889,7 @@ MonoBehaviour:
   procedures:
   - {fileID: 11400000, guid: 322e1279b11aa42ba800f38861e0ec76, type: 2}
   beginOnStart: 0
+  endRule: CurrentBattleDepth>=7
 --- !u!1 &8322955991009784411
 GameObject:
   m_ObjectHideFlags: 0

@@ -95,7 +95,7 @@ namespace Logic.Enemy.Scriptable
             _onTerminate += onTerminate;
         }
 
-        public override void Clear()
+        public override void Dispose()
         {
             isSpawning = false;
             if (currentAliveInstance > 0)
@@ -111,6 +111,7 @@ namespace Logic.Enemy.Scriptable
 
             currentAliveInstance = 0;
             activeAnimals.Clear();
+            Destroy(this);
         }
 
         public override void OnDeathSingle(Action onEnemyDeath)
@@ -121,11 +122,6 @@ namespace Logic.Enemy.Scriptable
         public override void OnDeathAll(Action onEnemyAllDeath)
         {
             _onDeathAll += onEnemyAllDeath;
-        }
-
-        private void OnDestroy()
-        {
-            Clear();
         }
     }
 }

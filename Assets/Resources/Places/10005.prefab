@@ -12156,6 +12156,7 @@ MonoBehaviour:
   procedures:
   - {fileID: 11400000, guid: 322e1279b11aa42ba800f38861e0ec76, type: 2}
   beginOnStart: 0
+  endRule: CurrentBattleDepth>=7
 --- !u!1001 &289022032247519580
 PrefabInstance:
   m_ObjectHideFlags: 0

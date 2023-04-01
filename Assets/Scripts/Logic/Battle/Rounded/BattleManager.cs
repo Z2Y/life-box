@@ -54,7 +54,7 @@ public class BattleManager : Singleton<BattleManager>
         BattleResultPanel.Show(state == BattleState.Win ? "胜利" : "失败", () =>
         {
             GameLoader.Instance.SwitchSceneWithAnimation(SceneManager.GetActiveScene(), originScene).Forget();
-        });
+        }).Coroutine();
     }
 
     public void AddBattleCharacter(BattleCharacter instance, BattleStartConfig config)

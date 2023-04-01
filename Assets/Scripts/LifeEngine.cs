@@ -2,7 +2,9 @@ using System;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Loot;
+using Logic.Message;
 using ModelContainer;
+using UniTaskPubSub;
 using UnityEngine;
 
 public class LifeEngine : MonoBehaviour {
@@ -45,8 +47,14 @@ public class LifeEngine : MonoBehaviour {
         mainCharacter.SetAsPlayer(true);
         WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Forget();
         isReady = true;
-        
-        // LifeCardManager.Instance.UpdateCardActions();
+
+        AsyncMessageBus.Default.Subscribe<CharacterDeath>((message =>
+        {
+            if (message.characterID == 0)
+            {
+                GameEnd();
+            }
+        })).AddTo(this.GetCancellationTokenOnDestroy());
         OnLifeStart?.Invoke();
         AfterLifeChange?.Invoke();
     }
@@ -65,7 +73,6 @@ public class LifeEngine : MonoBehaviour {
             return;
         }
         await lifeData.DoNext();
-        lifeData.DoForecast(lifeTime);
         LifeCardManager.Instance.UpdateCardActions();
         AfterLifeChange?.Invoke();
     }

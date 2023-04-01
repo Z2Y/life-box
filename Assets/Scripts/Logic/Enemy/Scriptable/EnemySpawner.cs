@@ -16,11 +16,9 @@ namespace Logic.Enemy.Scriptable
         public void OnDeathAll(Action onEnemyAllDeath);
 
         public void OnTerminate(Action onTerminate);
-
-        public void Clear();
     }
 
-    public abstract class EnemySpawner : ScriptableObject, IEnemySpawner
+    public abstract class EnemySpawner : ScriptableObject, IEnemySpawner, IDisposable
     {
         public abstract int CurrentAlive();
 
@@ -35,6 +33,6 @@ namespace Logic.Enemy.Scriptable
         public abstract void OnDeathAll(Action onEnemyAllDeath);
         public abstract void OnTerminate(Action onTerminate);
 
-        public abstract void Clear();
+        public abstract void Dispose();
     }
 }

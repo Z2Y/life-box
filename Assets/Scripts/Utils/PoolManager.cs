@@ -30,6 +30,11 @@ namespace Utils
             return pool;
         }
 
+        public static void ReturnUsedIf<T>(Predicate<T> match)
+        {
+            createOrGetPool(typeof(T)).ReturnUsedIf(match);
+        }
+
         public static void ReleaseUnused()
         {
             foreach (var pool in pools.Values)

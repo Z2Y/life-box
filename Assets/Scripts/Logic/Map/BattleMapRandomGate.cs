@@ -27,7 +27,6 @@ namespace Logic.Map
         {
             var nextPlaceID = GetNextPlaceID();
             nextPlace = map.Places.Find((place) => place.placeID == nextPlaceID);
-            
 
             if (nextPlace == null) return;
 
@@ -73,8 +72,16 @@ namespace Logic.Map
                 await YieldCoroutine.WaitForSeconds(0.125f);
             }
             await fromPlace.DeActivate();
+            
+            // update life node position
+            var currentNode = LifeEngine.Instance.lifeData.current;
+            currentNode.Location.PlaceID = nextPlace.placeID;
+            currentNode.Place = nextPlace.Place;
+            currentNode.Location.MapID = nextPlace.Place.MapID;
+            currentNode.Location.Position = mainCharacter.transform.position;
+
             var battleController = nextPlace.GetComponent<BattlePlaceController>();
-            battleController.Prepare();
+            battleController.Prepare(fromPlace.GetComponent<BattlePlaceController>().battleDepth + 1);
             battleController.BeginProcedure();
         }
         private enum ConnectDirection

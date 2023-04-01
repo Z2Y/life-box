@@ -31,7 +31,7 @@ public class BattleCommand : CommandResolver
             return null;
         }
         
-        place.GetOrAddComponent<UnAttachedObjectController>().AttachObject((ScriptableObject)enemySpawner);
+        place.GetOrAddComponent<UnAttachedObjectController>().AttachObject(enemySpawner as IDisposable);
 
         var cancelTokenSource = new CancellationTokenSource();
 

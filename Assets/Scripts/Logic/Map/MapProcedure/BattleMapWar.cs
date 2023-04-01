@@ -30,12 +30,13 @@ namespace Logic.Map.MapProcedure
 
         public override void OnProcedureFinish(Action onFinish)
         {
+            
             _onFinish += onFinish;
         }
 
         public override void TerminateProcedure()
         {
-            _enemySpawner.Clear();
+            _enemySpawner.Dispose();
             _onFinish = null;
         }
 

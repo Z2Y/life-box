@@ -32,7 +32,7 @@ namespace Logic.Enemy
 
         private void OnDestroy()
         {
-            _spawner.Clear();
+            _spawner.Dispose();
         }
 
         private async void DoSpawn()

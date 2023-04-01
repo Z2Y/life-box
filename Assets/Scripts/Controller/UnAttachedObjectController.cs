@@ -1,14 +1,16 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Controller
 {
     public class UnAttachedObjectController : MonoBehaviour
     {
-        private readonly List<Object> _objectsClearOnDestroy = new();
-        private readonly List<Object> _objectsClearOnDisable = new();
+        private readonly HashSet<IDisposable> _objectsClearOnDestroy = new();
+        private readonly HashSet<IDisposable> _objectsClearOnDisable = new();
 
-        public void AttachObject(Object instance, bool clearOnDisable = true)
+        public void AttachObject(IDisposable instance, bool clearOnDisable = true)
         {
             if (clearOnDisable)
             {
@@ -20,11 +22,17 @@ namespace Controller
             }
         }
 
+
+        public void RemoveIf(Predicate<IDisposable> func)
+        {
+            _objectsClearOnDestroy.RemoveWhere(func);
+        }
+
         private void OnDisable()
         {
             foreach (var obj in _objectsClearOnDisable)
             {
-                Destroy(obj);
+                obj.Dispose();
             }
             _objectsClearOnDisable.Clear();
         }
@@ -33,7 +41,7 @@ namespace Controller
         {
             foreach (var obj in _objectsClearOnDestroy)
             {
-                Destroy(obj);
+                obj.Dispose();
             }
             _objectsClearOnDestroy.Clear();
         }

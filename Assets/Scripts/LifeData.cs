@@ -11,15 +11,20 @@ public class LifeData
     public MoneyInventory moneyInventory = new ();
     public Dictionary<long, long> Events = new (); // 所有经历过的事件
 
-    public void DoForecast(LifeTime time)
-    {
-        current.Forecast(TimeTriggerContainer.GetTrigger(time.Time.Next()));
-    }
-
     public async UniTask DoNext()
     {
         current = current.Next;
         await current.ProcessEvent();
+    }
+
+    public LifeNode NextNode()
+    {
+        var next = LifeNode.CreateEmptyNode();
+        next.Location = current.Location;
+        next.Place = current.Place;
+        current.Next = next;
+        next.Prev = current;
+        return next;
     }
 
     public static LifeData CreateNew()

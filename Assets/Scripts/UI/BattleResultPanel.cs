@@ -13,7 +13,7 @@ public class BattleResultPanel : UIBase {
     void Awake() {
         description = transform.Find("Panel/Description").GetComponent<Text>();
         okButton = transform.Find("Panel/Buttons/OkButton").GetComponent<Button>();
-        okButton.onClick.AddListener(this.Destroy);
+        okButton.onClick.AddListener(Destroy);
     }
 
     public void SetDescription(string text) {

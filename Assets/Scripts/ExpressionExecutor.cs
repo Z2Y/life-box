@@ -31,7 +31,9 @@ public class ExpressionExecutor : MonoBehaviour
             fieldValue = Convert.ToInt32(resolved);
         } else {
             if (!int.TryParse(field, out fieldValue)) {
-                return false;
+                var resolved = ExpressionFieldResolver.Resolve(field);
+                if (resolved == null) { return false; }
+                fieldValue = Convert.ToInt32(resolved);
             }
         }
         switch (op)
@@ -437,7 +439,7 @@ public static class ExpressionHelper
     }
     public static object ExecuteExpression(this string expression, Dictionary<string, object> environments = null)
     {
-        if (expression.Length <= 0) { return null; }
+        if (string.IsNullOrEmpty(expression)) { return null; }
         var node = ExpressionNode.ParseExpression(expression);
         if (environments == null) return node.Execute();
         foreach (var item in environments)

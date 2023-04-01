@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Pool;
 
 namespace Utils
@@ -56,6 +57,15 @@ namespace Utils
         {
             unused.Clear();
             pool.Clear();
+        }
+
+        public void ReturnUsedIf<T>(Predicate<T> match)
+        {
+            var toRelease = used.Where((pair) => pair.Value is T value && match(value)).ToList();
+            foreach (var item in toRelease)
+            {
+                item.Value.Dispose();
+            }
         }
 
         public int Count => used.Count + unused.Count;
