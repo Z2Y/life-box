@@ -33,6 +33,7 @@ namespace Logic.Enemy
         {
             _spawner.Dispose();
             DestroyImmediate(_spawner, true);
+            _spawner = null;
         }
 
         private async void DoSpawn()
@@ -42,6 +43,10 @@ namespace Logic.Enemy
 
                 await YieldCoroutine.WaitForSeconds(SpawnInterval + Random.Range(-SpawnVariance, SpawnVariance));
 
+                if (_spawner == null)
+                {
+                    return;
+                }
                 if (_spawner.CurrentAlive() < MaxAliveInstance)
                 {
                     _spawner.Spawn(1, transform.position, SpawnRange, SpawnInterval);
