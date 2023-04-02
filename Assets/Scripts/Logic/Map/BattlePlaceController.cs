@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Controller;
 using Logic.Map.MapProcedure;
+using Logic.Message;
 using ModelContainer;
+using UniTaskPubSub;
 using UnityEngine;
+using Utils;
 
 namespace Logic.Map
 {
@@ -75,13 +78,20 @@ namespace Logic.Map
             }
         }
 
-        private void OnCompleteBattle()
+        private async void OnCompleteBattle()
         {
-            var prevNode = LifeEngine.Instance.lifeData.current.Prev;
+            var battleMsg = SimplePoolManager.Get<BattleComplete>();
 
-            if (prevNode != null)
+            try
             {
-                MapGate.JumpTo(prevNode.Location.MapID, prevNode.Location.Position);
+                battleMsg.placeID = root.placeID;
+                battleMsg.mapID = root.Place.MapID;
+                Debug.Log($"Dispatch BattleComplete {battleMsg}");
+                await AsyncMessageBus.Default.PublishAsync(battleMsg);
+            }
+            finally
+            {
+                battleMsg.Dispose();
             }
         }
 

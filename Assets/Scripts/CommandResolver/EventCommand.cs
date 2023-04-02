@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using ModelContainer;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Controller;
@@ -36,7 +35,7 @@ public class LastEffectResult : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var current = LifeEngine.Instance?.lifeData?.current;
+        var current = LifeEngine.Instance.lifeData?.current;
         if (current == null) return null;
         await this.Done();
         return current.Events[current.ProcessedCount - 1].EffectResult;
@@ -122,7 +121,6 @@ public class ListenMapMessage : CommandResolver
 [CommandResolverHandler("ListenNPCMessage")]
 public class ListenNPCMessage : CommandResolver
 {
-    private static MethodInfo sub = typeof(AsyncMessageBus).GetMethod("Subscribe");
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var messageName = Convert.ToString(args[0]);

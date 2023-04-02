@@ -11,6 +11,7 @@ public class CommandSnapshot : PoolObject, IDisposable
     public List<object> args;
     private Dictionary<string, object> env;
     private readonly List<IDisposable> stuff = new ();
+    private Action _onTerminate;
 
     public CommandSnapshot Capture(string name, string arg0, IEnumerable<object> args0, IDictionary<string, object> env0)
     {
@@ -25,6 +26,12 @@ public class CommandSnapshot : PoolObject, IDisposable
     {
         stuff.AddRange(stuffs);
     }
+
+    public void OnDispose(Action action)
+    {
+        _onTerminate += action;
+    }
+    
     
     public override void Dispose()
     {
@@ -33,9 +40,11 @@ public class CommandSnapshot : PoolObject, IDisposable
         {
             item.Dispose();
         }
+        _onTerminate?.Invoke();
         stuff.Clear();
         commandName = null;
         arg = null;
+        _onTerminate = null;
         args.Clear();
         env.Clear();
     }

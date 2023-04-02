@@ -9,7 +9,7 @@ namespace Logic.Message
         public long mapID;
     }
 
-    public class EnterMap : MapMessage {
-        
-    }
+    public class EnterMap : MapMessage { }
+
+    public class LeaveMap : MapMessage { }
 }

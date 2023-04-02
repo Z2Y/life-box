@@ -2,7 +2,10 @@ using System;
 using System.Linq;
 using Controller;
 using Cysharp.Threading.Tasks;
+using Logic.Message;
+using UniTaskPubSub;
 using UnityEngine;
+using Utils;
 
 namespace Logic.Map
 {
@@ -21,18 +24,34 @@ namespace Logic.Map
         {
             GameLoader.Instance.LoadWithAnimation(async () =>
             {
+                var enterMapMsg = SimplePoolManager.Get<EnterMap>();
+                var leaveMapMsg = SimplePoolManager.Get<LeaveMap>();
                 try
                 {
-                    var map = await WorldMapController.LoadMapAsync(mapID);
+                    
                     var oldMap = LifeEngine.Instance.Map;
-                    await map.InitMapWithPosition(position);
-                    saveLifeNode(map, position);
+                    leaveMapMsg.mapID = oldMap.mapID;
+                    await AsyncMessageBus.Default.PublishAsync<MapMessage>(leaveMapMsg);
+                    
+                    var map = await WorldMapController.LoadMapAsync(mapID);
+                    
+                    await map.InitMapWithPosition(Vector3.zero);
+                    saveLifeNode(map, map.transform.TransformPoint(position));
                     WorldCameraController.Instance.JumpToFollowPos();
                     WorldMapController.UnloadMap(oldMap.mapID);
+
+                    
+                    enterMapMsg.mapID = mapID;
+                    await AsyncMessageBus.Default.PublishAsync<MapMessage>(enterMapMsg);
                 }
                 catch (Exception e)
                 {
                     Debug.LogWarning(e);
+                }
+                finally
+                {
+                    enterMapMsg.Dispose();
+                    leaveMapMsg.Dispose();
                 }
                 
             }).Coroutine();        
@@ -48,6 +67,7 @@ namespace Logic.Map
             nextNode.Location.MapID = map.mapID;
             nextNode.Location.Position = enterPosition;
             mainCharacter.transform.position = enterPosition;
+            LifeEngine.Instance.lifeData.current = nextNode;
         }
 
         public bool Interactive()

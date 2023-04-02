@@ -47,14 +47,7 @@ public class LifeEngine : MonoBehaviour {
         mainCharacter.SetAsPlayer(true);
         WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Forget();
         isReady = true;
-
-        AsyncMessageBus.Default.Subscribe<CharacterDeath>((message =>
-        {
-            if (message.characterID == 0)
-            {
-                GameEnd();
-            }
-        })).AddTo(this.GetCancellationTokenOnDestroy());
+        
         OnLifeStart?.Invoke();
         AfterLifeChange?.Invoke();
     }

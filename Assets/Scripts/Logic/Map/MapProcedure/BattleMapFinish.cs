@@ -8,7 +8,12 @@ namespace Logic.Map.MapProcedure
         private Action _onFinish;
         public override void StartProcedure(BattlePlaceController from)
         {
-            var result = BattleResultPanel.Show("战斗结束", _onFinish);
+            BattleResultPanel.Show("战斗结束", battleFinished).Coroutine();
+        }
+
+        private void battleFinished()
+        {
+            _onFinish?.Invoke();
         }
 
         public override void OnProcedureFinish(Action onFinish)

@@ -1,20 +1,18 @@
-using System;
-using System.Collections.Generic;
 using Logic.Enemy.Scriptable;
 using UnityEngine;
-using Utils;
 using Random = UnityEngine.Random;
 
 namespace Logic.Enemy
 {
     public class SimpleAnimalBornPlace : MonoBehaviour
     {
-
         private AnimalSpawner _spawner;
 
         public int MaxAliveInstance = 10;
 
         public float SpawnRange = 2f;
+        
+        public string[] animalTypes;
 
         public float SpawnInterval = 2f;
 
@@ -23,6 +21,7 @@ namespace Logic.Enemy
         private void Awake()
         {
             _spawner = ScriptableObject.CreateInstance<AnimalSpawner>();
+            _spawner.animalTypes = animalTypes;
         }
 
         private void Start()
@@ -33,6 +32,7 @@ namespace Logic.Enemy
         private void OnDestroy()
         {
             _spawner.Dispose();
+            DestroyImmediate(_spawner, true);
         }
 
         private async void DoSpawn()

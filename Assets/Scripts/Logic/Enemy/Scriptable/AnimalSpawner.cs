@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -111,7 +112,8 @@ namespace Logic.Enemy.Scriptable
 
             currentAliveInstance = 0;
             activeAnimals.Clear();
-            Destroy(this);
+            
+            // Destroy(this);
         }
 
         public override void OnDeathSingle(Action onEnemyDeath)
