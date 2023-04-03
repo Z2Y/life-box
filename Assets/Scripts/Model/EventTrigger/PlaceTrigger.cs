@@ -20,9 +20,17 @@ namespace Model
         public IList<long> Priority { get;  }
         public IList<string> Stage { get; }
 
-        public List<Event> GetValidEvents()
+        public  IEnumerable<Event> GetValidEvents()
         {
-            return EventCollection.GetValidEvents(Event).ToList();
+            return EventCollection.GetValidEvents(Event);
+        }
+
+        public  IEnumerable<Event> GetValidEventsOfState(params string[] stages)
+        {
+            
+            var validIndex = Stage.Select((stage, idx) => stages.Contains(stage) ? idx : -1).Where((idx) => idx >= 0);
+
+            return EventCollection.GetValidEvents(Event.Where((eventID, idx) => validIndex.Contains(idx)));
         }
     }
 }

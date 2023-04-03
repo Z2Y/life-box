@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Controller;
+using Cysharp.Threading.Tasks;
 using MessagePack;
 using Model;
 using Realms;
@@ -77,8 +78,20 @@ namespace ModelContainer
             }).Where((int v) => v >= 0);            
         }
 
-        public static IEnumerable<Event> GetValidEvents(IList<long> events) {
-            return GetValidEventIndex(events).Select((idx) => GetEvent(events[idx]));
+        public static IEnumerable<Event> GetValidEvents(IEnumerable<long> events)
+        {
+            return events.Select((id) =>
+            {
+                var e = GetEvent(id);
+                if (e == null) return null;
+                if (e.Exclude.ExecuteExpression() is true) return null;
+                if (e.Include.ExecuteExpression() is bool isInclude)
+                {
+                    // UnityEngine.Debug.Log($"isInclude {(bool?)isInclude}");
+                    return isInclude ? e : null;
+                }
+                return e;
+            }).Where((e) => e != null);
         }
 
         public static int RandomEventIndex(IEnumerable<long> events, IList<float> weights) {

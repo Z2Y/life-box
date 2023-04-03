@@ -97,16 +97,16 @@ namespace Logic.Map
 
         public void Prepare(int depth = 0)
         {
-            var events = PlaceTriggerContainer.GetPlaceTrigger(root.placeID)?.GetValidEvents();
-
-            if (events is { Count: > 0 })
+            var eventProcedures = PlaceTriggerContainer.GetPlaceTrigger(root.placeID)?.GetValidEvents().Select((@event) =>
             {
-                procedures = events.Select((@event) =>
-                {
-                    var mapEvent = ScriptableObject.CreateInstance<BattleMapEvent>();
-                    mapEvent.mapEvent = @event;
-                    return (BattleMapProcedure)mapEvent;
-                }).ToList();
+                var mapEvent = ScriptableObject.CreateInstance<BattleMapEvent>();
+                mapEvent.mapEvent = @event;
+                return (BattleMapProcedure)mapEvent;
+            }).ToList();
+
+            if (eventProcedures is { Count: > 0 })
+            {
+                procedures = eventProcedures;
             }
             
             currentProcedure = procedures[currentProcedureIndex];

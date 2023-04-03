@@ -79,7 +79,7 @@ public class RandomEventResolver : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var events = args.Where((o, idx) => (idx % 2 == 0)).Select(Convert.ToInt64).ToArray();
+        var events = args.Where((o, idx) => (idx % 2 == 0)).Select(Convert.ToInt64);
         var weights = args.Where((o, idx) => (idx % 2 == 1)).Select(Convert.ToSingle).ToArray();
         await this.Done();
         return EventCollection.RandomEventIndex(events, weights);
