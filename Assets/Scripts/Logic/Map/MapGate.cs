@@ -63,7 +63,7 @@ namespace Logic.Map
             var nextNode = LifeEngine.Instance.lifeData.NextNode();
             var placeContain = new PlaceContains() { position = enterPosition };
             currentNode.Location.Position = mainCharacter.transform.position;
-            nextNode.Location.PlaceID = map.ActivePlaces.ToStructEnumerable().Where(ref placeContain, x => x).First(x => x).placeID;
+            nextNode.Location.PlaceID = map.ActivePlaces.ReadOnlyEnumerable().Where(ref placeContain, x => x).First(x => x).placeID;
             nextNode.Location.MapID = map.mapID;
             nextNode.Location.Position = enterPosition;
             mainCharacter.transform.position = enterPosition;

@@ -1,6 +1,8 @@
 using Controller;
 using Cysharp.Threading.Tasks;
+using StructLinq;
 using UnityEngine;
+using Utils;
 using Random = UnityEngine.Random;
 
 namespace Logic.Map
@@ -26,7 +28,7 @@ namespace Logic.Map
         private async UniTask Jump()
         {
             var nextPlaceID = GetNextPlaceID();
-            nextPlace = map.Places.Find((place) => place.placeID == nextPlaceID);
+            nextPlace = map.Places.ReadOnlyEnumerable().FirstOrDefault((place) => place.placeID == nextPlaceID);
 
             if (nextPlace == null) return;
 

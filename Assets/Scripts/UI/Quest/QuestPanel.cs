@@ -56,7 +56,7 @@ namespace UI
         public void ShowQuestList(QuestType questType)
         {
             // 获取对应任务类型的任务列表
-            var quests = QuestManager.Instance.GetQuestByType(questType).ToStructEnumerable().ToList();
+            var quests = QuestManager.Instance.GetQuestByType(questType).ToStructEnumerable().ToArray();
             activeQuestType = questType;
             questListView.UpdateContents(quests);
             Show();

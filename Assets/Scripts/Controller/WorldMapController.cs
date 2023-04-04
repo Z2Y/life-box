@@ -32,8 +32,8 @@ namespace Controller
         private Bounds visibleBounds;
         private GridLayout ground;
 
-        public List<PlaceController> Places { get; private set; } = new();
-        public List<PlaceController> ActivePlaces { get; private set; } = new();
+        public List<PlaceController> Places { get; private set; } = new ();
+        public List<PlaceController> ActivePlaces { get; private set; } = new ();
         
 
         private void Awake()
@@ -114,7 +114,7 @@ namespace Controller
 
         private List<PlaceController> getPlacesInBounds()
         {
-            return Places.ToStructEnumerable().Where(isPlaceVisible, x => x).ToList(x => x);
+            return Places.ReadOnlyEnumerable().Where(isPlaceVisible, x => x).AsList(x => x);
         }
 
         private bool isPlaceVisible(PlaceController place)
@@ -133,7 +133,7 @@ namespace Controller
             var placesInBounds = getPlacesInBounds();
 
             if (placesInBounds.Count == ActivePlaces.Count &&
-                placesInBounds.ToStructEnumerable().All(isPlaceVisible, x => x))
+                placesInBounds.ReadOnlyEnumerable().All(isPlaceActive, x => x))
             {
                 return;
             }
@@ -159,7 +159,7 @@ namespace Controller
 
         public void ActivatePlace(PlaceController target)
         {
-            if (ActivePlaces.Exists((p) => p.placeID == target.placeID))
+            if (ActivePlaces.ReadOnlyEnumerable().Any((p) => p.placeID == target.placeID))
             {
                 return;
             }

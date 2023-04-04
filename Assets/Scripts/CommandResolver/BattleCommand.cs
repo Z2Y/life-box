@@ -31,7 +31,7 @@ public class BattleCommand : CommandResolver
 
         var placeContains = new PlaceContains() { position = player.transform.position };
 
-        var place = map.ActivePlaces.ToStructEnumerable().FirstOrDefault(ref placeContains, x => x);
+        var place = map.ActivePlaces.ReadOnlyEnumerable().FirstOrDefault(ref placeContains, x => x);
 
         if (ReferenceEquals(place, null))
         {

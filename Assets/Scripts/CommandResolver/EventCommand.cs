@@ -67,9 +67,9 @@ public class ConfirmedResolver : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        if (args.Count < 2) return args.ToStructEnumerable().LastOrDefault();
+        if (args.Count < 2) return args.ReadOnlyEnumerable().LastOrDefault();
         env.TryGetValue("$Effect", out var confirmed);
-        if (confirmed == null) return args.ToStructEnumerable().LastOrDefault();
+        if (confirmed == null) return args.ReadOnlyEnumerable().LastOrDefault();
         await this.Done();
         return Convert.ToInt32(confirmed) == 0 ? args[0] : args[1];
     }    
@@ -93,13 +93,13 @@ public class SelectEventResolver : CommandResolver
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var description = args[0] as string;
-        var events = args.ToStructEnumerable().Skip(1).Select(Convert.ToInt64).ToArray();
+        var events = args.ReadOnlyEnumerable().Skip(1).Select(Convert.ToInt64).ToArray();
         env["$Effect"] = "";
-        var options = EventCollection.GetValidEvents(events).ToStructEnumerable().Select((evt) => evt.Description.InjectedExpression(env)).ToList();
+        var options = EventCollection.GetValidEvents(events).ToStructEnumerable().Select((evt) => evt.Description.InjectedExpression(env)).ToArray();
         return await Select(description, options);
     }
 
-    private UniTask<int> Select(string description, List<string> options)
+    private UniTask<int> Select(string description, IList<string> options)
     {
         var tcs = new UniTaskCompletionSource<int>();
         var onSelect = new Action<int>((idx) => tcs.TrySetResult(idx));

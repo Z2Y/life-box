@@ -44,7 +44,7 @@ public class NPCMoveToNearGate : CommandResolver
 
         var placeContain = new PlaceContains { position = npc.transform.position };
 
-        var place = map.ActivePlaces.ToStructEnumerable().FirstOrDefault(ref placeContain, x => x);
+        var place = map.ActivePlaces.ReadOnlyEnumerable().FirstOrDefault(ref placeContain, x => x);
 
         if (place == null)
         {

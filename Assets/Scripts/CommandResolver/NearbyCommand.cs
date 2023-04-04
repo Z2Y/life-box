@@ -118,13 +118,13 @@ public class SelectShopToNearby : CommandResolver
 
     private async void OnShop(Character character, Action<ShopResult> onComplete, Action OnCancel)
     {
-        var configs = ShopConfigCollection.GetShopConfigsByCharacter(character.ID).ToStructEnumerable().Where((config) => config.isOpen).ToList();
+        var configs = ShopConfigCollection.GetShopConfigsByCharacter(character.ID).ToStructEnumerable().Where((config) => config.isOpen).ToArray();
 
-        if (configs.Count <= 0)
+        if (configs.Length <= 0)
         {
             // todo  
         }
-        else if (configs.Count == 1)
+        else if (configs.Length == 1)
         {
             OpenShop(configs[0], onComplete);
         }

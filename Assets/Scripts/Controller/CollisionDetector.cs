@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Logic.Detector;
 using NPBehave;
 using StructLinq;
@@ -76,14 +77,15 @@ namespace Controller
             }
         }
 
-        private void OnEnable()
+        private async void OnEnable()
         {
             blackboard.UpdateClock(UnityContext.GetClock());
-            var removed = collidingObjects.RemoveWhere(LinqHelper.IsNull);
+            
+            collidingObjects.RemoveWhere(LinqHelper.IsObjectNull);
             
             // Debug.Log($"Remove {removed} invalid object");
-            var existed = collidingObjects.ToStructEnumerable().ToList();
-            
+            var existed = collidingObjects.ToStructEnumerable().Where(LinqHelper.IsObjectNotNull);
+
             foreach (var collidingObject in existed)
             {
                 foreach (var detector in collisionDetectors)
@@ -98,11 +100,11 @@ namespace Controller
             collidingObjects.Clear();
         }
 
-        private void OnDisable()
+        private async void OnDisable()
         {
-            collidingObjects.RemoveWhere(LinqHelper.IsNull);
+            collidingObjects.RemoveWhere(LinqHelper.IsObjectNull);
             
-            var existed = collidingObjects.ToStructEnumerable().ToList();
+            var existed = collidingObjects.ToStructEnumerable().Where(LinqHelper.IsObjectNotNull);
             
             foreach (var collidingObject in existed)
             {

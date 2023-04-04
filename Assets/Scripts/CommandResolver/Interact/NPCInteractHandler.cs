@@ -7,6 +7,7 @@ using ModelContainer;
 using StructLinq;
 using UI;
 using UnityEngine;
+using Utils;
 
 namespace Interact
 {
@@ -47,7 +48,7 @@ namespace Interact
                 var characters = npcObjects.ToStructEnumerable()
                     .Select((npc) => npc.GetComponent<NPCController>(), x => x)
                     .ToList(x => x);
-                var names = characters.ToStructEnumerable()
+                var names = characters.ReadOnlyEnumerable()
                     .Select((npc) => npc.character.Name, x => x)
                     .ToList(x => x);
                 self!.disableAllShortCuts();

@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using ModelContainer;
 using StructLinq;
 using UI;
+using Utils;
 
 [CommandResolverHandler("Talk")]
 public class TalkCommand : CommandResolver
@@ -14,7 +15,7 @@ public class TalkCommand : CommandResolver
         var characterID = Convert.ToInt64(args[0]);
         var description = Convert.ToString(args[1]);
         var uninterruptible = Convert.ToInt32(args[2]);
-        var options = args.ToStructEnumerable().Skip(3);
+        var options = args.ReadOnlyEnumerable().Skip(3);
 
         var character = CharacterCollection.GetCharacter(characterID);
 

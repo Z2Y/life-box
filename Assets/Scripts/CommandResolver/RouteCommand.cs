@@ -28,7 +28,7 @@ public class RouteCommand : CommandResolver
 
         var selector = await SelectPanel.Show(
             "选择想要去的地点",
-            nearbyPlaces.ToStructEnumerable().Select(PlaceHelper.NameOf).ToList(),
+            nearbyPlaces.ReadOnlyEnumerable().Select(PlaceHelper.NameOf).ToArray(),
             (idx) =>
             {
                 OnRoute(nearbyPlaces[idx]);

@@ -28,7 +28,7 @@ public class SelectPanel : UIBase {
         description.text = text;
     }
     
-    public void SetOptions(List<string> options, Action<int> onSelect) {
+    public void SetOptions(IList<string> options, Action<int> onSelect) {
         for (int i = 0; i < options.Count; i++)
         {
             string option = options[i];
@@ -48,7 +48,7 @@ public class SelectPanel : UIBase {
         }
     }
 
-    public static async UniTask<SelectPanel> Show(string description, List<string> options, Action<int> onSelect) {
+    public static async UniTask<SelectPanel> Show(string description, IList<string> options, Action<int> onSelect) {
         var panel = await UIManager.Instance.FindOrCreateAsync<SelectPanel>() as SelectPanel;
         panel.SetDescription(description);
         panel.SetOptions(options, onSelect);

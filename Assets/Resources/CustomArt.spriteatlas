@@ -46,6 +46,7 @@ SpriteAtlas:
   - {fileID: -1885567557, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
   - {fileID: 1336906701, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
   - {fileID: -2014805301, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
+  - {fileID: 21300000, guid: 6da38192021a742578fa313b672db530, type: 3}
   - {fileID: -26086281, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
   - {fileID: -1487320371, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
   - {fileID: -2027593475, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
@@ -69,7 +70,9 @@ SpriteAtlas:
   - {fileID: -2050731079, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
   - {fileID: 948825324, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
   - {fileID: 799254491, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
+  - {fileID: 21300000, guid: f923562a22434452593e6c473b6655f0, type: 3}
   - {fileID: 21300000, guid: 7108149e6b3e047b88540f9793b2f6e3, type: 3}
+  - {fileID: 21300000, guid: 6a46c9af46c2d4817a473a0d4d563cde, type: 3}
   m_PackedSpriteNamesToIndex:
   - tree-3
   - Hyena_death_4
@@ -78,6 +81,7 @@ SpriteAtlas:
   - Hyena_death_3
   - Hyena_death_0
   - Hyena_death_1
+  - wall-0001
   - Hyena_idle_0
   - Hyena_idle_1
   - Hyena_idle_2
@@ -101,7 +105,9 @@ SpriteAtlas:
   - Hyena_walk_0
   - Hyena_walk_3
   - Hyena_walk_2
+  - building_2
   - tree1
+  - building_1
   m_RenderDataMap: {}
   m_Tag: CustomArt
   m_IsVariant: 0

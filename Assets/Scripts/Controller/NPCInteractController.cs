@@ -9,6 +9,7 @@ using ShortCuts;
 using StructLinq;
 using UI;
 using UnityEngine;
+using Utils;
 using Exception = NPBehave.Exception;
 
 namespace Controller
@@ -106,7 +107,7 @@ namespace Controller
         {
             activeDetectors.RemoveWhere((pair) => pair.Value == null);
             var items = InteractMenuConfig.buildMenuItems(activeDetectors);
-            var targets = items.ToStructEnumerable().Select((item) => item.collision).Distinct();
+            var targets = items.ReadOnlyEnumerable().Select((item) => item.collision).Distinct();
 
             var target = ReferenceEquals(tip, null)
                 ? targets.FirstOrDefault()
@@ -114,14 +115,14 @@ namespace Controller
 
             if (ReferenceEquals(target, null)) return;
             
-            var menuTypes = items.ToStructEnumerable().Where((item) => item.collision.GetInstanceID() == target.GetInstanceID())
-                .Select((item) => item.menuID).Distinct().ToList();
+            var menuTypes = items.ReadOnlyEnumerable().Where((item) => item.collision.GetInstanceID() == target.GetInstanceID())
+                .Select((item) => item.menuID).Distinct().ToArray();
             
-            if (menuTypes.Count <= 0)
+            if (menuTypes.Length <= 0)
             {
                 return;
             }
-            var menuID = menuTypes.Count > 1  ? 0 : menuTypes[0];
+            var menuID = menuTypes.Length > 1  ? 0 : menuTypes[0];
             
             try
             {

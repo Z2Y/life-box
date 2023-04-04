@@ -102,11 +102,11 @@ namespace Logic.Map
                 var mapEvent = ScriptableObject.CreateInstance<BattleMapEvent>();
                 mapEvent.mapEvent = @event;
                 return (BattleMapProcedure)mapEvent;
-            }).ToList();
+            }).ToArray();
 
-            if (eventProcedures is { Count: > 0 })
+            if (eventProcedures is { Length: > 0 })
             {
-                procedures = eventProcedures;
+                procedures = new List<BattleMapProcedure>(eventProcedures);
             }
             
             currentProcedure = procedures[currentProcedureIndex];

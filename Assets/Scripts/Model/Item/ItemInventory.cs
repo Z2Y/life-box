@@ -4,6 +4,7 @@ using Model;
 using StructLinq;
 using UnityEngine;
 using UnityEngine.Events;
+using Utils;
 
 
 public class ItemInventory
@@ -140,7 +141,7 @@ public class ItemInventory
 
     public virtual bool DiscardItem(Item item, int num) {
         if (item == null || num <= 0) { return false;}
-        var stacks = Stacks.ToStructEnumerable().Where(s => (!s.Empty && s.item.ID == item.ID));
+        var stacks = Stacks.ReadOnlyEnumerable().Where(s => (!s.Empty && s.item.ID == item.ID));
         var total = stacks.Sum(s => s.Count);
         if (total < num) { return false; }
         isStoring = true;
@@ -161,33 +162,30 @@ public class ItemInventory
 
     public virtual int CountItem(Item item) {
         if (item == null) { return 0; }
-        return Stacks.ToStructEnumerable().Where(s => (!s.Empty && s.item.ID == item.ID)).Sum(s => s.Count);
+        return Stacks.ReadOnlyEnumerable().Where(s => (!s.Empty && s.item.ID == item.ID)).Sum(s => s.Count);
     }
 
     public bool Empty {
         get {
-            return Stacks.Count == 0 || Stacks.ToStructEnumerable().All((stack) => stack.Empty);
+            return Stacks.Count == 0 || Stacks.ReadOnlyEnumerable().All((stack) => stack.Empty);
         }
     }
 
     protected List<ItemStack> FindItemStacks(Item item)
     {
-        return Stacks.ToStructEnumerable().Where(s => (s.Empty || (!s.Full && s.item.ID == item.ID))).ToList();
+        return new List<ItemStack>(Stacks.ReadOnlyEnumerable().Where(s => (s.Empty || (!s.Full && s.item.ID == item.ID))).ToEnumerable());
     }
 
     protected ItemStack FindItemStack(Item item)
     {
-        ItemStack stack = Stacks.ToStructEnumerable().FirstOrDefault(s => (s.Empty || (!s.Full && s.item.ID == item.ID)));
-        if (stack == null)
-        {
-            stack = FindEmptyStack();
-        }
+        ItemStack stack = Stacks.ReadOnlyEnumerable().FirstOrDefault(s => (s.Empty || (!s.Full && s.item.ID == item.ID))) ??
+                          FindEmptyStack();
         return stack;
     }
 
     protected ItemStack FindEmptyStack()
     {
-        ItemStack stack = Stacks.ToStructEnumerable().FirstOrDefault(s => s.Empty);
+        ItemStack stack = Stacks.ReadOnlyEnumerable().FirstOrDefault(s => s.Empty);
         if (stack == null)
         {
             stack = InitializeNewStack();
