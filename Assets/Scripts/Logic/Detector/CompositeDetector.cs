@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using NPBehave;
 using UnityEngine;
@@ -12,7 +10,7 @@ namespace Logic.Detector
         private UnityAction<IDetector, Collider2D> onDetectCallback;
         private UnityAction<IDetector, Collider2D> onEndDetectCallback;
         private bool isRoot;
-        public SelectorDetector(UnityAction<IDetector, Collider2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
+        public SelectorDetector(UnityAction<IDetector, Collider2D> callback, params Node[] detectors) : base(detectors)
         {
             onDetectCallback = callback;
         }
@@ -100,7 +98,7 @@ namespace Logic.Detector
         private int currentIndex = -1;
         private bool isRoot;
         
-        public SequenceDetector(UnityAction<IDetector, Collider2D> callback, params BaseDetector[] detectors) : base(detectors.OfType<Node>().ToArray())
+        public SequenceDetector(UnityAction<IDetector, Collider2D> callback, params Node[] detectors) : base(detectors)
         {
             onDetectCallback = callback;
         }

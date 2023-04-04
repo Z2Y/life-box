@@ -2,10 +2,11 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Controller;
-using Cysharp.Threading.Tasks;
 using MessagePack;
 using Model;
 using Realms;
+using StructLinq;
+using Utils;
 
 public abstract class GameEvent
 {
@@ -75,23 +76,27 @@ namespace ModelContainer
                     return isInclude ? idx : -1;
                 }
                 return idx;
-            }).Where((int v) => v >= 0);            
+            }).Where(LinqHelper.IsNotNegative);            
+        }
+
+        private static Event GetValidEvent(long eventID)
+        {
+            var e = GetEvent(eventID);
+            if (e == null) return null;
+            if (e.Exclude.ExecuteExpression() is true) return null;
+            if (e.Include.ExecuteExpression() is bool isInclude)
+            {
+                return isInclude ? e : null;
+            }
+            return e;
         }
 
         public static IEnumerable<Event> GetValidEvents(IEnumerable<long> events)
         {
-            return events.Select((id) =>
-            {
-                var e = GetEvent(id);
-                if (e == null) return null;
-                if (e.Exclude.ExecuteExpression() is true) return null;
-                if (e.Include.ExecuteExpression() is bool isInclude)
-                {
-                    // UnityEngine.Debug.Log($"isInclude {(bool?)isInclude}");
-                    return isInclude ? e : null;
-                }
-                return e;
-            }).Where((e) => e != null);
+            return events.ToStructEnumerable()
+                .Select(GetValidEvent, x => x)
+                .Where(LinqHelper.IsNotNull, x => x)
+                .ToEnumerable();
         }
 
         public static int RandomEventIndex(IEnumerable<long> events, IList<float> weights) {

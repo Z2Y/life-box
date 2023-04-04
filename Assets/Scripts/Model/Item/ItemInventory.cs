@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Model;
+using StructLinq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -140,11 +140,11 @@ public class ItemInventory
 
     public virtual bool DiscardItem(Item item, int num) {
         if (item == null || num <= 0) { return false;}
-        List<ItemStack> stacks = Stacks.Where(s => (!s.Empty && s.item.ID == item.ID)).ToList();
-        int total = stacks.Sum(s => s.Count);
+        var stacks = Stacks.ToStructEnumerable().Where(s => (!s.Empty && s.item.ID == item.ID));
+        var total = stacks.Sum(s => s.Count);
         if (total < num) { return false; }
         isStoring = true;
-        foreach (ItemStack stack in stacks)
+        foreach (var stack in stacks)
         {
             int stacked = Mathf.Min(num, stack.Count);
             stack.DiscardItem(stacked);
@@ -161,23 +161,23 @@ public class ItemInventory
 
     public virtual int CountItem(Item item) {
         if (item == null) { return 0; }
-        return Stacks.Where(s => (!s.Empty && s.item.ID == item.ID)).Sum(s => s.Count);
+        return Stacks.ToStructEnumerable().Where(s => (!s.Empty && s.item.ID == item.ID)).Sum(s => s.Count);
     }
 
     public bool Empty {
         get {
-            return Stacks.Count == 0 || Stacks.All((stack) => stack.Empty);
+            return Stacks.Count == 0 || Stacks.ToStructEnumerable().All((stack) => stack.Empty);
         }
     }
 
     protected List<ItemStack> FindItemStacks(Item item)
     {
-        return Stacks.Where(s => (s.Empty || (!s.Full && s.item.ID == item.ID))).ToList();
+        return Stacks.ToStructEnumerable().Where(s => (s.Empty || (!s.Full && s.item.ID == item.ID))).ToList();
     }
 
     protected ItemStack FindItemStack(Item item)
     {
-        ItemStack stack = Stacks.FirstOrDefault(s => (s.Empty || (!s.Full && s.item.ID == item.ID)));
+        ItemStack stack = Stacks.ToStructEnumerable().FirstOrDefault(s => (s.Empty || (!s.Full && s.item.ID == item.ID)));
         if (stack == null)
         {
             stack = FindEmptyStack();
@@ -187,7 +187,7 @@ public class ItemInventory
 
     protected ItemStack FindEmptyStack()
     {
-        ItemStack stack = Stacks.FirstOrDefault(s => s.Empty);
+        ItemStack stack = Stacks.ToStructEnumerable().FirstOrDefault(s => s.Empty);
         if (stack == null)
         {
             stack = InitializeNewStack();

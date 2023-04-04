@@ -1,4 +1,3 @@
-using System;
 using Assets.HeroEditor.Common.Scripts.CharacterScripts;
 using Logic.Enemy;
 using UnityEngine;

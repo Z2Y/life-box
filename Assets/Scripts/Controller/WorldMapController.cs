@@ -3,7 +3,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Logic.Map;
 using Model;
-using ModelContainer;
+using StructLinq;
 using UnityEngine;
 using Utils;
 
@@ -114,7 +114,17 @@ namespace Controller
 
         private List<PlaceController> getPlacesInBounds()
         {
-            return Places.Where((place) => visibleBounds.Intersects(place.bounds)).ToList();
+            return Places.ToStructEnumerable().Where(isPlaceVisible, x => x).ToList(x => x);
+        }
+
+        private bool isPlaceVisible(PlaceController place)
+        {
+            return visibleBounds.Intersects(place.bounds);
+        }
+
+        private bool isPlaceActive(PlaceController place)
+        {
+            return ActivePlaces.Contains(place);
         }
 
 
@@ -123,7 +133,7 @@ namespace Controller
             var placesInBounds = getPlacesInBounds();
 
             if (placesInBounds.Count == ActivePlaces.Count &&
-                placesInBounds.All((place) => ActivePlaces.Contains(place)))
+                placesInBounds.ToStructEnumerable().All(isPlaceVisible, x => x))
             {
                 return;
             }
@@ -185,7 +195,7 @@ namespace Controller
 
             var maps = worldRoot.GetComponentsInChildren<WorldMapController>();
 
-            var loaded = maps.FirstOrDefault((map) => map.mapID == mapID);
+            var loaded = maps.ToStructEnumerable().FirstOrDefault((map) => map.mapID == mapID, x => x);
 
             if (loaded != null)
             {
@@ -207,7 +217,7 @@ namespace Controller
             worldMap.Places = (await UniTask.WhenAll(RealmDBController.Db.All<Place>().
                 Where((place) => place.MapID == mapID).ToList().
                 Select((place) => PlaceController.LoadPlaceAsync(place.ID, placeRoot)))).
-                Where((p) => p != null).ToList();
+                Where(LinqHelper.IsNotNull).ToList();
 
             return worldMap;
         }

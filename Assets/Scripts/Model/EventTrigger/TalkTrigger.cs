@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Controller;
 using MessagePack;
@@ -24,9 +23,9 @@ namespace Model
             return EventCollection.RandomEvent(Event, Weight);
         }
 
-        public List<Event> GetTalks()
+        public IEnumerable<Event> GetTalks()
         {
-            return EventCollection.GetValidEvents(Event).ToList();
+            return EventCollection.GetValidEvents(Event);
         }
     }
 }

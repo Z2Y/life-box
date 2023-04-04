@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using StructLinq;
 
 [CommandResolverHandler("ChangeProperty")]
 public class ChangePropertyCommand : CommandResolver
@@ -11,9 +11,8 @@ public class ChangePropertyCommand : CommandResolver
         PropertyChangeResult result = new PropertyChangeResult();
         for (int i = 0; i < args.Count; i += 2)
         {
-            SubPropertyType propertyType;
             int propertyChangeValue = Convert.ToInt32(args[i + 1]);
-            if (Enum.TryParse<SubPropertyType>(args[i] as string, true, out propertyType) && ChangeProperty(propertyType, propertyChangeValue)) {
+            if (Enum.TryParse<SubPropertyType>(args[i] as string, true, out var propertyType) && ChangeProperty(propertyType, propertyChangeValue)) {
                 result.Add(propertyType, propertyChangeValue);
             }
         }
@@ -23,7 +22,7 @@ public class ChangePropertyCommand : CommandResolver
 
     private bool ChangeProperty(SubPropertyType propertyType, int value)
     {
-        if (value == 0 || LifeEngine.Instance?.lifeData == null || propertyType.IsFrozen())
+        if (value == 0 || LifeEngine.Instance.lifeData == null || propertyType.IsFrozen())
         {
             return false;
         }
@@ -33,7 +32,7 @@ public class ChangePropertyCommand : CommandResolver
     }
 
     public class PropertyChangeResult {
-        public Dictionary<SubPropertyType, int> changes = new Dictionary<SubPropertyType, int>();
+        public Dictionary<SubPropertyType, int> changes = new ();
 
         public void Add(SubPropertyType propertyType, int value) {
             if (changes.ContainsKey(propertyType)) {
@@ -48,7 +47,7 @@ public class ChangePropertyCommand : CommandResolver
 
         public override string ToString()
         {
-            return string.Join(" ", changes.Keys.Select(pType => $"【{pType.GetPropertyName()}】 {(changes[pType] > 0 ? "+" : "-")} {changes[pType]}"));
+            return string.Join(" ", changes.Keys.ToStructEnumerable().Select(pType => $"【{pType.GetPropertyName()}】 {(changes[pType] > 0 ? "+" : "-")} {changes[pType]}"));
         }
     }
 }

@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Detector;
 using Model;
 using ModelContainer;
-using NPBehave;
+using StructLinq;
 using UI;
 using UnityEngine;
 
@@ -42,17 +40,22 @@ namespace Interact
 
             if (npcObjects.Count == 1)
             {
-                buildDialog(npcObjects.First().GetComponent<NPCController>().character, npcDetectors);
+                buildDialog(npcObjects.ToStructEnumerable().Get(0).GetComponent<NPCController>().character, npcDetectors);
             }
             else
             {
-                var characters = npcObjects.Select((npc) => npc.GetComponent<NPCController>()).ToList();
-                var names = characters.Select((npc) => npc.character.Name).ToList();
+                var characters = npcObjects.ToStructEnumerable()
+                    .Select((npc) => npc.GetComponent<NPCController>(), x => x)
+                    .ToList(x => x);
+                var names = characters.ToStructEnumerable()
+                    .Select((npc) => npc.character.Name, x => x)
+                    .ToList(x => x);
                 self!.disableAllShortCuts();
                 var selector = await SelectPanel.Show("选择想要交互的人物", names, (idx) =>
                 {
-                    var detectors = activeDetectors.Where((pair) => pair.Value.gameObject == characters[idx].gameObject)
-                        .Select((pair) => pair.Key);
+                    var detectors = activeDetectors.ToStructEnumerable()
+                        .Where((pair) => pair.Value.gameObject == characters[idx].gameObject, x => x)
+                        .Select((pair) => pair.Key, x => x).ToEnumerable();
                     buildDialog(characters[idx].character, new HashSet<IDetector>(detectors));
                 });
                 selector.SetCancelable(true, onCancel: () =>

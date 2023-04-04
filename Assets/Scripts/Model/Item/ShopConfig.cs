@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Controller;
 using MessagePack;
 using Model;
@@ -50,9 +50,14 @@ namespace ModelContainer
             return RealmDBController.Db.Find<ShopConfig>(id);
         }
 
-        public static IQueryable<ShopConfig> GetShopConfigsByCharacter(long characterID)
+        public static IEnumerable<ShopConfig> GetShopConfigsByCharacter(long characterID)
         {
             return RealmDBController.Db.All<ShopConfig>().Where((config) => config.CharacterID == characterID);
+        }
+        
+        public static ShopConfig FirstConfigOfCharacter(long characterID)
+        {
+            return RealmDBController.Db.All<ShopConfig>().FirstOrDefault((config) => config.CharacterID == characterID);
         }
     }
 }

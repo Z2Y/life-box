@@ -1,9 +1,10 @@
-using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Model;
 using ModelContainer;
+using StructLinq;
+using Utils;
 
 [CommandResolverHandler("RoutePlace")]
 public class RouteCommand : CommandResolver
@@ -27,7 +28,7 @@ public class RouteCommand : CommandResolver
 
         var selector = await SelectPanel.Show(
             "选择想要去的地点",
-            nearbyPlaces.Select((place) => place.Name).ToList(),
+            nearbyPlaces.ToStructEnumerable().Select(PlaceHelper.NameOf).ToList(),
             (idx) =>
             {
                 OnRoute(nearbyPlaces[idx]);

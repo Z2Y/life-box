@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Logic.Detector;
-using Logic.Detector.Scriptable;
 using NPBehave;
+using StructLinq;
 using UnityEngine;
+using Utils;
 
 namespace Controller
 {
@@ -80,10 +79,10 @@ namespace Controller
         private void OnEnable()
         {
             blackboard.UpdateClock(UnityContext.GetClock());
-            var removed = collidingObjects.RemoveWhere((obj) => obj == null || obj.gameObject == null);
+            var removed = collidingObjects.RemoveWhere(LinqHelper.IsNull);
             
             // Debug.Log($"Remove {removed} invalid object");
-            var existed = collidingObjects.ToList();
+            var existed = collidingObjects.ToStructEnumerable().ToList();
             
             foreach (var collidingObject in existed)
             {
@@ -101,9 +100,9 @@ namespace Controller
 
         private void OnDisable()
         {
-            collidingObjects.RemoveWhere((obj) => obj == null || obj.gameObject == null);
+            collidingObjects.RemoveWhere(LinqHelper.IsNull);
             
-            var existed = collidingObjects.ToList();
+            var existed = collidingObjects.ToStructEnumerable().ToList();
             
             foreach (var collidingObject in existed)
             {

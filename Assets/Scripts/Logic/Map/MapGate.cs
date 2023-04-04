@@ -1,8 +1,7 @@
 using System;
-using System.Linq;
 using Controller;
-using Cysharp.Threading.Tasks;
 using Logic.Message;
+using StructLinq;
 using UniTaskPubSub;
 using UnityEngine;
 using Utils;
@@ -62,8 +61,9 @@ namespace Logic.Map
             var mainCharacter = LifeEngine.Instance.MainCharacter;
             var currentNode = LifeEngine.Instance.lifeData.current;
             var nextNode = LifeEngine.Instance.lifeData.NextNode();
+            var placeContain = new PlaceContains() { position = enterPosition };
             currentNode.Location.Position = mainCharacter.transform.position;
-            nextNode.Location.PlaceID = map.ActivePlaces.First((place) => place.bounds.Contains(enterPosition)).placeID;
+            nextNode.Location.PlaceID = map.ActivePlaces.ToStructEnumerable().Where(ref placeContain, x => x).First(x => x).placeID;
             nextNode.Location.MapID = map.mapID;
             nextNode.Location.Position = enterPosition;
             mainCharacter.transform.position = enterPosition;

@@ -1,5 +1,5 @@
-using System.Linq;
 using Assets.HeroEditor.Common.Scripts.Common;
+using StructLinq;
 using UnityEngine;
 
 namespace Logic.Battle.Realtime.Ai
@@ -27,7 +27,7 @@ namespace Logic.Battle.Realtime.Ai
 
             if (size == 0) return null;
 
-            if (!ReferenceEquals(previous, null) && results.Take(size).Contains(previous))
+            if (!ReferenceEquals(previous, null) && results.ToStructEnumerable().Take(size, x => x).Contains(previous, x => x))
             {
                 return previous;
             }
@@ -37,7 +37,7 @@ namespace Logic.Battle.Realtime.Ai
                 return results[Random.Range(0, size)];
             }
 
-            return results.Where((collider) => collider.CompareTag(enemyTag)).ToList().Random();
+            return results.ToStructEnumerable().Where((collider) => collider.CompareTag(enemyTag), x => x).FirstOrDefault(x => x);
         }
     }
 }

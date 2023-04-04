@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Model;
 using ModelContainer;
+using StructLinq;
 using UnityEngine;
 
 namespace Logic.Quest
@@ -18,10 +18,10 @@ namespace Logic.Quest
         {
             if (!questsByType.ContainsKey(questType))
             {
-                return Enumerable.Empty<Model.Quest>();
+                return StructEnumerable.Empty<Model.Quest>().ToEnumerable();
             }
 
-            return questsByType[questType].Select((qID) => QuestCollection.GetQuest(qID));
+            return questsByType[questType].ToStructEnumerable().Select(QuestCollection.GetQuest).ToEnumerable();
         }
 
         public async Task<object> AddQuest(Model.Quest quest)

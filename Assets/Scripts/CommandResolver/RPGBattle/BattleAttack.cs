@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Controller;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace Battle.RPGBattle
 {

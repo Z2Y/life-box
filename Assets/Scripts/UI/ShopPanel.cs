@@ -94,7 +94,7 @@ public class ShopPanel : UIBase
     private void UpdateBagView()
     {
         List<ItemStack> stacks = bag.Stacks
-            .Where(itemStack => !itemStack.Empty && shop.GetResycle(itemStack.item.ID) > 0).ToList();
+            .Where(itemStack => !itemStack.Empty && shop.GetRecycle(itemStack.item.ID) > 0).ToList();
 
         for (int i = 0; i < stacks.Count; i++)
         {
@@ -108,7 +108,7 @@ public class ShopPanel : UIBase
                 uIShopItem = Instantiate(itemPrefab, bagItemScroll.content).GetComponent<UIShopItem>();
             }
 
-            int recycle = shop.GetResycle(stacks[i].item.ID);
+            int recycle = shop.GetRecycle(stacks[i].item.ID);
             uIShopItem.SetItem(new ShopConfirmData(stacks[i], shop.Currency, recycle));
             uIShopItem.OnItemClick(onConfirmRecycle);
             uIShopItem.gameObject.SetActive(true);

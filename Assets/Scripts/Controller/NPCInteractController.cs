@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Logic.Detector;
 using Logic.Detector.Config;
@@ -7,6 +6,7 @@ using Logic.Detector.Scriptable;
 using Logic.Loot;
 using ModelContainer;
 using ShortCuts;
+using StructLinq;
 using UI;
 using UnityEngine;
 using Exception = NPBehave.Exception;
@@ -105,8 +105,8 @@ namespace Controller
         private async void showInteractMenu()
         {
             activeDetectors.RemoveWhere((pair) => pair.Value == null);
-            var items = InteractMenuConfig.buildMenuItems(activeDetectors.ToList());
-            var targets = items.Select((item) => item.collision).Distinct();
+            var items = InteractMenuConfig.buildMenuItems(activeDetectors);
+            var targets = items.ToStructEnumerable().Select((item) => item.collision).Distinct();
 
             var target = ReferenceEquals(tip, null)
                 ? targets.FirstOrDefault()
@@ -114,14 +114,14 @@ namespace Controller
 
             if (ReferenceEquals(target, null)) return;
             
-            var menuTypes = items.Where((item) => item.collision.GetInstanceID() == target.GetInstanceID())
+            var menuTypes = items.ToStructEnumerable().Where((item) => item.collision.GetInstanceID() == target.GetInstanceID())
                 .Select((item) => item.menuID).Distinct().ToList();
             
             if (menuTypes.Count <= 0)
             {
                 return;
             }
-            var menuID = menuTypes.Count > 1  ? 0 : menuTypes.First();
+            var menuID = menuTypes.Count > 1  ? 0 : menuTypes[0];
             
             try
             {

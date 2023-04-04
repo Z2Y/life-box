@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Utils;
-using Object = System.Object;
 
 
 namespace Controller

@@ -9,6 +9,7 @@ namespace Logic.Battle.Realtime.Ai
     public class AstarRoute : PoolObject, IDisposable {
         private readonly SortedSet<RoutePath> openList = new (new RoutePathComparer());
         private readonly HashSet<RoutePath> used = new();
+        private readonly List<Vector3Int> nearbyPositions = new (8);
         private readonly Dictionary<Vector3Int, RoutePath> opened = new ();
         private readonly Dictionary<Vector3Int, bool> closed = new ();
         private readonly Dictionary<Vector3Int, bool> blocked = new ();
@@ -90,16 +91,16 @@ namespace Logic.Battle.Realtime.Ai
         }
 
         private List<Vector3Int> adjacentPoints(WorldMapController map, Vector3Int pos) {
-            var adjacent = new List<Vector3Int>();
+            nearbyPositions.Clear();
             for (var x = pos.x - 1; x <= pos.x + 1; x++) {
                 for (var y = pos.y - 1; y <= pos.y + 1; y++) {
                     var next = new Vector3Int(x, y, 0);
                     if (!isBlocked(map, next)) {
-                        adjacent.Add(next);
+                        nearbyPositions.Add(next);
                     }
                 }
             }
-            return adjacent;
+            return nearbyPositions;
         }
 
         public override void Dispose()

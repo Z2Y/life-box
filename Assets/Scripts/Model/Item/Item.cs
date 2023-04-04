@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Controller;
 using MessagePack;
 using Model;
@@ -50,11 +50,17 @@ namespace ModelContainer
             return RealmDBController.Db.Find<Item>(id);
         }
 
-        public static IQueryable<Item> GetItemsByType(ItemType itemType)
+        public static IEnumerable<Item> GetItemsByType(ItemType itemType)
         {
             return RealmDBController.Db.All<Item>().Where((item) => item.ItemType == (int)itemType);
         }
 
+        public static Item FirstItemOfType(ItemType itemType)
+        {
+            return RealmDBController.Db.All<Item>().FirstOrDefault(item => item.ItemType == (int)itemType);
+        }
+
+        /*
         private static IEnumerable<long> GetValidItemIndex(IEnumerable<long> ids)
         {
             return RealmDBController.Db.All<Item>().Filter("ID IN {%@}", string.Join(",", ids)).ToList()
@@ -74,8 +80,7 @@ namespace ModelContainer
 
         public static Item RandomItem(long[] ids, float[] weights) {
             var index = RandomItemIndex(ids, weights);
-            if (index < 0) return null;
-            return GetItem(ids[index]);
-        }
+            return index < 0 ? null : GetItem(ids[index]);
+        }*/
     }
 }

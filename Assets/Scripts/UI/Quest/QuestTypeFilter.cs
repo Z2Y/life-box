@@ -1,6 +1,6 @@
-using System.Linq;
 using Logic.Quest;
 using Model;
+using StructLinq;
 using UnityEngine.EventSystems;
 
 namespace UI
@@ -13,7 +13,7 @@ namespace UI
         {
             if (questPanel != null && questPanel.activeQuestType != QuestType) {
                 questPanel.ShowQuestList(QuestType);
-                questPanel.ShowQuestDetailPanel(QuestManager.Instance.GetQuestByType(QuestType).FirstOrDefault());
+                questPanel.ShowQuestDetailPanel(QuestManager.Instance.GetQuestByType(QuestType).ToStructEnumerable().FirstOrDefault());
             }
         }
     }

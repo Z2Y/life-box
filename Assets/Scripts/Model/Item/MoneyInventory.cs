@@ -1,8 +1,7 @@
-
-using System.Linq;
-using System.Collections.Generic;
 using Model;
 using ModelContainer;
+using StructLinq;
+
 public class MoneyStack : InfiniteItemStack {
     public override bool StoreItem(Item other, int num)
     {
@@ -20,11 +19,9 @@ public class MoneyStack : InfiniteItemStack {
 public class MoneyInventory : ItemInventory<Item, MoneyStack>
 {
     public Item DefaultMoneyItem { get; set;}
-    public MoneyInventory() : base(5) {
-        var moneyItems = ItemCollection.GetItemsByType(ItemType.Money);
-        if (moneyItems != null) {
-            DefaultMoneyItem = moneyItems.FirstOrDefault();
-        }
+    public MoneyInventory() : base(5)
+    {
+        DefaultMoneyItem = ItemCollection.FirstItemOfType(ItemType.Money);
     }
 
     public void BindToWealth(PropertyValue property) {
@@ -33,7 +30,7 @@ public class MoneyInventory : ItemInventory<Item, MoneyStack>
         StoreItem(DefaultMoneyItem, (int)(property.value / DefaultMoneyItem.Wealth));
         property.Type.SetFrozen(true);
         onInventoryChange.AddListener(() => {
-            property.value = (int)Stacks.Sum((stack) => stack.item.Wealth * stack.Count);
+            property.value = (int)Stacks.ToStructEnumerable().Sum((stack) => stack.item.Wealth * stack.Count);
             property.owner.onPropertyChange?.Invoke();
         });
     }

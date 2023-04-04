@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using Cysharp.Threading.Tasks;
 using HeroEditor.Common.Enums;
 using UnityEngine;
 using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
@@ -142,7 +140,7 @@ namespace Controller
         {
             if (character.Bow.Count <= 0)
             {
-                character.Equip(character.SpriteCollection.Bow.First(), EquipmentPart.Bow);
+                character.Equip(character.SpriteCollection.Bow[0], EquipmentPart.Bow);
             }
             else
             {

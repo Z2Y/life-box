@@ -18,7 +18,7 @@ public class Talkable : Singleton<Talkable>, ICharacterState {
 public class Shopable : Singleton<Shopable>, ICharacterState {
     public bool IsState(Character character) {
         if (character == null) return false;
-        ShopConfig config = ShopConfigCollection.GetShopConfigsByCharacter(character.ID)?.FirstOrDefault();
+        var config = ShopConfigCollection.FirstConfigOfCharacter(character.ID);
         return config != null && config.Item.Count > 0;
     }
 }

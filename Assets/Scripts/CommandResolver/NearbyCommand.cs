@@ -5,6 +5,7 @@ using ModelContainer;
 using System.Collections.Generic;
 using Controller;
 using Cysharp.Threading.Tasks;
+using StructLinq;
 using Utils.Collision;
 
 
@@ -20,7 +21,7 @@ public class NearbyNPCCommand : CommandResolver
 
         var nearByCharacters = character.gameObject.GetNearbyObjects<NPCController>();
         
-        return nearByCharacters.Count((npc) => npc.character.IsState(args[0] as string));
+        return nearByCharacters.ToStructEnumerable().Where((npc) => npc.character.IsState(args[0] as string)).Count();
     }
 }
 
@@ -117,8 +118,7 @@ public class SelectShopToNearby : CommandResolver
 
     private async void OnShop(Character character, Action<ShopResult> onComplete, Action OnCancel)
     {
-        var configs = ShopConfigCollection.GetShopConfigsByCharacter(character.ID)
-            .Where((config) => config.isOpen).ToList();
+        var configs = ShopConfigCollection.GetShopConfigsByCharacter(character.ID).ToStructEnumerable().Where((config) => config.isOpen).ToList();
 
         if (configs.Count <= 0)
         {

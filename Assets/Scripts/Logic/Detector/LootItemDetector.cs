@@ -1,5 +1,4 @@
 using Assets.HeroEditor.Common.Scripts.Common;
-using Logic.Enemy;
 using Logic.Loot;
 using UnityEngine;
 

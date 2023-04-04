@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Controller;
 using HeroEditor.Common.Enums;
 using Logic.Enemy;
 using Logic.Projectile;
 using Model;
+using StructLinq;
 using UnityEngine;
 using Character = Assets.HeroEditor.Common.Scripts.CharacterScripts.Character;
 
@@ -80,7 +80,7 @@ namespace Logic.Battle.Realtime.SkillAction
             skillState = 1;
             _controller.BowCharge(1);
             prepareStartTime = Time.time;
-            targets = GetEnemiesInSightRange(self.transform, skill.SelectRange, 120f).Take(1).ToList();
+            // targets = GetEnemiesInSightRange(self.transform, skill.SelectRange, 120f).Take(1).ToList();
         }
 
         public async void endPrepare()
@@ -200,7 +200,7 @@ namespace Logic.Battle.Realtime.SkillAction
             
             arrow.SetEnemyTag("Enemy");
             var velocity = _fire.right * (speed * Mathf.Sign(character.transform.lossyScale.x) * UnityEngine.Random.Range(0.85f, 1.15f));
-            arrow.Fire(_fire, character.Bow.Single(j => j.name == "Arrow"), velocity, 5f, onHit);
+            arrow.Fire(_fire, character.Bow.ToStructEnumerable().Where(j => j.name == "Arrow").FirstOrDefault(), velocity, 5f, onHit);
         }
 
         private void onHit(Collider2D collision)

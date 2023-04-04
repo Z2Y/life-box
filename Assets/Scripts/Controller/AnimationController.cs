@@ -1,7 +1,5 @@
 using System;
-using DG.Tweening;
 using UnityEngine;
-using CharacterScripts = Assets.HeroEditor.Common.Scripts.CharacterScripts;
 
 namespace Controller
 {

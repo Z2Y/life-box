@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Controller;
 using Logic.Map.MapProcedure;
 using Logic.Message;
 using ModelContainer;
+using StructLinq;
 using UniTaskPubSub;
 using UnityEngine;
 using Utils;
@@ -97,7 +97,7 @@ namespace Logic.Map
 
         public void Prepare(int depth = 0)
         {
-            var eventProcedures = PlaceTriggerContainer.GetPlaceTrigger(root.placeID)?.GetValidEvents().Select((@event) =>
+            var eventProcedures = PlaceTriggerContainer.GetPlaceTrigger(root.placeID)?.GetValidEvents().ToStructEnumerable().Select((@event) =>
             {
                 var mapEvent = ScriptableObject.CreateInstance<BattleMapEvent>();
                 mapEvent.mapEvent = @event;

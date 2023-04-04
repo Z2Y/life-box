@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Controller;
 using Cysharp.Threading.Tasks;
@@ -8,6 +7,7 @@ using Logic.Enemy.Scriptable;
 using Logic.Message;
 using Logic.Message.DefaultHandler;
 using ModelContainer;
+using StructLinq;
 using UniTaskPubSub;
 using UnityEngine;
 using Utils;
@@ -29,7 +29,9 @@ public class BattleCommand : CommandResolver
         
         var map = LifeEngine.Instance.Map;
 
-        var place = map.ActivePlaces.FirstOrDefault((place) => place.bounds.Contains(player.transform.position));
+        var placeContains = new PlaceContains() { position = player.transform.position };
+
+        var place = map.ActivePlaces.ToStructEnumerable().FirstOrDefault(ref placeContains, x => x);
 
         if (ReferenceEquals(place, null))
         {

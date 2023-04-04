@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Model;
 using UnityEngine;
 
 namespace Logic.Detector.Config
@@ -15,7 +14,7 @@ namespace Logic.Detector.Config
         };
 
 
-        public static List<InteractMenuItem> buildMenuItems(List<KeyValuePair<IDetector, Collider2D>> data)
+        public static List<InteractMenuItem> buildMenuItems(IEnumerable<KeyValuePair<IDetector, Collider2D>> data)
         {
             var result = new List<InteractMenuItem>();
             foreach (var item in data)
@@ -43,7 +42,7 @@ namespace Logic.Detector.Config
     }
 
 
-    public class InteractMenuItem
+    public struct InteractMenuItem
     {
         public IDetector detector;
         public Collider2D collision;

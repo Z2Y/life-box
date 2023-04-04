@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Model;
 using ModelContainer;
 using System.Linq;
 using Utils.Shuffle;
-using UnityEngine;
 
 public class ShopItemStack : InfiniteItemStack
 {
@@ -43,7 +41,7 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
         }
     }
 
-    public int GetResycle(long itemID)
+    public int GetRecycle(long itemID)
     {
         int itemIndex = validItemIndex.FindIndex((idx) => Config.Item[idx] == itemID);
         if (itemIndex < 0) return 0;

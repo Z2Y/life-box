@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Map;
+using StructLinq;
 using UnityEngine;
+using Utils;
 using Object = UnityEngine.Object;
 
 [CommandResolverHandler("NPCMove")]
@@ -41,7 +42,9 @@ public class NPCMoveToNearGate : CommandResolver
         
         var map = LifeEngine.Instance.Map;
 
-        var place = map.ActivePlaces.FirstOrDefault((place) => place.bounds.Contains(npc.transform.position));
+        var placeContain = new PlaceContains { position = npc.transform.position };
+
+        var place = map.ActivePlaces.ToStructEnumerable().FirstOrDefault(ref placeContain, x => x);
 
         if (place == null)
         {

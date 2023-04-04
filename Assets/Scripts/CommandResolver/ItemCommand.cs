@@ -1,9 +1,9 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Model;
 using ModelContainer;
+using StructLinq;
 
 public abstract class ItemCommandResolver : CommandResolver {
     protected ItemInventory Knapsack => LifeEngine.Instance.lifeData?.knapsackInventory;
@@ -16,7 +16,7 @@ public class ItemCommandResult {
 
     public override string ToString()
     {
-        return string.Join(" ", Items.Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
+        return string.Join(" ", Items.ToStructEnumerable().Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
     }
 }
 
@@ -29,7 +29,7 @@ public class ReceiveItemCommand : ItemCommandResolver
         for (int i = 0; i < args.Count; i += 2)
         {
             ItemStack stack = ReceiveItem(Convert.ToInt64(args[i]), Convert.ToInt32(args[i + 1]));
-            if (stack != null && !stack.Empty) {
+            if (stack is { Empty: false }) {
                 received.Items.Add(stack);
             }
         }
@@ -62,7 +62,7 @@ public class LostItemCommand : ItemCommandResolver
         for (var i = 0; i < args.Count; i += 2)
         {
             var stack = LostItem(Convert.ToInt64(args[i]), Convert.ToInt32(args[i + 1]));
-            if (stack != null && !stack.Empty) {
+            if (stack is { Empty: false }) {
                 lost.Items.Add(stack);
             }
         }

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using ModelContainer;
 using System.Collections.Generic;
 using System.Threading;
@@ -7,6 +6,8 @@ using System.Threading.Tasks;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Message;
+using System.Linq;
+using StructLinq;
 using UniTaskPubSub;
 using UnityEngine;
 using Utils;
@@ -66,9 +67,9 @@ public class ConfirmedResolver : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        if (args.Count < 2) return args.LastOrDefault();
+        if (args.Count < 2) return args.ToStructEnumerable().LastOrDefault();
         env.TryGetValue("$Effect", out var confirmed);
-        if (confirmed == null) return args.LastOrDefault();
+        if (confirmed == null) return args.ToStructEnumerable().LastOrDefault();
         await this.Done();
         return Convert.ToInt32(confirmed) == 0 ? args[0] : args[1];
     }    
@@ -79,8 +80,8 @@ public class RandomEventResolver : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var events = args.Where((o, idx) => (idx % 2 == 0)).Select(Convert.ToInt64);
-        var weights = args.Where((o, idx) => (idx % 2 == 1)).Select(Convert.ToSingle).ToArray();
+        var events = args.Where(LinqHelper.IsEven).ToStructEnumerable().Select(Convert.ToInt64, x => x).ToArray(x => x);
+        var weights = args.Where(LinqHelper.IsOdd).ToStructEnumerable().Select(Convert.ToSingle, x => x).ToArray(x => x);
         await this.Done();
         return EventCollection.RandomEventIndex(events, weights);
     }
@@ -92,9 +93,9 @@ public class SelectEventResolver : CommandResolver
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var description = args[0] as string;
-        var events = args.Skip(1).Select(Convert.ToInt64).ToArray();
+        var events = args.ToStructEnumerable().Skip(1).Select(Convert.ToInt64).ToArray();
         env["$Effect"] = "";
-        var options = EventCollection.GetValidEvents(events).Select((evt) => evt.Description.InjectedExpression(env)).ToList();
+        var options = EventCollection.GetValidEvents(events).ToStructEnumerable().Select((evt) => evt.Description.InjectedExpression(env)).ToList();
         return await Select(description, options);
     }
 

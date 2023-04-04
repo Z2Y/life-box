@@ -1,7 +1,7 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Logic.Quest;
 using Model;
+using StructLinq;
 using UnityEngine;
 using Utils;
 
@@ -49,14 +49,14 @@ namespace UI
         {
             // 默认选中第一个任务类型的按钮
             ShowQuestList(QuestType.Main);
-            ShowQuestDetailPanel(QuestManager.Instance.GetQuestByType(QuestType.Main).FirstOrDefault());
+            ShowQuestDetailPanel(QuestManager.Instance.GetQuestByType(QuestType.Main).ToStructEnumerable().FirstOrDefault());
         }
 
         // 显示对应任务类型的任务列表
         public void ShowQuestList(QuestType questType)
         {
             // 获取对应任务类型的任务列表
-            var quests = QuestManager.Instance.GetQuestByType(questType).ToList();
+            var quests = QuestManager.Instance.GetQuestByType(questType).ToStructEnumerable().ToList();
             activeQuestType = questType;
             questListView.UpdateContents(quests);
             Show();
