@@ -1,13 +1,12 @@
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Detector;
 using Model;
 using ModelContainer;
-using StructLinq;
 using UI;
 using UnityEngine;
-using Utils;
 
 namespace Interact
 {
@@ -41,22 +40,22 @@ namespace Interact
 
             if (npcObjects.Count == 1)
             {
-                buildDialog(npcObjects.ToStructEnumerable().Get(0).GetComponent<NPCController>().character, npcDetectors);
+                buildDialog(npcObjects.Gen().First().GetComponent<NPCController>().character, npcDetectors);
             }
             else
             {
-                var characters = npcObjects.ToStructEnumerable()
-                    .Select((npc) => npc.GetComponent<NPCController>(), x => x)
-                    .ToList(x => x);
-                var names = characters.ReadOnlyEnumerable()
-                    .Select((npc) => npc.character.Name, x => x)
-                    .ToList(x => x);
+                var characters = npcObjects.Gen()
+                    .Select((npc) => npc.GetComponent<NPCController>())
+                    .ToList();
+                var names = characters.Gen()
+                    .Select((npc) => npc.character.Name)
+                    .ToList();
                 self!.disableAllShortCuts();
                 var selector = await SelectPanel.Show("选择想要交互的人物", names, (idx) =>
                 {
-                    var detectors = activeDetectors.ToStructEnumerable()
-                        .Where((pair) => pair.Value.gameObject == characters[idx].gameObject, x => x)
-                        .Select((pair) => pair.Key, x => x).ToEnumerable();
+                    var detectors = activeDetectors.Gen()
+                        .Where((pair) => pair.Value.gameObject == characters[idx].gameObject)
+                        .Select((pair) => pair.Key).AsEnumerable();
                     buildDialog(characters[idx].character, new HashSet<IDetector>(detectors));
                 });
                 selector.SetCancelable(true, onCancel: () =>

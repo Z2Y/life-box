@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using Model;
 using ModelContainer;
-using StructLinq;
 using Utils;
 
 [CommandResolverHandler("RoutePlace")]
@@ -28,7 +28,7 @@ public class RouteCommand : CommandResolver
 
         var selector = await SelectPanel.Show(
             "选择想要去的地点",
-            nearbyPlaces.ReadOnlyEnumerable().Select(PlaceHelper.NameOf).ToArray(),
+            nearbyPlaces.Gen().Select(PlaceHelper.NameOf).ToArray(),
             (idx) =>
             {
                 OnRoute(nearbyPlaces[idx]);

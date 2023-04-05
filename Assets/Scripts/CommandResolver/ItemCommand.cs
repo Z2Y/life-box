@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using Model;
 using ModelContainer;
-using StructLinq;
-using Utils;
 
 public abstract class ItemCommandResolver : CommandResolver {
     protected ItemInventory Knapsack => LifeEngine.Instance.lifeData?.knapsackInventory;
@@ -17,7 +16,7 @@ public class ItemCommandResult {
 
     public override string ToString()
     {
-        return string.Join(" ", Items.ReadOnlyEnumerable().Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
+        return string.Join(" ", Items.Gen().Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
     }
 }
 

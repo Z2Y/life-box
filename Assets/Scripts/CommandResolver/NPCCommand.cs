@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Map;
-using StructLinq;
 using UnityEngine;
 using Utils;
 using Object = UnityEngine.Object;
@@ -44,7 +44,7 @@ public class NPCMoveToNearGate : CommandResolver
 
         var placeContain = new PlaceContains { position = npc.transform.position };
 
-        var place = map.ActivePlaces.ReadOnlyEnumerable().FirstOrDefault(ref placeContain, x => x);
+        var place = map.ActivePlaces.Gen().Where(placeContain).FirstOrDefault();
 
         if (place == null)
         {

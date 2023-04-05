@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Controller;
 using MessagePack;
 using Model;
 using Realms;
-using StructLinq;
 
 namespace Model
 {
@@ -31,7 +31,7 @@ namespace ModelContainer
     {
         public static TimeTrigger GetTrigger(TimeSpan timeSpan)
         {
-            return RealmDBController.Db.All<TimeTrigger>().Filter($"Year == {timeSpan.Year} && Month == {timeSpan.Month}").ToStructEnumerable().FirstOrDefault();
+            return RealmDBController.Db.All<TimeTrigger>().Filter($"Year == {timeSpan.Year} && Month == {timeSpan.Month}").FirstOrDefault();
         }
     }
 }

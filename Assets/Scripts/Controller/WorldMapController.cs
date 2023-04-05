@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using Logic.Map;
 using Model;
-using StructLinq;
 using UnityEngine;
 using Utils;
 
@@ -112,37 +112,25 @@ namespace Controller
 
         public GridLayout Ground => ground;
 
-        private List<PlaceController> getPlacesInBounds()
-        {
-            return Places.ReadOnlyEnumerable().Where(isPlaceVisible, x => x).AsList(x => x);
-        }
-
         private bool isPlaceVisible(PlaceController place)
         {
+            Debug.Log($"is Place visible");
             return visibleBounds.Intersects(place.bounds);
         }
 
         private bool isPlaceActive(PlaceController place)
         {
-            return ActivePlaces.Contains(place);
+            return place.gameObject.activeInHierarchy;
         }
 
 
         private async UniTask updateWorldPlaces()
         {
-            var placesInBounds = getPlacesInBounds();
+            await UniTask.WhenAll(Places.Gen().Select((place) => isPlaceVisible(place) ? place.Activate() : place.DeActivate())
+                .AsEnumerable());
 
-            if (placesInBounds.Count == ActivePlaces.Count &&
-                placesInBounds.ReadOnlyEnumerable().All(isPlaceActive, x => x))
-            {
-                return;
-            }
-
-            await UniTask.WhenAll(placesInBounds.Select((place) => place.Activate()));
-
-            await UniTask.WhenAll((ActivePlaces.Count > 0 ? ActivePlaces : Places).Where((place) => !placesInBounds.Contains(place)).Select((place) => place.DeActivate()));
-
-            ActivePlaces = placesInBounds;
+            ActivePlaces.Clear();
+            ActivePlaces.AddRange(Places.Gen().Where(isPlaceActive).AsEnumerable());
             updateWorldBounds();
         }
         
@@ -159,7 +147,7 @@ namespace Controller
 
         public void ActivatePlace(PlaceController target)
         {
-            if (ActivePlaces.ReadOnlyEnumerable().Any((p) => p.placeID == target.placeID))
+            if (ActivePlaces.Gen().Any((p) => p.placeID == target.placeID))
             {
                 return;
             }
@@ -195,7 +183,7 @@ namespace Controller
 
             var maps = worldRoot.GetComponentsInChildren<WorldMapController>();
 
-            var loaded = maps.ToStructEnumerable().FirstOrDefault((map) => map.mapID == mapID, x => x);
+            var loaded = maps.Gen().Where((map) => map.mapID == mapID).FirstOrDefault();
 
             if (loaded != null)
             {

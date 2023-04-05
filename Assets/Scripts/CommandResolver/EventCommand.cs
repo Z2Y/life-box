@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Message;
-using System.Linq;
-using StructLinq;
+using Cathei.LinqGen;
 using UniTaskPubSub;
 using UnityEngine;
 using Utils;
@@ -67,9 +66,9 @@ public class ConfirmedResolver : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        if (args.Count < 2) return args.ReadOnlyEnumerable().LastOrDefault();
+        if (args.Count < 2) return args.Gen().LastOrDefault();
         env.TryGetValue("$Effect", out var confirmed);
-        if (confirmed == null) return args.ReadOnlyEnumerable().LastOrDefault();
+        if (confirmed == null) return args.Gen().LastOrDefault();
         await this.Done();
         return Convert.ToInt32(confirmed) == 0 ? args[0] : args[1];
     }    
@@ -80,8 +79,8 @@ public class RandomEventResolver : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var events = args.Where(LinqHelper.IsEven).ToStructEnumerable().Select(Convert.ToInt64, x => x).ToArray(x => x);
-        var weights = args.Where(LinqHelper.IsOdd).ToStructEnumerable().Select(Convert.ToSingle, x => x).ToArray(x => x);
+        var events = args.Gen().Where(LinqHelper.IsEven).Select(Convert.ToInt64).ToArray();
+        var weights = args.Gen().Where(LinqHelper.IsOdd).Select(Convert.ToSingle).ToArray();
         await this.Done();
         return EventCollection.RandomEventIndex(events, weights);
     }
@@ -93,9 +92,9 @@ public class SelectEventResolver : CommandResolver
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
         var description = args[0] as string;
-        var events = args.ReadOnlyEnumerable().Skip(1).Select(Convert.ToInt64).ToArray();
+        var events = args.Gen().Skip(1).Select(Convert.ToInt64).ToArray();
         env["$Effect"] = "";
-        var options = EventCollection.GetValidEvents(events).ToStructEnumerable().Select((evt) => evt.Description.InjectedExpression(env)).ToArray();
+        var options = EventCollection.GetValidEvents(events).Gen().Select((evt) => evt.Description.InjectedExpression(env)).ToArray();
         return await Select(description, options);
     }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using Logic.Detector;
 using Logic.Detector.Config;
@@ -6,10 +7,8 @@ using Logic.Detector.Scriptable;
 using Logic.Loot;
 using ModelContainer;
 using ShortCuts;
-using StructLinq;
 using UI;
 using UnityEngine;
-using Utils;
 using Exception = NPBehave.Exception;
 
 namespace Controller
@@ -107,15 +106,15 @@ namespace Controller
         {
             activeDetectors.RemoveWhere((pair) => pair.Value == null);
             var items = InteractMenuConfig.buildMenuItems(activeDetectors);
-            var targets = items.ReadOnlyEnumerable().Select((item) => item.collision).Distinct();
+            var targets = items.Gen().Select((item) => item.collision).Distinct();
 
             var target = ReferenceEquals(tip, null)
                 ? targets.FirstOrDefault()
-                : targets.FirstOrDefault(t => t.GetInstanceID() == tip.targetID);
+                : targets.Where(t => t.GetInstanceID() == tip.targetID).FirstOrDefault();
 
             if (ReferenceEquals(target, null)) return;
             
-            var menuTypes = items.ReadOnlyEnumerable().Where((item) => item.collision.GetInstanceID() == target.GetInstanceID())
+            var menuTypes = items.Gen().Where((item) => item.collision.GetInstanceID() == target.GetInstanceID())
                 .Select((item) => item.menuID).Distinct().ToArray();
             
             if (menuTypes.Length <= 0)

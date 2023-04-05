@@ -19,7 +19,6 @@ public static class ExcelExporter
     
     public static void Export()
     {
-        Debug.Log(Application.persistentDataPath);
         var config  = new RealmConfiguration(Application.persistentDataPath + "/db.realm")
         {
             ShouldDeleteIfMigrationNeeded = true
@@ -43,6 +42,8 @@ public static class ExcelExporter
                 }
             }
         }
+
+        File.Copy($"{Application.persistentDataPath}/db.realm", $"{Application.streamingAssetsPath}/db.realm", true);
     }
 
     static List<ClassField> ExportClassField(ExcelWorksheet sheet) {

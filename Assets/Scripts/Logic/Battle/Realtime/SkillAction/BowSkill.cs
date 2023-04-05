@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Controller;
 using HeroEditor.Common.Enums;
 using Logic.Enemy;
 using Logic.Projectile;
 using Model;
-using StructLinq;
 using UnityEngine;
 using Utils;
 using Character = Assets.HeroEditor.Common.Scripts.CharacterScripts.Character;
@@ -201,7 +201,7 @@ namespace Logic.Battle.Realtime.SkillAction
             
             arrow.SetEnemyTag("Enemy");
             var velocity = _fire.right * (speed * Mathf.Sign(character.transform.lossyScale.x) * UnityEngine.Random.Range(0.85f, 1.15f));
-            arrow.Fire(_fire, character.Bow.ReadOnlyEnumerable().Where(j => j.name == "Arrow").FirstOrDefault(), velocity, 5f, onHit);
+            arrow.Fire(_fire, character.Bow.Gen().Where(j => j.name == "Arrow").FirstOrDefault(), velocity, 5f, onHit);
         }
 
         private void onHit(Collider2D collision)

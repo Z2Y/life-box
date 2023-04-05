@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Cathei.LinqGen;
 using Controller;
 using Cysharp.Threading.Tasks;
 using Logic.Enemy.Scriptable;
 using Logic.Message;
 using Logic.Message.DefaultHandler;
 using ModelContainer;
-using StructLinq;
 using UniTaskPubSub;
 using UnityEngine;
 using Utils;
@@ -31,7 +31,7 @@ public class BattleCommand : CommandResolver
 
         var placeContains = new PlaceContains() { position = player.transform.position };
 
-        var place = map.ActivePlaces.ReadOnlyEnumerable().FirstOrDefault(ref placeContains, x => x);
+        var place = map.ActivePlaces.Gen().Where(placeContains).FirstOrDefault();
 
         if (ReferenceEquals(place, null))
         {

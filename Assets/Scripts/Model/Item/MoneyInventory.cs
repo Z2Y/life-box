@@ -1,6 +1,6 @@
+using Cathei.LinqGen;
 using Model;
 using ModelContainer;
-using StructLinq;
 using Utils;
 
 public class MoneyStack : InfiniteItemStack {
@@ -31,7 +31,7 @@ public class MoneyInventory : ItemInventory<Item, MoneyStack>
         StoreItem(DefaultMoneyItem, (int)(property.value / DefaultMoneyItem.Wealth));
         property.Type.SetFrozen(true);
         onInventoryChange.AddListener(() => {
-            property.value = (int)Stacks.ReadOnlyEnumerable().Sum((stack) => stack.item.Wealth * stack.Count);
+            property.value = (int)Stacks.Gen().Sum((stack) => stack.item.Wealth * stack.Count);
             property.owner.onPropertyChange?.Invoke();
         });
     }

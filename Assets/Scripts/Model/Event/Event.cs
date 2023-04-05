@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Controller;
 using MessagePack;
 using Model;
 using Realms;
-using StructLinq;
 using Utils;
 
 public abstract class GameEvent
@@ -65,7 +65,7 @@ namespace ModelContainer
         }
 
         private static IEnumerable<int> GetValidEventIndex(IEnumerable<long> events) {
-            return events.Select((id, idx) =>
+            return events.Gen().Select((id, idx) =>
             {
                 var e = GetEvent(id);
                 if (e == null) return -1;
@@ -76,7 +76,7 @@ namespace ModelContainer
                     return isInclude ? idx : -1;
                 }
                 return idx;
-            }).Where(LinqHelper.IsNotNegative);            
+            }).Where(LinqHelper.IsNotNegative).AsEnumerable();            
         }
 
         private static Event GetValidEvent(long eventID)
@@ -93,10 +93,10 @@ namespace ModelContainer
 
         public static IEnumerable<Event> GetValidEvents(IEnumerable<long> events)
         {
-            return events.ToStructEnumerable()
-                .Select(GetValidEvent, x => x)
-                .Where(LinqHelper.IsNotNull, x => x)
-                .ToEnumerable();
+            return events.Gen()
+                .Select(GetValidEvent)
+                .Where(LinqHelper.IsNotNull)
+                .AsEnumerable();
         }
 
         public static int RandomEventIndex(IEnumerable<long> events, IList<float> weights) {

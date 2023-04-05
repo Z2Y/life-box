@@ -1,6 +1,6 @@
+using Cathei.LinqGen;
 using Controller;
 using Cysharp.Threading.Tasks;
-using StructLinq;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -28,7 +28,7 @@ namespace Logic.Map
         private async UniTask Jump()
         {
             var nextPlaceID = GetNextPlaceID();
-            nextPlace = map.Places.ReadOnlyEnumerable().FirstOrDefault((place) => place.placeID == nextPlaceID);
+            nextPlace = map.Places.Gen().Where((place) => place.placeID == nextPlaceID).FirstOrDefault();
 
             if (nextPlace == null) return;
 

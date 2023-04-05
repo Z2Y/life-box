@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
-using StructLinq;
 
 [CommandResolverHandler("ChangeProperty")]
 public class ChangePropertyCommand : CommandResolver
@@ -47,7 +47,7 @@ public class ChangePropertyCommand : CommandResolver
 
         public override string ToString()
         {
-            return string.Join(" ", changes.Keys.ToStructEnumerable().Select(pType => $"【{pType.GetPropertyName()}】 {(changes[pType] > 0 ? "+" : "-")} {changes[pType]}"));
+            return string.Join(" ", changes.Keys.Gen().Select(pType => $"【{pType.GetPropertyName()}】 {(changes[pType] > 0 ? "+" : "-")} {changes[pType]}"));
         }
     }
 }

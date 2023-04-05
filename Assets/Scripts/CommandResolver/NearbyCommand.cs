@@ -3,9 +3,9 @@ using System.Linq;
 using Model;
 using ModelContainer;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Controller;
 using Cysharp.Threading.Tasks;
-using StructLinq;
 using Utils.Collision;
 
 
@@ -21,7 +21,7 @@ public class NearbyNPCCommand : CommandResolver
 
         var nearByCharacters = character.gameObject.GetNearbyObjects<NPCController>();
         
-        return nearByCharacters.ToStructEnumerable().Where((npc) => npc.character.IsState(args[0] as string)).Count();
+        return nearByCharacters.Gen().Where((npc) => npc.character.IsState(args[0] as string)).Count();
     }
 }
 
@@ -118,7 +118,7 @@ public class SelectShopToNearby : CommandResolver
 
     private async void OnShop(Character character, Action<ShopResult> onComplete, Action OnCancel)
     {
-        var configs = ShopConfigCollection.GetShopConfigsByCharacter(character.ID).ToStructEnumerable().Where((config) => config.isOpen).ToArray();
+        var configs = ShopConfigCollection.GetShopConfigsByCharacter(character.ID).Gen().Where((config) => config.isOpen).ToArray();
 
         if (configs.Length <= 0)
         {
