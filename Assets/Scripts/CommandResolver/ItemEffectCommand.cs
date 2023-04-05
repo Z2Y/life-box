@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 
 [CommandResolverHandler("ItemUsage")]
@@ -10,7 +10,7 @@ public class ItemUsageResolver : CommandResolver
     {
         var result = new ItemUsage
         {
-            effects = env.Values.OfType<ItemUsageEffect>().ToList(),
+            effects = new List<ItemUsageEffect>(env.Values.Gen().OfType<ItemUsageEffect>().AsEnumerable()),
             UseLimt = Convert.ToInt32(args[0]),
             DestroyOnUseup = Convert.ToInt32(args[1]) > 0
         };

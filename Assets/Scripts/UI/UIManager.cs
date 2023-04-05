@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -51,12 +51,12 @@ namespace UI
 
         public UIBase FindByName(string uiName)
         {
-            return _lookup.Values.FirstOrDefault((ui => ui.gameObject.name == uiName));
+            return _lookup.Values.Gen().Where((ui => ui.gameObject.name == uiName)).FirstOrDefault();
         }
         
-        public T FindByType<T>()
+        public T FindByType<T>() where T : UIBase
         {
-            return _lookup.Values.OfType<T>().FirstOrDefault();
+            return _lookup.Values.Gen().Where((v) => v is T).FirstOrDefault() as T;
         }
 
         public UIBase Remove(int instanceID)
@@ -77,7 +77,7 @@ namespace UI
 
         public UIBase FindOrCreate<T>() where T : UIBase
         {
-            var exist = _lookup.Values.OfType<T>().FirstOrDefault();
+            var exist = _lookup.Values.Gen().Where((v) => v is T).FirstOrDefault();
             if (exist != null)
             {
                 return exist;
@@ -88,7 +88,8 @@ namespace UI
         public async UniTask<UIBase> FindOrCreateAsync<T>(bool useActive = false) where T : UIBase
         {
             var uiType = typeof(T);
-            var exist = _lookup.Values.OfType<T>().FirstOrDefault(ui => (useActive || !ui.gameObject.activeSelf));
+            var exist = _lookup.Values.Gen().Where((v) => v is T).
+                Where(ui => (useActive || !ui.gameObject.activeSelf)).FirstOrDefault();
             if (exist != null)
             {
                 return exist;

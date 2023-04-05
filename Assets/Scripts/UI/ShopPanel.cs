@@ -1,6 +1,5 @@
 using System;
-using System.Linq;
-using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using Model;
 using UI;
@@ -64,8 +63,8 @@ public class ShopPanel : UIBase
 
     public void UpdateShopView()
     {
-        List<ItemStack> stacks = shop.Stacks.Where(itemStack => !itemStack.Empty).ToList();
-        for (int i = 0; i < stacks.Count; i++)
+        var stacks = shop.Stacks.Gen().Where(itemStack => !itemStack.Empty).ToArray();
+        for (int i = 0; i < stacks.Length; i++)
         {
             UIShopItem uIShopItem;
             if (i < shopItemScroll.content.childCount)
@@ -78,12 +77,12 @@ public class ShopPanel : UIBase
             }
 
             uIShopItem.gameObject.SetActive(true);
-            ShopItemStack itemStack = stacks[i] as ShopItemStack;
+            ShopItemStack itemStack = (ShopItemStack)stacks[i];
             uIShopItem.SetItem(new ShopConfirmData(itemStack, shop.Currency, itemStack.Price));
             uIShopItem.OnItemClick(onConfirmSell);
         }
 
-        for (int i = stacks.Count; i < shopItemScroll.content.childCount; i++)
+        for (int i = stacks.Length; i < shopItemScroll.content.childCount; i++)
         {
             shopItemScroll.content.GetChild(i).gameObject.SetActive(false);
         }
@@ -93,10 +92,10 @@ public class ShopPanel : UIBase
 
     private void UpdateBagView()
     {
-        List<ItemStack> stacks = bag.Stacks
-            .Where(itemStack => !itemStack.Empty && shop.GetRecycle(itemStack.item.ID) > 0).ToList();
+        var stacks = bag.Stacks
+            .Gen().Where(itemStack => !itemStack.Empty && shop.GetRecycle(itemStack.item.ID) > 0).ToArray();
 
-        for (int i = 0; i < stacks.Count; i++)
+        for (int i = 0; i < stacks.Length; i++)
         {
             UIShopItem uIShopItem;
             if (i < bagItemScroll.content.childCount)
@@ -114,7 +113,7 @@ public class ShopPanel : UIBase
             uIShopItem.gameObject.SetActive(true);
         }
 
-        for (int i = stacks.Count; i < bagItemScroll.content.childCount; i++)
+        for (int i = stacks.Length; i < bagItemScroll.content.childCount; i++)
         {
             bagItemScroll.content.GetChild(i).gameObject.SetActive(false);
         }
@@ -253,8 +252,8 @@ public class ShopResult
     {
         get
         {
-            var payed = Sells.Stacks.Sum((stack) => (stack as ShopItemStack).Price * stack.Count);
-            var recycled = Recycles.Stacks.Sum((stack) => (stack as ShopItemStack).Price * stack.Count);
+            var payed = Sells.Stacks.Gen().Select((stack) => ((ShopItemStack)stack).Price * stack.Count).Sum();
+            var recycled = Recycles.Stacks.Gen().Select((stack) => ((ShopItemStack)stack).Price * stack.Count).Sum();
             return payed - recycled;
         }
     }
@@ -263,8 +262,8 @@ public class ShopResult
 
     public override string ToString()
     {
-        var sells = string.Join(" ", Sells.Stacks.Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
-        var recycles = string.Join(" ", Recycles.Stacks.Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
+        var sells = string.Join(" ", Sells.Stacks.Gen().Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
+        var recycles = string.Join(" ", Recycles.Stacks.Gen().Select(stack => $"【{stack.item.Name} x {stack.Count}】"));
         var count = CurrencyCount;
         return $"{(Sells.Empty ? "" : "购买")} {sells} {(Recycles.Empty ? "" : "卖出")} {recycles} {(count > 0 ? "失去" : "获得")} 【{Sells.Currency.Name}】 x {Math.Abs(count)}";
     }

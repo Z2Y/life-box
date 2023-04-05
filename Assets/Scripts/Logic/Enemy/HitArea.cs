@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Cathei.LinqGen;
 using Controller;
 using Logic.Detector;
 using Logic.Detector.Scriptable;
@@ -34,7 +34,7 @@ namespace Logic.Enemy
 
         public void SetEnemyTag(String tagName)
         {
-            foreach (var d in _detectors.OfType<NormalAttackDetector>())
+            foreach (var d in _detectors.Gen().OfType<NormalAttackDetector>())
             {
                 d.SetTag(tagName);
             }

@@ -114,7 +114,6 @@ namespace Controller
 
         private bool isPlaceVisible(PlaceController place)
         {
-            Debug.Log($"is Place visible");
             return visibleBounds.Intersects(place.bounds);
         }
 

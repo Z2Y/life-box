@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Cysharp.Threading.Tasks;
-using UnityEditor;
+using Cathei.LinqGen;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -105,7 +103,7 @@ namespace Logic.Enemy.Scriptable
                 _onTerminate = null;
             }
 
-            foreach (var animal in activeAnimals.Where(animal => animal != null))
+            foreach (var animal in activeAnimals.Gen().Where(LinqHelper.IsObjectNotNull))
             {
                 Pool.Return(animal, animal.animalType);
             }

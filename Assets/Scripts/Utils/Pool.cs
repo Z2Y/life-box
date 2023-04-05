@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+using Cathei.LinqGen;
 using UnityEngine.Pool;
 
 namespace Utils
@@ -62,7 +61,8 @@ namespace Utils
 
         public void ReturnUsedIf<T>(Predicate<T> match)
         {
-            var toRelease = used.Where((pair) => pair.Value is T value && match(value)).ToList();
+            var toRelease = used.Gen().Where((pair) => pair.Value is T value && match(value)).ToArray();
+            
             foreach (var item in toRelease)
             {
                 item.Value.Dispose();

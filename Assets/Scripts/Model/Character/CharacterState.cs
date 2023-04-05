@@ -1,6 +1,5 @@
 using Model;
 using ModelContainer;
-using System.Linq;
 
 public interface ICharacterState {
     bool IsState(Character character);

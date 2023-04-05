@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using MessagePack;
@@ -196,7 +195,7 @@ public class ExpressionNode
         {
             try
             {
-                listData = MessagePackSerializer.Deserialize<object[]>(MessagePackSerializer.ConvertFromJson(data)).ToList();
+                listData.AddRange(MessagePackSerializer.Deserialize<object[]>(MessagePackSerializer.ConvertFromJson(data)));
             }
             catch (Exception e)
             {

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Model;
 using ModelContainer;
 using System.Collections.Generic;
@@ -61,8 +60,8 @@ public class SelectTalkToNearBy : CommandResolver
         
         var character = LifeEngine.Instance.MainCharacter;
 
-        var nearbyCharacters = character.gameObject.GetNearbyObjects<NPCController>().Where((npc) => npc.character.IsTalkable()).ToList();
-        var names = nearbyCharacters.Select((npc) => npc.character.Name).ToList();
+        var nearbyCharacters = character.gameObject.GetNearbyObjects<NPCController>().Gen().Where((npc) => npc.character.IsTalkable()).ToArray();
+        var names = nearbyCharacters.Gen().Select((npc) => npc.character.Name).ToArray();
         var selector = await SelectPanel.Show("选择想要交谈的人物", names, (idx) =>
         {
             OnTalk(nearbyCharacters[idx].character);
@@ -92,22 +91,22 @@ public class SelectShopToNearby : CommandResolver
         
         var character = LifeEngine.Instance.MainCharacter;
 
-        var nearbyCharacters = character.gameObject.GetNearbyObjects<NPCController>().Where((npc) => npc.character.IsShopable()).ToList();
+        var nearbyCharacters = character.gameObject.GetNearbyObjects<NPCController>().Gen().Where((npc) => npc.character.IsShopable()).ToArray();
 
         void OnCancel() => shopCompleteSource.TrySetCanceled();
         void OnComplete(ShopResult result) => shopCompleteSource.TrySetResult(result);
 
-        if (nearbyCharacters.Count == 0)
+        if (nearbyCharacters.Length == 0)
         {
             shopCompleteSource.TrySetCanceled();
         }
-        else if (nearbyCharacters.Count == 1)
+        else if (nearbyCharacters.Length == 1)
         {
             OnShop(nearbyCharacters[0].character, OnComplete, OnCancel);
         }
         else
         {
-            var names = nearbyCharacters.Select((npc) => npc.character.Name).ToList();
+            var names = nearbyCharacters.Gen().Select((npc) => npc.character.Name).ToArray();
             var selector = await SelectPanel.Show("选择想要交谈的人物", names,
                 (idx) => OnShop(nearbyCharacters[idx].character, OnComplete, OnCancel));
             selector.SetCancelable(true, OnCancel);
@@ -130,7 +129,7 @@ public class SelectShopToNearby : CommandResolver
         }
         else
         {
-            var selector = await SelectPanel.Show("选择想要购买的物品", configs.Select((config) => config.Name).ToList(),
+            var selector = await SelectPanel.Show("选择想要购买的物品", configs.Gen().Select((config) => config.Name).ToArray(),
                 (idx) => OpenShop(configs[idx], onComplete));
             selector.SetCancelable(true, OnCancel);
         }

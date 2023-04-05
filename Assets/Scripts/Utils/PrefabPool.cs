@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -115,11 +114,14 @@ namespace Utils
         
         public void RecycleUsed()
         {
-            var recycles = used.ToList();
-            foreach (var item in recycles)
+            foreach (var item in used)
             {
-                Return(item);
+                if (!unused.Contains(item))
+                {
+                    pool.Release(item);
+                }
             }
+            used.Clear();
         }
 
         public void Clear()
@@ -275,11 +277,21 @@ namespace Utils
 
         public void RecycleUsed()
         {
-            var recycles = used.ToList();
-            foreach (var item in recycles)
+            foreach (var item in used)
             {
-                Return(item.Key, item.Value);
+                if (!unused.Contains(item))
+                {
+                    if (pool.TryGetValue(item.Value, out var poolWithArg))
+                    {
+                        poolWithArg.Release(item.Key);
+                    }
+                }
+                else
+                {
+                    onReturnToPool(item.Key, item.Value);
+                }
             }
+            used.Clear();
         }
 
         public void Dispose()

@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -34,7 +34,7 @@ public static class ExpressionCommandResolver {
 
     private static void RegisterCommandResolver() {
         var asm = typeof(CommandResolverHandler).Assembly;
-        var types = asm.GetExportedTypes().Where((type) => type.IsDefined(typeof(CommandResolverHandler), false)).ToArray();
+        var types = asm.GetExportedTypes().Gen().Where((type) => type.IsDefined(typeof(CommandResolverHandler), false));
         foreach(var type in types) {
             var fieldName = ((CommandResolverHandler)type.GetCustomAttribute(typeof(CommandResolverHandler), false))?.FieldName;
             if (type.GetInterface(nameof(ICommandResolver)) != null)

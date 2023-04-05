@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using Model;
 using UI;
@@ -50,13 +50,9 @@ public class KnapsackPanel : UIBase
 
     private void InitStackData()
     {
-        if (knapsack == null)
-        {
-            stackData.Clear();
-        }
-        else
-        {
-            stackData = Enumerable.Range(0, knapsack.Capacity).Select((idx) =>
+        stackData = new List<ItemCellData>();
+        if (knapsack != null) {
+            stackData.AddRange(Gen.Enumerable.Range(0, knapsack.Capacity).Select((idx) =>
             {
                 var data = new ItemCellData(idx);
                 if (idx < knapsack.Stacks.Count)
@@ -68,7 +64,7 @@ public class KnapsackPanel : UIBase
                     data.ItemStack = new ItemStack();
                 }
                 return data;
-            }).ToList();
+            }).AsEnumerable());
         }
 
         itemGridView.UpdateContents(stackData);
@@ -100,18 +96,18 @@ public class KnapsackPanel : UIBase
     public void FilterItemByType(ItemType type)
     {
         if (knapsack == null) return;
-        List<int> stackIdx = knapsack.Stacks.Select((_, idx) => idx).Where((idx) => !knapsack.Stacks[idx].Empty && knapsack.Stacks[idx].item.ItemType == (int)type).ToList();
-        for (int i = 0; i < stackIdx.Count; i++)
+        var stackIdx = knapsack.Stacks.Gen().Select((_, idx) => idx).Where((idx) => !knapsack.Stacks[idx].Empty && knapsack.Stacks[idx].item.ItemType == (int)type).ToArray();
+        for (var i = 0; i < stackIdx.Length; i++)
         {
             stackData[i].ItemStack = knapsack.Stacks[stackIdx[i]];
             stackData[i].Index = stackIdx[i];
         }
-        for (int i = stackIdx.Count; i < stackData.Count; i++)
+        for (var i = stackIdx.Length; i < stackData.Count; i++)
         {
             stackData[i].ItemStack = new ItemStack();
         }
         itemGridView?.UpdateContents(stackData);
-        currentFilter = filters.FirstOrDefault((filter) => filter.ItemType == type);
+        currentFilter = filters.Gen().Where((filter) => filter.ItemType == type).FirstOrDefault();
     }
 
     private void OnPointerExitCell(int index)
