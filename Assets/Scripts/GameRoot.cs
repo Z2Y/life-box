@@ -12,6 +12,10 @@ public class GameRoot : MonoBehaviour
             Instance = this;
         }
 
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            Application.targetFrameRate = 120;
+        }
         // Application.targetFrameRate = 512;
     }
 

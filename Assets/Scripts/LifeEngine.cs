@@ -29,6 +29,7 @@ public class LifeEngine : MonoBehaviour {
     }
 
     public async UniTask CreateNewGame() {
+        await RealmDBController.copyDbFile();
         lifeData = LifeData.CreateNew();
         CharacterCollection.LoadPlayerCharacter();
 
