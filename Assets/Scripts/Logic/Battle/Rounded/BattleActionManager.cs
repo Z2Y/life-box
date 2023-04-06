@@ -4,7 +4,7 @@ using DG.Tweening;
 using Model;
 using ModelContainer;
 using System.Collections.Generic;
-using System.Linq;
+using Cathei.LinqGen;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -106,7 +106,7 @@ public class BattleActionManager : MonoBehaviour, IDropHandler
     public void ShuffleNewSkills(BattleCharacter character, int count)
     {
         var currentSkills = character.skills;
-        var skills = character.character.Skills.Select(SkillCollection.GetSkill).ToList();
+        var skills = character.character.Skills.Gen().Select(SkillCollection.GetSkill).ToArray();
         skills.Shuffle();
         foreach (var t in skills)
         {

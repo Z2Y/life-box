@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+using Cathei.LinqGen;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -59,7 +59,7 @@ public class BattleBlockManager : MonoBehaviour
     public List<BattlePositionBlock> GetBlocksByRange(Vector3Int center, int range = 0, BlockRangeType type = BlockRangeType.Dot)
     {
         List<BattlePositionBlock> blocks = new List<BattlePositionBlock>();
-        var block = battleBlocks.FirstOrDefault(b => b.Position == center);
+        var block = battleBlocks.Gen().Where(b => b.Position == center).FirstOrDefault();
 
         if (block == null) return blocks;
 
@@ -83,15 +83,15 @@ public class BattleBlockManager : MonoBehaviour
 
     public void HideAllBlocks()
     {
-        Vector3Int[] positions = battleBlocks.Select(block => block.Position).ToArray();
+        Vector3Int[] positions = battleBlocks.Gen().Select(block => block.Position).ToArray();
         TileBase[] tiles = new TileBase[positions.Length];
         tilemap.SetTiles(positions, tiles);
     }
 
     public void ShowBlocks(List<BattlePositionBlock> blocks, BattleBlockType type = BattleBlockType.Moveable)
     {
-        Vector3Int[] positions = blocks.Select(block => block.Position).ToArray();
-        TileBase[] tiles = blocks.Select(block =>
+        Vector3Int[] positions = blocks.Gen().Select(block => block.Position).ToArray();
+        TileBase[] tiles = blocks.Gen().Select(block =>
         {
             switch (type)
             {

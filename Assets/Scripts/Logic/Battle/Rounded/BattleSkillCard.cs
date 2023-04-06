@@ -1,7 +1,7 @@
 using DG.Tweening;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using Model;
 using UnityEngine;
@@ -126,7 +126,7 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
 
         List<BattlePositionBlock> blocks = BattleBlockManager.Instance.GetBlocksByRange(cellPos);
 
-        if (blocks.Count <= 0 || !skillAction.selectRange.Intersect(blocks).Any() )
+        if (blocks.Count <= 0 || !skillAction.selectRange.Gen().Any((block) => blocks.Contains(block)) )
         {
             skillAction.selectResult = null;
             ShowSkillIndicator();

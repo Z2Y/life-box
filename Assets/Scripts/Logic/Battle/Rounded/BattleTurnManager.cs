@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 
 public enum BattleState
 {
@@ -22,16 +21,16 @@ public class BattleTurnManager
     {
         get
         {
-            var teams = AllRoles.GroupBy(role => role.TeamID).ToDictionary((group) => group.Key, (group) => group.ToList());
-            int alivedTeam = 0;
-            int alivedTeamID = 0;
+            var teams = AllRoles.Gen().GroupBy(role => role.TeamID);
+            var aliveTeam = 0;
+            var aliveTeamID = 0;
             foreach (var team in teams)
             {
-                bool isAlive = team.Value.Count(role => role.isAlive) > 0;
-                alivedTeam += isAlive ? 1 : 0;
-                alivedTeamID = isAlive ? team.Key : alivedTeamID;
+                var isAlive = team.Gen().Count(role => role.isAlive) > 0;
+                aliveTeam += isAlive ? 1 : 0;
+                aliveTeamID = isAlive ? team.Key : aliveTeamID;
             }
-            return alivedTeam > 1 ? BattleState.InProgress : (alivedTeamID == 0 ? BattleState.Win : BattleState.Lose);
+            return aliveTeam > 1 ? BattleState.InProgress : (aliveTeamID == 0 ? BattleState.Win : BattleState.Lose);
         }
     }
 
@@ -42,12 +41,12 @@ public class BattleTurnManager
 
     public BattleCharacter GetNextCharacter()
     {
-        return AllRoles.FirstOrDefault(role => role.isAlive && role.ActedTurn < CurrentTurn);
+        return AllRoles.Gen().Where(role => role.isAlive && role.ActedTurn < CurrentTurn).FirstOrDefault();
     }
 
     public BattleCharacter GetCharacterByPosition(Vector3Int pos)
     {
-        return AllRoles.FirstOrDefault(role => role.isAlive && role.Position == pos);
+        return AllRoles.Gen().Where(role => role.isAlive && role.Position == pos).FirstOrDefault();
     }
 
     public void AddBattleCharacter(BattleCharacter character)

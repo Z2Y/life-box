@@ -1,7 +1,7 @@
 using UnityEngine;
 using Model;
 using System.Collections.Generic;
-using System.Linq;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 
 public class BattleAIManager : Singleton<BattleAIManager>
@@ -197,7 +197,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
 
     private int GetNearestEnemyDistance(Vector3Int position)
     {
-        var enemies = BattleManager.Instance.TurnManager.AllRoles.Where(role => role.isAlive && role.TeamID != AiCharacter.TeamID);
+        var enemies = BattleManager.Instance.TurnManager.AllRoles.Gen().Where(role => role.isAlive && role.TeamID != AiCharacter.TeamID);
 
         int minDist = int.MaxValue;
         foreach (var enemy in enemies)
@@ -222,7 +222,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
             attackBlocks.Add(skillAction.selectResult);
         }
 
-        return attackBlocks.Count(block =>
+        return attackBlocks.Gen().Count(block =>
         {
             var character = BattleManager.Instance.TurnManager.GetCharacterByPosition(block.Position);
             if (skillAction.skill.SkillType == SkillType.Attack)
@@ -238,7 +238,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
 
     private IEnumerable<BattlePositionBlock> GetAllSelectableBlock(BattleSkillAction action)
     {
-        return action.selectRange.Where(block =>
+        return action.selectRange.Gen().Where(block =>
         {
             BattleCharacter blockCharacter = BattleManager.Instance.TurnManager.GetCharacterByPosition(block.Position);
             bool isEnemy = blockCharacter != null && blockCharacter.TeamID != action.self.TeamID;
