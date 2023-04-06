@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Utils
@@ -37,6 +39,16 @@ namespace Utils
         public static bool IsNotNegative(int value)
         {
             return value >= 0;
+        }
+
+        public static List<T> ToList<T>(this IEnumerator<T> source)
+        {
+            var list = new List<T>();
+            while (source.MoveNext())
+            {
+                list.Add(source.Current);
+            }
+            return list;
         }
     }
 }

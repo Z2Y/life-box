@@ -1,15 +1,15 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
+using Utils;
 
 [CommandResolverHandler("BattlePropertyCost")]
 public class BattlePropertyCostResolver : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        BattleSkillAction skillAction = env["Skill"] as BattleSkillAction;
-        if (skillAction == null) return null;
+        if (env["Skill"] is not BattleSkillAction skillAction) return null;
 
         if (Enum.TryParse<SubPropertyType>(args[0] as string, true, out var propertyType))
         {
@@ -27,9 +27,9 @@ public class BattleCostResolver : CommandResolver
 {
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        var result = new BattleCostResult
+        var result = new BattleCostResult()
         {
-            costs = env.Values.OfType<IBattleCost>().ToList()
+            costs = env.Values.Gen().OfType<IBattleCost>().GetEnumerator().ToList()
         };
         await this.Done();
         return result;
@@ -42,7 +42,7 @@ public class BattleCostResult
 
     public bool CouldCost()
     {
-        return costs.Count <= 0 || costs.All(cost => cost.CouldCost());
+        return costs.Count <= 0 || costs.Gen().All(cost => cost.CouldCost());
     }
 
     public void Cost()
@@ -54,7 +54,7 @@ public class BattleCostResult
 
     public override string ToString()
     {
-        return string.Join("\n", costs.Select(cost => cost.CostDescription()));
+        return string.Join("\n", costs.Gen().Select(cost => cost.CostDescription()).ToArray());
     }
 }
 

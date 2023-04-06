@@ -1,12 +1,7 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using MessagePack;
 using UnityEngine;
 
 
+/*
 [AttributeUsage(AttributeTargets.Class)]
 public class ModelContainerOf : Attribute {
 
@@ -19,13 +14,14 @@ public class ModelContainerOf : Attribute {
         LoadOrder = order;
     }
 }
+*/
 
 public class ModelLoader : MonoBehaviour {
     private const string dir = "Models/";
 
     public static ModelLoader Instance {get; private set;}
 
-    public bool loaded {get; private set;}
+    public bool loaded => false;
 
     private void Awake() {
         if (Instance == null) {
@@ -34,7 +30,8 @@ public class ModelLoader : MonoBehaviour {
         // Load().Coroutine();
     }
 
-    private async UniTask Load() {
+    private async void Load() {
+        /*
         if (loaded) {
             return ;
         }
@@ -58,5 +55,6 @@ public class ModelLoader : MonoBehaviour {
             type.GetMethod("OnLoad", flags)?.Invoke(modelContainer, null);
         }
         loaded = true;
+        */
     }
 }

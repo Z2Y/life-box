@@ -1,9 +1,9 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 
 public class LifeProperty
 {
@@ -54,8 +54,8 @@ public static class LifePropertyFactory
             configs = DefaultRandomConfig;
         }
         LifeProperty lifeProperty = new LifeProperty();
-        int randomTotal = configs.Select((config) => config.propertyRange.end).Sum();
-        foreach (RandomPropertyConfig config in configs)
+        int randomTotal = configs.Gen().Select((config) => config.propertyRange.end).Sum();
+        foreach (var config in configs)
         {
             var min = Math.Min(total, config.propertyRange.start);
             var max = Math.Min(total, config.propertyRange.end);

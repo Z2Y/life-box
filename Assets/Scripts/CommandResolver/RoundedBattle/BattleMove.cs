@@ -1,8 +1,9 @@
-using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
+using Utils;
 
 [CommandResolverHandler("BattleMove")]
 public class BattleMove : CommandResolver
@@ -10,8 +11,7 @@ public class BattleMove : CommandResolver
     public UniTaskCompletionSource<bool> moveTcs;
     public override async UniTask<object> Resolve(string arg, List<object> args, Dictionary<string, object> env)
     {
-        BattleSkillAction skillAction = env["Skill"] as BattleSkillAction;
-        if (skillAction == null) return null;
+        if (env["Skill"] is not BattleSkillAction skillAction) return null;
 
         BattleMoveEffect result = new BattleMoveEffect(skillAction.self, skillAction.selectResult.Position);
 
@@ -27,7 +27,7 @@ public class BattleEffectResolver : CommandResolver
     {
         var result = new BattleEffectResult
         {
-            effects = env.Values.OfType<IBattleEffect>().ToList()
+            effects = env.Values.Gen().OfType<IBattleEffect>().GetEnumerator().ToList()
         };
         await this.Done();
         return result;
@@ -54,12 +54,12 @@ public class BattleEffectResult
 
     public int GetScore()
     {
-        return effects.Sum(effect => effect.GetScore());
+        return effects.Gen().Select(effect => effect.GetScore()).Sum();
     }
 
     public override string ToString()
     {
-        return string.Join("\n", effects.Select(effect => effect.EffectDescription()));
+        return string.Join("\n", effects.Gen().Select(effect => effect.EffectDescription()).ToArray());
     }    
 }
 

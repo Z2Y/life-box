@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -80,7 +79,7 @@ public class BattleManager : Singleton<BattleManager>
 
     BattlePositionBlock FindBattlePosition(Vector3 pos)
     {
-        var blocks = BattleBlockManager.Instance.GetBattlePositonBlocks();
+        var blocks = BattleBlockManager.Instance.GetBattlePositionBlocks();
         var minDist = float.MaxValue;
         BattlePositionBlock result = null;
         foreach (var block in blocks)

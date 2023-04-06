@@ -7,10 +7,10 @@ namespace Utils.Collision
 {
     static class NearBy
     {
-        public static IEnumerable<T> GetNearbyObjects<T>(this GameObject target)  where T : MonoBehaviour
+        public static IEnumerable<Collider2D> GetNearbyObjects(this GameObject target)
         {
             var collisionDetector = target.GetComponent<CollisionDetector>();
-            return collisionDetector.GetCollidingObjects().Select((obj) => obj.GetComponent<T>()).Where((obj) => !ReferenceEquals(obj, null));
+            return collisionDetector.GetCollidingObjects();
         }
     }
 }

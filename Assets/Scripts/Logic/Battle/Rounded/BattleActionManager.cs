@@ -1,13 +1,14 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Model;
 using ModelContainer;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Utils;
 using Utils.Shuffle;
 
 public class BattleActionManager : MonoBehaviour, IDropHandler
@@ -104,14 +105,14 @@ public class BattleActionManager : MonoBehaviour, IDropHandler
 
     public void ShuffleNewSkills(BattleCharacter character, int count)
     {
-        List<Skill> currentSkills = character.skills;
-        List<Skill> skills = character.character.Skills.Select(SkillCollection.GetSkill).ToList();
+        var currentSkills = character.skills;
+        var skills = character.character.Skills.Select(SkillCollection.GetSkill).ToList();
         skills.Shuffle();
-        for (int i = 0; i < skills.Count; i++)
+        foreach (var t in skills)
         {
             if (count <= 0) break;
-            if (currentSkills.Contains(skills[i])) continue;
-            character.skills.Add(skills[i]);
+            if (currentSkills.Contains(t)) continue;
+            character.skills.Add(t);
             count--;
         }
     }

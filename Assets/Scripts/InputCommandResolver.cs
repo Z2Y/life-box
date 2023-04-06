@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using Cathei.LinqGen;
 using UnityEngine;
-
 
 public class InputCommandResolver : MonoBehaviour
 {
@@ -22,8 +21,11 @@ public class InputCommandResolver : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            var handlers = Resolvers.Where((pair) => Input.GetKeyDown(pair.Key) && !keyDisabled.Contains(pair.Key)).ToList();
-            handlers.ForEach(pair => pair.Value.Resolve(pair.Key));
+            var handlers = Resolvers.Gen().Where((pair) => Input.GetKeyDown(pair.Key) && !keyDisabled.Contains(pair.Key));
+            foreach (var pair in handlers)
+            {
+                pair.Value.Resolve(pair.Key);
+            }
         }
 
     }
@@ -54,7 +56,7 @@ public class InputCommandResolver : MonoBehaviour
     
     private void RegisterCommandResolver() {
         var asm = typeof(CommandResolverHandler).Assembly;
-        var types = asm.GetExportedTypes().Where((type) => type.IsDefined(typeof(InputCommandResolverHandler), false)).ToArray();
+        var types = asm.GetExportedTypes().Gen().Where((type) => type.IsDefined(typeof(InputCommandResolverHandler), false));
         foreach(var type in types) {
             var keyCode = ((InputCommandResolverHandler)type.GetCustomAttribute(typeof(InputCommandResolverHandler), false))?.Code;
             if (keyCode != null && type.GetInterface(nameof(IInputCommandResolver)) != null)

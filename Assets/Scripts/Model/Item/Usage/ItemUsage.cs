@@ -1,6 +1,5 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Model;
 
 public interface IItemUsable {
@@ -19,7 +18,7 @@ public class ItemUsage {
     {
         get {
             if (cachedDescription == null) {
-                cachedDescription = string.Join("\n", effects.Select((effect) => effect.UsageDescription()));
+                cachedDescription = string.Join("\n", effects.Gen().Select((effect) => effect.UsageDescription()).AsEnumerable() );
             }
             return cachedDescription;
         }

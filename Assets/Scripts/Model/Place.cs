@@ -1,10 +1,8 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Controller;
 using MessagePack;
 using Realms;
-using Utils.Shuffle;
 
 namespace Model
 {
@@ -42,7 +40,6 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Model.Place), "places")]
     public static class PlaceCollection
     {
 

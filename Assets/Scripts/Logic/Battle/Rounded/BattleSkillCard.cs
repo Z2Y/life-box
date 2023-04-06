@@ -1,8 +1,7 @@
-using System;
 using DG.Tweening;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Model;
 using UnityEngine;
@@ -134,7 +133,7 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
             return;
         }
 
-        BattleCharacter blockCharacter = BattleManager.Instance.TurnManager.GetCharacterByPosition(blocks.First().Position);
+        BattleCharacter blockCharacter = BattleManager.Instance.TurnManager.GetCharacterByPosition(blocks[0].Position);
 
         bool isEnemy = blockCharacter != null && blockCharacter.TeamID != Character.TeamID;
         bool isFriend = blockCharacter != null && blockCharacter.TeamID == Character.TeamID;
@@ -145,17 +144,17 @@ public class BattleSkillCard : UIBase, IDragHandler, IBeginDragHandler, IEndDrag
 
         switch (Skill.SelectType) {
             case SelectType.EmptyBlock:
-                skillAction.selectResult = isEmpty ? blocks.First() : null;
+                skillAction.selectResult = isEmpty ? blocks[0] : null;
                 break;
             case SelectType.EnemyBlock:
-                skillAction.selectResult = isEnemy ? blocks.First() : null;
+                skillAction.selectResult = isEnemy ? blocks[0] : null;
                 break;
             case SelectType.FriendBlock:
-                skillAction.selectResult = isEnemy ? blocks.First() : null;
+                skillAction.selectResult = isEnemy ? blocks[0] : null;
                 break;
             case SelectType.AnyBlock:
             default:
-                skillAction.selectResult = blocks.First();
+                skillAction.selectResult = blocks[0];
                break;
         }
 

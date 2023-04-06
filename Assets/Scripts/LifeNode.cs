@@ -1,7 +1,7 @@
-using System.Linq;
 using UnityEngine.Events;
 using ModelContainer;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -76,7 +76,7 @@ public class LifeNode
 
     public string Description
     {
-        get { return Events.Count <= 0 ? "无事发生" : string.Join(" ", Events.Select(e => e.Description)); }
+        get { return Events.Count <= 0 ? "无事发生" : string.Join(" ", Events.Gen().Select(e => e.Description)); }
     }
 
     public bool IsDeath

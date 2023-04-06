@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using UnityEngine;
 
 public static class ExpressionFieldResolver {
@@ -34,7 +34,7 @@ public static class ExpressionFieldResolver {
 
     static void RegisterFieldResolver() {
         var asm = typeof(FieldResolverHandler).Assembly;
-        var types = asm.GetExportedTypes().Where((Type type) => type.IsDefined(typeof(FieldResolverHandler), false)).ToArray();
+        var types = asm.GetExportedTypes().Gen().Where((Type type) => type.IsDefined(typeof(FieldResolverHandler), false));
         foreach(var type in types) {
             var fieldName = ((FieldResolverHandler)type.GetCustomAttribute(typeof(FieldResolverHandler), false))?.FieldName;
             if (Activator.CreateInstance(type) is IFieldResolver resolver) {

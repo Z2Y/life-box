@@ -1,14 +1,14 @@
 using UnityEngine;
 using Model;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 
 public class BattleAIManager : Singleton<BattleAIManager>
 {
     public BattleCharacter AiCharacter { get; private set; }
 
-    private Dictionary<KeyValuePair<Skill, Vector3Int>, AISelectResult> selectCache = new Dictionary<KeyValuePair<Skill, Vector3Int>, AISelectResult>();
+    private Dictionary<KeyValuePair<Skill, Vector3Int>, AISelectResult> selectCache = new ();
 
     public void BindCharacter(BattleCharacter character)
     {
@@ -68,7 +68,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         }
 
 
-        List<BattlePositionBlock> selectableBlocks = GetAllSelectableBlock(skillAction);
+        var selectableBlocks = GetAllSelectableBlock(skillAction);
 
         int frameCount = 0;
         int maxScore = 0;
@@ -197,7 +197,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
 
     private int GetNearestEnemyDistance(Vector3Int position)
     {
-        List<BattleCharacter> enemies = BattleManager.Instance.TurnManager.AllRoles.Where(role => role.isAlive && role.TeamID != AiCharacter.TeamID).ToList();
+        var enemies = BattleManager.Instance.TurnManager.AllRoles.Where(role => role.isAlive && role.TeamID != AiCharacter.TeamID);
 
         int minDist = int.MaxValue;
         foreach (var enemy in enemies)
@@ -236,7 +236,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
         });
     }
 
-    private List<BattlePositionBlock> GetAllSelectableBlock(BattleSkillAction action)
+    private IEnumerable<BattlePositionBlock> GetAllSelectableBlock(BattleSkillAction action)
     {
         return action.selectRange.Where(block =>
         {
@@ -256,7 +256,7 @@ public class BattleAIManager : Singleton<BattleAIManager>
                 default:
                     return true;
             }
-        }).ToList();
+        }).AsEnumerable();
     }
 }
 

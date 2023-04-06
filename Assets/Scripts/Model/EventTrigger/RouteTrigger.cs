@@ -1,6 +1,6 @@
+using Cathei.LinqGen;
 using Model;
 using ModelContainer;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 
 public class RouteTrigger : Singleton<RouteTrigger>, IEventTrigger
@@ -13,10 +13,10 @@ public class RouteTrigger : Singleton<RouteTrigger>, IEventTrigger
     {
         if (routeEvent == null)
         {
-            routeEvent = EventCollection.GetEventByType(EventType.Route).FirstOrDefault();
+            routeEvent = EventCollection.GetEventByType(EventType.Route).Gen().FirstOrDefault();
         }
-        LifeNode lifenode = LifeEngine.Instance.lifeData?.current;
-        EventNode lastEvent = lifenode?.Events?.LastOrDefault();
+        var node = LifeEngine.Instance.lifeData?.current;
+        var lastEvent = node?.Events?.Gen().LastOrDefault();
         if (lastEvent != null && lastEvent.Event.EventType == (int)EventType.Route) {
             lastEvent.DoEffect().Forget();
             return null;

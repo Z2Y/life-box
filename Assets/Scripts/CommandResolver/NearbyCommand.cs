@@ -18,9 +18,12 @@ public class NearbyNPCCommand : CommandResolver
 
         var character = LifeEngine.Instance.MainCharacter;
 
-        var nearByCharacters = character.gameObject.GetNearbyObjects<NPCController>();
+        var nearByCharacters = character.gameObject.GetNearbyObjects();
         
-        return nearByCharacters.Gen().Where((npc) => npc.character.IsState(args[0] as string)).Count();
+        return nearByCharacters.Gen().
+            Select((obj) => obj.GetComponent<NPCController>()).
+            Where((obj) => !ReferenceEquals(obj, null)).
+            Where((npc) => npc.character.IsState(args[0] as string)).Count();
     }
 }
 
@@ -60,7 +63,10 @@ public class SelectTalkToNearBy : CommandResolver
         
         var character = LifeEngine.Instance.MainCharacter;
 
-        var nearbyCharacters = character.gameObject.GetNearbyObjects<NPCController>().Gen().Where((npc) => npc.character.IsTalkable()).ToArray();
+        var nearbyCharacters = character.gameObject.GetNearbyObjects().Gen()
+            .Select((obj) => obj.GetComponent<NPCController>())
+            .Where((obj) => !ReferenceEquals(obj, null))
+            .Where((npc) => npc.character.IsTalkable()).ToArray();
         var names = nearbyCharacters.Gen().Select((npc) => npc.character.Name).ToArray();
         var selector = await SelectPanel.Show("选择想要交谈的人物", names, (idx) =>
         {
@@ -91,7 +97,10 @@ public class SelectShopToNearby : CommandResolver
         
         var character = LifeEngine.Instance.MainCharacter;
 
-        var nearbyCharacters = character.gameObject.GetNearbyObjects<NPCController>().Gen().Where((npc) => npc.character.IsShopable()).ToArray();
+        var nearbyCharacters = character.gameObject.GetNearbyObjects().Gen()
+            .Select((obj) => obj.GetComponent<NPCController>())
+            .Where((obj) => !ReferenceEquals(obj, null))
+            .Where((npc) => npc.character.IsShopable()).ToArray();
 
         void OnCancel() => shopCompleteSource.TrySetCanceled();
         void OnComplete(ShopResult result) => shopCompleteSource.TrySetResult(result);

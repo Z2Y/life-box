@@ -1,9 +1,10 @@
 using Model;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using ModelContainer;
 using System.Collections.Generic;
+using Cathei.LinqGen;
+using Utils;
 
 public class LifeCardManager : MonoBehaviour
 {
@@ -41,9 +42,9 @@ public class LifeCardManager : MonoBehaviour
         IEnumerable<Command> globalCommands = CommandCollection.GetValidGlobalCommands();
         List<Command> commands;
         if (place != null) {
-            commands = CommandCollection.GetValidCommands(place.Commands).Concat(globalCommands).ToList();
+            commands = CommandCollection.GetValidCommands(place.Commands).Gen().Concat(globalCommands.Gen()).GetEnumerator().ToList();
         } else {
-            commands = globalCommands.ToList();
+            commands = globalCommands.GetEnumerator().ToList();
         }
         for (int i = 0; i < commands.Count; i++)
         {

@@ -1,6 +1,6 @@
+using Cathei.LinqGen;
 using Model;
 using ModelContainer;
-using System.Linq;
 
 public class ShopTrigger : Singleton<ShopTrigger>, IEventTrigger
 {
@@ -19,13 +19,12 @@ public class ShopTrigger : Singleton<ShopTrigger>, IEventTrigger
     {
         if (shopEvent == null)
         {
-            shopEvent = EventCollection.GetEventByType(EventType.Shop).FirstOrDefault();
+            shopEvent = EventCollection.GetEventByType(EventType.Shop).Gen().FirstOrDefault();
         }
-        LifeNode lifenode = LifeEngine.Instance.lifeData?.current;
-        EventNode lastEvent = lifenode?.Events?.LastOrDefault();
+        var node = LifeEngine.Instance.lifeData?.current;
+        var lastEvent = node?.Events?.Gen().LastOrDefault();
         if (lastEvent != null && lastEvent.Event.EventType == (int)EventType.Shop) {
-            ShopResult lastShopResult = lastEvent.EffectResult as ShopResult;
-            return (lastShopResult == null || lastShopResult.Sells.Config != Config) ? shopEvent : null;
+            return (lastEvent.EffectResult is not ShopResult lastShopResult || lastShopResult.Sells.Config != Config) ? shopEvent : null;
         }
         return shopEvent;
     }

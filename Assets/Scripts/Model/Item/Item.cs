@@ -41,7 +41,6 @@ namespace Model
 
 namespace ModelContainer
 {
-    [ModelContainerOf(typeof(Item), "items")]
     public static class ItemCollection
     {
 

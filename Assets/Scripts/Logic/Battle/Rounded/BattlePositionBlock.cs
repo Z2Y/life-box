@@ -1,7 +1,8 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using UnityEngine;
+using Utils;
 
 public enum BattleBlockType {
     Moveable,
@@ -51,9 +52,9 @@ public class BattlePositionBlock
     public List<Vector3Int> GetNeighbors()
     {
         if (Math.Abs(Position.y) %2 == 0) {
-            return offset0.Select((offset) => Position + offset).ToList();
+            return offset0.Gen().Select((offset) => Position + offset).GetEnumerator().ToList();
         }
-        return offset1.Select((offset) => Position + offset).ToList();
+        return offset1.Gen().Select((offset) => Position + offset).GetEnumerator().ToList();
     }
 
     public int GetDistance(BattlePositionBlock other) {
@@ -92,8 +93,8 @@ public class BattlePositionBlock
     public List<Vector3Int> GetNeighbors(int range)
     {
         var neighborDistances = GetNeighborDistance(range);
-        var neighbors = neighborDistances.Keys.ToList();
-        neighbors.Sort((posA , posB) => neighborDistances[posA].CompareTo(neighborDistances[posB]));
-        return neighbors;
+        var result = neighborDistances.Keys.GetEnumerator().ToList();
+        result.Sort((posA , posB) => neighborDistances[posA].CompareTo(neighborDistances[posB]));
+        return result;
     }
 }

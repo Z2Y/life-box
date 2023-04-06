@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Cysharp.Threading.Tasks;
 using Model;
 
@@ -22,6 +22,7 @@ public class ItemChangePropertyEffect : ItemUsageEffect
 
     public override string UsageDescription()
     {
-        return string.Join("\n", changes.Keys.Select((propertyType) => $"{propertyType.GetPropertyName()} {(changes[propertyType] > 0 ? "+" : "-")}{changes[propertyType]}"));
+        return string.Join("\n", 
+            changes.Keys.Gen().Select((propertyType) => $"{propertyType.GetPropertyName()} {(changes[propertyType] > 0 ? "+" : "-")}{changes[propertyType]}").AsEnumerable());
     }
 }

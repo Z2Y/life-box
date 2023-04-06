@@ -1,15 +1,13 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
 public class BattleBlockManager : MonoBehaviour
 {
     public static BattleBlockManager Instance { get; private set; }
 
-    private List<BattlePositionBlock> battleBlocks = new List<BattlePositionBlock>();
+    private List<BattlePositionBlock> battleBlocks = new ();
 
     private List<Vector3Int> circleOffsets = new List<Vector3Int>() {
         new Vector3Int(-1, 1, 0),
@@ -53,7 +51,7 @@ public class BattleBlockManager : MonoBehaviour
     }
 
 
-    public List<BattlePositionBlock> GetBattlePositonBlocks()
+    public List<BattlePositionBlock> GetBattlePositionBlocks()
     {
         return battleBlocks;
     }
@@ -86,7 +84,7 @@ public class BattleBlockManager : MonoBehaviour
     public void HideAllBlocks()
     {
         Vector3Int[] positions = battleBlocks.Select(block => block.Position).ToArray();
-        TileBase[] tiles = battleBlocks.Select<BattlePositionBlock, TileBase>(block => null).ToArray();
+        TileBase[] tiles = new TileBase[positions.Length];
         tilemap.SetTiles(positions, tiles);
     }
 

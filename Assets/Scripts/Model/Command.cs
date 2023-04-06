@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Controller;
 using MessagePack;
 using Model;
 using Realms;
+using Utils;
 
 namespace Model
 {
@@ -32,21 +34,7 @@ namespace ModelContainer
         {
             return RealmDBController.Db.Find<Command>(id);
         }
-
-        public static IEnumerable<int> GetValidCommandIndex(IEnumerable<long> ids)
-        {
-            return ids.Select((long id, int idx) =>
-            {
-                var command = GetCommand(id);
-                if (command == null) return -1;
-                if (command.Condition.ExecuteExpression() is bool isValid)
-                {
-                    UnityEngine.Debug.Log($"isValid {(bool?)isValid}");
-                    return isValid ? idx : -1;
-                }
-                return idx;
-            }).Where((int v) => v >= 0);
-        }
+        
 
         public static IEnumerable<Command> GetValidGlobalCommands()
         {
@@ -55,7 +43,17 @@ namespace ModelContainer
 
         public static IEnumerable<Command> GetValidCommands(IList<long> ids)
         {
-            return GetValidCommandIndex(ids).Select((idx) => GetCommand(ids[idx]));
+            return ids.Gen().Select((id) =>
+            {
+                var command = GetCommand(id);
+                if (command == null) return null;
+                if (command.Condition.ExecuteExpression() is bool isValid)
+                {
+                    UnityEngine.Debug.Log($"isValid {(bool?)isValid}");
+                    return isValid ? command : null;
+                }
+                return command;
+            }).Where(LinqHelper.IsNotNull).AsEnumerable();
         }
 
     }
