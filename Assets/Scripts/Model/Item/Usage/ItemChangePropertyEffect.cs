@@ -6,7 +6,7 @@ using Model;
 
 public class ItemChangePropertyEffect : ItemUsageEffect
 {
-    public Dictionary<SubPropertyType, int> changes = new Dictionary<SubPropertyType, int>();
+    public readonly Dictionary<SubPropertyType, int> changes = new ();
 
     public override void TackEffect(Character player)
     {
