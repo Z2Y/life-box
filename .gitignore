@@ -44,6 +44,7 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
+*.pdf
 *.sln
 *.suo
 *.tmp
