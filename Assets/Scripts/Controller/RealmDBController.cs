@@ -16,33 +16,33 @@ namespace Controller
 
         public static async UniTask copyDbFile()
         {
+            var sourcePath = $"{Application.streamingAssetsPath}/db.realm";
+            var targetPath = $"{Application.persistentDataPath}/db.realm";
             Debug.Log($"Checking Db File is in {Application.persistentDataPath}");
-            if (!File.Exists($"{Application.persistentDataPath}/db.realm"))
+            if (File.Exists(targetPath))
             {
                 Debug.Log($"Db File is Not Exist in {Application.persistentDataPath}, Copying...");
                 if (Application.platform != RuntimePlatform.Android)
                 {
-
-                    await UniTask.RunOnThreadPool(() =>
-                    {
-                        File.Copy($"{Application.streamingAssetsPath}/db.realm",
-                            $"{Application.persistentDataPath}/db.realm");
-                    });
+                    File.Copy(sourcePath, targetPath);
                 }
                 else
                 {
-                    var req = UnityWebRequest.Get($"{Application.streamingAssetsPath}/db.realm");
+                    Debug.Log($"Read Streaming Assets...");
+                    var req = UnityWebRequest.Get(sourcePath);
                     await req.SendWebRequest();
-                    await File.WriteAllBytesAsync($"{Application.persistentDataPath}/db.realm",
-                        req.downloadHandler.data);
+                    Debug.Log($"Writing PersistentDataPath Assets... {req.downloadHandler.data.Length}");
+                    File.WriteAllBytes(targetPath, req.downloadHandler.data);
                 }
+                Debug.Log($"Copy Completed");
             }
             else
             {
                 // todo check db version and update db assets
             }
-            config = new(Application.persistentDataPath + "/db.realm");
-            Db = await Realm.GetInstanceAsync(config);
+            config = new(targetPath);
+            Db = Realm.GetInstance(config);
+            Debug.Log($"Db Connected.");
         }
     }
 }
