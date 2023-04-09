@@ -71,6 +71,10 @@ SpriteAtlas:
   - {fileID: 948825324, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
   - {fileID: 799254491, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
   - {fileID: 21300000, guid: f923562a22434452593e6c473b6655f0, type: 3}
+  - {fileID: 21300000, guid: 3b247ddba848142588a754aa839d9f79, type: 3}
+  - {fileID: 21300000, guid: 465e51bc54cf24b45857689c627df99e, type: 3}
+  - {fileID: 21300000, guid: a4bfac1d4ad2a42189fd6877725888b9, type: 3}
+  - {fileID: 21300000, guid: 5b52388de06f5488688eaa6184f5b148, type: 3}
   - {fileID: 21300000, guid: 7108149e6b3e047b88540f9793b2f6e3, type: 3}
   - {fileID: 21300000, guid: 6a46c9af46c2d4817a473a0d4d563cde, type: 3}
   m_PackedSpriteNamesToIndex:
@@ -106,6 +110,10 @@ SpriteAtlas:
   - Hyena_walk_3
   - Hyena_walk_2
   - building_2
+  - wall-0005
+  - wall-0003
+  - wall-0004
+  - wall-0002
   - tree1
   - building_1
   m_RenderDataMap: {}
