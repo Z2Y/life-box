@@ -33,11 +33,19 @@ public class InputCommandResolver : MonoBehaviour
     public void DisableKeyCode(KeyCode code)
     {
         keyDisabled.Add(code);
+        if (JoyStickController.isReady)
+        {
+            var button = JoyStickController.Instance.GetButtonFor(code);
+            button.gameObject.SetActive(false);
+        }
     }
 
     public void EnableKeyCode(KeyCode code)
     {
-        keyDisabled.Remove(code);
+        if (keyDisabled.Remove(code) && JoyStickController.isReady)
+        {
+            JoyStickController.Instance.GetButtonFor(code);
+        }
     }
 
     public void Register(KeyCode code, IInputCommandResolver resolver) {
@@ -46,12 +54,24 @@ public class InputCommandResolver : MonoBehaviour
         } else {
             Resolvers.Add(code, resolver);
         }
+        if (JoyStickController.isReady)
+        {
+            var button = JoyStickController.Instance.GetButtonFor(code);
+            button.RemoveAllListener();
+            button.onClick.AddListener(() => resolver.Resolve(code));
+        }
     }
 
     public void UnRegister(KeyCode code)
     {
         Resolvers.Remove(code);
         keyDisabled.Remove(code);
+        if (JoyStickController.isReady)
+        {
+            var button = JoyStickController.Instance.GetButtonFor(code);
+            button.RemoveAllListener();
+            button.gameObject.SetActive(false);
+        }
     }
     
     private void RegisterCommandResolver() {

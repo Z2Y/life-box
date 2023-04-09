@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cathei.LinqGen;
 using Controller;
+using Cysharp.Threading.Tasks;
 using Logic.Map.MapProcedure;
 using Logic.Message;
 using ModelContainer;
@@ -56,6 +57,7 @@ namespace Logic.Map
         {
             if (beginOnStart)
             {
+                await UniTask.WaitUntil(() => LifeEngine.Instance.isReady);
                 await YieldCoroutine.WaitForSeconds(0.125f);
                 Prepare();
                 BeginProcedure();

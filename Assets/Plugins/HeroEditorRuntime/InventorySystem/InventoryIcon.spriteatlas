@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: InventoryIcon
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: db7275d1e27c4b4488aa4d930682edad, type: 3}
+    - {fileID: 102900000, guid: e8d24c5fb1cea554793f336818295bef, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: d136cb10e87740c2b6912f1a36e88894, type: 3}
+  - {fileID: 21300000, guid: d26c1d80adf046f8bfb39fa41b086ec7, type: 3}
+  - {fileID: 21300000, guid: 63faaba0a6ab41c891e7471f0f3924d8, type: 3}
+  - {fileID: 21300000, guid: 7271f9d0fe4f41848b875db50e05dbd3, type: 3}
+  - {fileID: 21300000, guid: 8098d001595641a09d1a231822321e54, type: 3}
+  - {fileID: 21300000, guid: 216612419cfd423480be12506c03062b, type: 3}
+  - {fileID: 21300000, guid: ab718a51727c4a82886b06cb004df634, type: 3}
+  - {fileID: 21300000, guid: 533abca1f345417e984b150a43d1ef78, type: 3}
+  - {fileID: 21300000, guid: 89f0f9f13ea146bf8bb089e9767134b8, type: 3}
+  - {fileID: 21300000, guid: 6e417af18a814ed5b6d4e055413a3c9f, type: 3}
+  - {fileID: 21300000, guid: fd4b4032172640d1aaea3a9e48ca6bcc, type: 3}
+  - {fileID: 21300000, guid: 7fc31972583968c4cbfaca7a77474bee, type: 3}
+  - {fileID: 21300000, guid: ec095a725f8d48c9b301e97a14a82683, type: 3}
+  - {fileID: 21300000, guid: d0bcaa82889e3c047aa89ddfafb46dfb, type: 3}
+  - {fileID: 21300000, guid: c3d44c822aab469592ddb903e9b04b8c, type: 3}
+  - {fileID: 21300000, guid: b7aef392d3564bebb421b76b53033ff8, type: 3}
+  - {fileID: 21300000, guid: 1bb988b26fd94a32b8f0389632c94d39, type: 3}
+  - {fileID: 21300000, guid: 566baf0333bc42ccbe0973b5bebec71a, type: 3}
+  - {fileID: 21300000, guid: 2a13c0537e604e76b48fb6a10af59e81, type: 3}
+  - {fileID: 21300000, guid: 7df37d93d479473892b11e60491be5dc, type: 3}
+  - {fileID: 21300000, guid: dc67c3c3fff34c979a91efb426f225ca, type: 3}
+  - {fileID: 21300000, guid: 22f709e369ac49fa9ac15f509ea20e8e, type: 3}
+  - {fileID: 21300000, guid: 2bd87704d9d8415fb2562cbe65f8d5f2, type: 3}
+  - {fileID: 21300000, guid: b1b7d244d57341f9a64fefb9ad87ceff, type: 3}
+  - {fileID: 21300000, guid: 916ae444a8d24b2d94f3fca4ac6878a0, type: 3}
+  - {fileID: 21300000, guid: b7b50a648b914b71a63c6ede8a31ea9b, type: 3}
+  - {fileID: 21300000, guid: d229f2746a024bf3b47201703b9ec14b, type: 3}
+  - {fileID: 21300000, guid: 43cb41843a4e48f3939d27508a41d1f6, type: 3}
+  - {fileID: 21300000, guid: 15d38394ad804e40aced5fcc718c9a2d, type: 3}
+  - {fileID: 21300000, guid: 033d36940848f11419a2dd62890bae20, type: 3}
+  - {fileID: 21300000, guid: 78f76f45457c49a0b28fa4e2a91b30ef, type: 3}
+  - {fileID: 21300000, guid: 8ebdc375001046539db40eecb5ce2ec5, type: 3}
+  - {fileID: 21300000, guid: 15ce82f5c46b4657acb235df3073e5da, type: 3}
+  - {fileID: 21300000, guid: f2712a16f3a945ad93ea6a7e02defc00, type: 3}
+  - {fileID: 21300000, guid: 92cdaa36a4157434b90c94cad63204cd, type: 3}
+  - {fileID: 21300000, guid: 6a7965a697c24a689633cfa2a821ca7e, type: 3}
+  - {fileID: 21300000, guid: 363589a6a71f41178568f25657ba4de3, type: 3}
+  - {fileID: 21300000, guid: 176661c66228466f9f74c027f6d60f9f, type: 3}
+  - {fileID: 21300000, guid: 81ce7cf6f38f4b4f8983c153af6610d9, type: 3}
+  - {fileID: 21300000, guid: 78156a7796d94bc19a8f72844c68d362, type: 3}
+  - {fileID: 21300000, guid: cf1087f7d4a642848c206a12487fef82, type: 3}
+  - {fileID: 21300000, guid: 829e2698f4a940698df4359686925b5f, type: 3}
+  - {fileID: 21300000, guid: 15101aa8274743f3b592174115165fe8, type: 3}
+  - {fileID: 21300000, guid: 10dee9b87d324441bcb20a2010e3ae55, type: 3}
+  - {fileID: 21300000, guid: 3d210ed8562242d3804c2502b7312c3a, type: 3}
+  - {fileID: 21300000, guid: 526b65aa93604a8eb236a699e08fc9b3, type: 3}
+  - {fileID: 21300000, guid: a1ee9aaa05814b4b9660aebdaaa24578, type: 3}
+  - {fileID: 21300000, guid: 1cb305bafac44ee6891fdec0b71848b4, type: 3}
+  - {fileID: 21300000, guid: 2b6caaca0f814ba7a8be69288d4e7b4c, type: 3}
+  - {fileID: 21300000, guid: dbff44ea28934646b14fff229f0db0d9, type: 3}
+  - {fileID: 21300000, guid: ae011a2b76094d3d988dc7d5ab9b778d, type: 3}
+  - {fileID: 21300000, guid: 7f4ec24b5f7540b390ea6a506e851ba5, type: 3}
+  - {fileID: 21300000, guid: ada49ebbda004f959f40a08491eeaa53, type: 3}
+  - {fileID: 21300000, guid: a36a26db86a540cd978ba8c673b557a9, type: 3}
+  - {fileID: 21300000, guid: 402fdb9d8b9d41cf9d023363fed36ab3, type: 3}
+  - {fileID: 21300000, guid: 56afccfd75bb40b19cd1935f469e9f06, type: 3}
+  - {fileID: 21300000, guid: bf5517de517f4c5a9bef6061ce7596fc, type: 3}
+  - {fileID: 21300000, guid: d394fdcf6e594dccab168743d7f50740, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Cape
+  - Gloves
+  - Scroll
+  - DualSwords
+  - Material
+  - Eye
+  - Frame
+  - Brown
+  - Head
+  - Pistol
+  - Mask
+  - FullHair
+  - Ring
+  - Round12
+  - Earrings
+  - Armor
+  - Body
+  - Mouth
+  - Eyebrows
+  - Crossbow
+  - ButtonR
+  - Beard
+  - Food
+  - Button
+  - ButtonG
+  - Green
+  - Ear
+  - ButtonB
+  - Axe
+  - FilledCircle
+  - Makeup
+  - Belt
+  - Vest
+  - Glasses
+  - OutLineCircle
+  - Blue
+  - Sword2H
+  - Grey
+  - Helmet
+  - Back
+  - Frame
+  - Backpack
+  - Panel
+  - Panel
+  - Purple
+  - Bow
+  - Potion
+  - Shield
+  - Pauldrons
+  - Red
+  - IconEmpty
+  - Rifle
+  - Necklace
+  - Button
+  - Empty
+  - Sword1H
+  - Boots
+  - Hair
+  m_RenderDataMap: {}
+  m_Tag: InventoryIcon
+  m_IsVariant: 0

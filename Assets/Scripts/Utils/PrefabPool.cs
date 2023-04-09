@@ -203,7 +203,6 @@ namespace Utils
         private void onReturnToPool(T obj, T2 arg)
         {
             var pair = new KeyValuePair<T, T2>(obj, arg);
-            used.Remove(pair);
             unused.Add(pair);
             obj.transform.SetParent(Root);
             obj.gameObject.SetActive(false);

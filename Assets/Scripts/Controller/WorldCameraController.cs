@@ -7,6 +7,7 @@ namespace Controller
     public class WorldCameraController : MonoBehaviour
     {
 
+        [SerializeField]
         private GameObject _followGameObject;
         
         [SerializeField]
@@ -52,18 +53,27 @@ namespace Controller
                 return;
             }
             
-            if (moveSmoothly)
-            {
-                var tween = transform.DOMove(tarGetPosition(), duration);
+            Debug.Log($"Follow to {other.name} begin");
 
-                await YieldCoroutine.WaitForInstruction(tween.WaitForCompletion());
-            }
-            else
+            try
             {
-                transform.position = tarGetPosition();
-            }
+                if (moveSmoothly)
+                {
+                    transform.DOComplete();
+                    var tween = transform.DOMove(tarGetPosition(), duration);
 
-            isFollowing = _followGameObject != null;
+                    await YieldCoroutine.WaitForInstruction(tween.WaitForCompletion()).SuppressCancellationThrow();
+                }
+                else
+                {
+                    transform.position = tarGetPosition();
+                }
+            }
+            finally
+            {
+                isFollowing = _followGameObject != null;
+                Debug.Log($"Follow to {_followGameObject?.name} end {isFollowing}");
+            }
         }
 
         private Vector3 tarGetPosition()

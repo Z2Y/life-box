@@ -33,7 +33,14 @@ namespace Controller
         {
             if (isPlayer)
             {
-                updateSpeedFromUserInput();
+                if (JoyStickController.isReady)
+                {
+                    updateSpeedFromJoystick();
+                }
+                else
+                {
+                    updateSpeedFromUserInput();
+                }
             }
             else
             {
@@ -107,6 +114,21 @@ namespace Controller
                 speed *= 2;
                 animator.SetSpeed(speed);
             }
+        }
+        
+        private void updateSpeedFromJoystick() {
+            if (animator.Sliding) return;
+            
+            var speedX = JoyStickController.Instance.Joystick.Horizontal;
+            var speedY = JoyStickController.Instance.Joystick.Vertical;
+            var input = new Vector3(speedX, speedY, 0).normalized * 2f;
+            
+            if (input != speed && Vector3.Distance(input, speed) > 0.001f)
+            {
+                speed.Set(input.x, input.y, input.z);
+                speed *= 2;
+                animator.SetSpeed(speed);
+            }         
         }
 
         public async UniTask MoveTo(Vector3 target, Vector3 moveSpeed, long expectTime)

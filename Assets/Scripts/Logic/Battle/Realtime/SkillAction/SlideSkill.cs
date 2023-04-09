@@ -38,8 +38,8 @@ namespace Logic.Battle.Realtime.SkillAction
 
         public void DoSkill()
         {
-            var speedX = Input.GetAxisRaw("Horizontal");
-            var speedY = Input.GetAxisRaw("Vertical");
+            var speedX = JoyStickController.isReady ? JoyStickController.Instance.Joystick.Horizontal : Input.GetAxisRaw("Horizontal");
+            var speedY = JoyStickController.isReady ? JoyStickController.Instance.Joystick.Vertical : Input.GetAxisRaw("Vertical");
             var input = new Vector3(speedX, speedY, 0).normalized * 2f;
 
             if (input.magnitude < 0.0001f)

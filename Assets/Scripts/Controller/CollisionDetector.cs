@@ -83,7 +83,7 @@ namespace Controller
             collidingObjects.RemoveWhere(LinqHelper.IsObjectNull);
             
             // Debug.Log($"Remove {removed} invalid object");
-            var existed = collidingObjects.Gen().Where(LinqHelper.IsObjectNotNull);
+            var existed = collidingObjects.Gen().Where(LinqHelper.IsObjectNotNull).ToArray();
 
             foreach (var collidingObject in existed)
             {
@@ -103,7 +103,7 @@ namespace Controller
         {
             collidingObjects.RemoveWhere(LinqHelper.IsObjectNull);
             
-            var existed = collidingObjects.Gen().Where(LinqHelper.IsObjectNotNull);
+            var existed = collidingObjects.Gen().Where(LinqHelper.IsObjectNotNull).ToArray();
             
             foreach (var collidingObject in existed)
             {

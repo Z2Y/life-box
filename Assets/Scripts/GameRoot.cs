@@ -12,7 +12,7 @@ public class GameRoot : MonoBehaviour
             Instance = this;
         }
 
-        if (Application.platform == RuntimePlatform.Android)
+        if (Application.platform is RuntimePlatform.Android or RuntimePlatform.IPhonePlayer)
         {
             Application.targetFrameRate = 120;
         }

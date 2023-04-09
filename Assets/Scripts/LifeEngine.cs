@@ -44,7 +44,7 @@ public class LifeEngine : MonoBehaviour {
         // setup main character for player
         mainCharacter.SetLocation(lifeData.current.Location);
         mainCharacter.SetAsPlayer(true);
-        WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Forget();
+        WorldCameraController.Instance.FollowTo(mainCharacter.gameObject).Coroutine();
         isReady = true;
         
         OnLifeStart?.Invoke();
@@ -57,6 +57,7 @@ public class LifeEngine : MonoBehaviour {
         SwordSlashController.Pool.RecycleUsed();
         WorldLootObject.Pool.RecycleUsed();
         GameLoader.Instance.LoadSceneWithAnimation("MainScene").Coroutine();
+        isReady = false;
     }
 
     private async void OnNextMonth() {

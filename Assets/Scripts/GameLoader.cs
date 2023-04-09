@@ -75,7 +75,10 @@ public class GameLoader : MonoBehaviour
         {
             isLoading = true;
             await LoadSceneAsync("LifeScene");
-            // await LoadModelData();
+            if (Application.isMobilePlatform)
+            {
+                await JoyStickController.LoadAsync();
+            }
             await LifeEngine.Instance.CreateNewGame();
             await FadeOut(0f);
         }
