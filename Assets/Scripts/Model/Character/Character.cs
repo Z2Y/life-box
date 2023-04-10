@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Cathei.LinqGen;
 using Controller;
 using MessagePack;
+using Microsoft.NET.StringTools;
 using Model;
 using Realms;
 
@@ -53,6 +55,6 @@ namespace ModelContainer
         {
             return RealmDBController.Db.Find<Character>(id);
         }
-        
+
     }
 }

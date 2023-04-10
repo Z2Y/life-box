@@ -56,13 +56,13 @@ public class GameLoader : MonoBehaviour
         });
     }
 
-    public async UniTask LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
+    private async UniTask LoadSceneAsync(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
     {
         var loadOp = SceneManager.LoadSceneAsync(sceneName, mode);
         while (!loadOp.isDone)
         {
             loadingText.text = $"载入中。。。 {(int)(loadOp.progress * 100)}%";
-            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);;
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
         }
         loadingText.text = "载入中。。。 100%";
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
@@ -79,6 +79,7 @@ public class GameLoader : MonoBehaviour
             {
                 await JoyStickController.LoadAsync();
             }
+            await RealmDBController.copyDbFile();
             await LifeEngine.Instance.CreateNewGame();
             await FadeOut(0f);
         }
@@ -92,9 +93,9 @@ public class GameLoader : MonoBehaviour
 
     private async UniTask CrossFade(Func<UniTask> action)
     {
-        await FadeIn(0.5f);
+        await FadeIn(0.4f);
         await action();
-        await FadeOut(0.5f);
+        await FadeOut(0.4f);
     }
 
     private async UniTask FadeOut(float duration)
@@ -105,14 +106,5 @@ public class GameLoader : MonoBehaviour
     private async UniTask FadeIn(float duration)
     {
         await YieldCoroutine.WaitForInstruction(loadingCanvas.DOFade(1f, duration).WaitForCompletion());
-    }
-
-    private async UniTask LoadModelData()
-    {
-        while (!(ModelLoader.Instance?.loaded ?? false))
-        {
-            loadingText.text = "读取数据。。。";
-            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
-        }
     }
 }

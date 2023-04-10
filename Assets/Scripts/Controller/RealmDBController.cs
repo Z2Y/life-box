@@ -38,7 +38,7 @@ namespace Controller
             {
                 // todo check db version and update db assets
             }
-            config = new(targetPath) { FallbackPipePath = getAndroidFilesDir()};
+            config = new RealmConfiguration(targetPath) { FallbackPipePath = getAndroidFilesDir()};
             
             Db = Realm.GetInstance(config);
             Debug.Log($"Db Connected.");

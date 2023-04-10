@@ -13,9 +13,10 @@ namespace Model
         Money = 1,
         Equipment = 2,
         Book = 3,
-        material = 4,
+        Material = 4,
         Tool = 5,
-        Special = 6
+        Special = 6,
+        Asset = 7
     }
 
     [MessagePackObject(true)]

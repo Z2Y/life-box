@@ -20,7 +20,7 @@ public class LifeNodeText : UIBase {
     }
 
     public void UpdateLifeText() {
-        UnityEngine.Debug.Log("Update Life Node");
+        Debug.Log("Update Life Node");
         lifeText.text = $"{node?.Description}";
 
         LifeTextConsole.Instance?.UpdateScroller();

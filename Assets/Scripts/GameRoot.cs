@@ -12,11 +12,10 @@ public class GameRoot : MonoBehaviour
             Instance = this;
         }
 
-        if (Application.platform is RuntimePlatform.Android or RuntimePlatform.IPhonePlayer)
+        if (Application.isMobilePlatform)
         {
             Application.targetFrameRate = 120;
         }
-        // Application.targetFrameRate = 512;
     }
 
     public void NewGame() {

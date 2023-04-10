@@ -7,9 +7,9 @@ using Cathei.LinqGen;
 
 public class LifeProperty
 {
-    public Dictionary<SubPropertyType, PropertyValue> propertys = new Dictionary<SubPropertyType, PropertyValue>();
+    public Dictionary<SubPropertyType, PropertyValue> propertys = new ();
 
-    public PropertyChangeEvent onPropertyChange = new PropertyChangeEvent();
+    public PropertyChangeEvent onPropertyChange = new ();
 
     public PropertyValue GetProperty(SubPropertyType pType)
     {
@@ -49,12 +49,9 @@ public static class LifePropertyFactory
     };
     public static LifeProperty Random(int total, List<RandomPropertyConfig> configs = null)
     {
-        if (configs == null)
-        {
-            configs = DefaultRandomConfig;
-        }
+        configs ??= DefaultRandomConfig;
         LifeProperty lifeProperty = new LifeProperty();
-        int randomTotal = configs.Gen().Select((config) => config.propertyRange.end).Sum();
+        // int randomTotal = configs.Gen().Select((config) => config.propertyRange.end).Sum();
         foreach (var config in configs)
         {
             var min = Math.Min(total, config.propertyRange.start);
@@ -98,7 +95,7 @@ public enum SubPropertyType
     HitPoint,
     [SubPropertyOf(PropertyType.Basic, "体力", false, true)]
     Energy,
-    [SubPropertyOf(PropertyType.Basic, "力量")]
+    [SubPropertyOf(PropertyType.Attack, "力量")]
     Strength,
     [SubPropertyOf(PropertyType.Basic, "文采")]
     Literary,
