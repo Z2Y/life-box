@@ -47,7 +47,7 @@ namespace Logic.Battle.Realtime.SkillAction
         {
             if (_controller.IsReady() && character.WeaponType == WeaponType.Bow)
             {
-                var targetPos = JoyStickController.isReady ? _arm.position + (Vector3)JoyStickController.Instance.offset : camera.ScreenToWorldPoint(Input.mousePosition);
+                var targetPos = JoyStickController.isReady ? _arm.position + (Vector3)JoyStickController.Instance.GetJoystickFor(KeyCode.Mouse1).GetOffset() : camera.ScreenToWorldPoint(Input.mousePosition);
                 RotateArm(_arm, _weapon,  targetPos, -60, 60);
                 _controller.Turn(Mathf.Sign((targetPos - self.transform.position).x));
             }

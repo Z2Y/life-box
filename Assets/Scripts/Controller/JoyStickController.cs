@@ -22,7 +22,7 @@ public class JoyStickController : UIBase
         isReady = true;
     }
 
-    public Vector2 offset => new Vector2(Joystick.Horizontal, Joystick.Vertical);
+    public Vector2 offset => Joystick.GetOffset();
 
     public JoyStickButton GetButtonFor(KeyCode code)
     {
@@ -32,6 +32,19 @@ public class JoyStickController : UIBase
             {
                 item.button.gameObject.SetActive(true);
                 return item.button;
+            }
+        }
+        return null;
+    }
+
+    public bl_Joystick GetJoystickFor(KeyCode code)
+    {
+        foreach (var item in buttons)
+        {
+            if (item.code == code)
+            {
+                item.button.gameObject.SetActive(true);
+                return item.joystick;
             }
         }
         return null;
@@ -47,5 +60,13 @@ public class JoyStickController : UIBase
     {
         public KeyCode code;
         public JoyStickButton button;
+        public bl_Joystick joystick;
+    }
+}
+
+public static class bl_Joystick_Helper {
+    public static Vector2 GetOffset(this bl_Joystick joystick)
+    {
+        return new Vector2(joystick.Horizontal, joystick.Vertical);
     }
 }
