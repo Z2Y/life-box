@@ -70,7 +70,9 @@ SpriteAtlas:
   - {fileID: -2050731079, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
   - {fileID: 948825324, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
   - {fileID: 799254491, guid: 60ba0f28f111b456bba70f7b9b2796fb, type: 3}
+  - {fileID: 21300000, guid: 01aa7678143b84faa8a653df13f7483a, type: 3}
   - {fileID: 21300000, guid: f923562a22434452593e6c473b6655f0, type: 3}
+  - {fileID: 21300000, guid: fc11b48a54e4e4f47a75e2b26d9798ef, type: 3}
   - {fileID: 21300000, guid: 3b247ddba848142588a754aa839d9f79, type: 3}
   - {fileID: 21300000, guid: 465e51bc54cf24b45857689c627df99e, type: 3}
   - {fileID: 21300000, guid: a4bfac1d4ad2a42189fd6877725888b9, type: 3}
@@ -109,7 +111,9 @@ SpriteAtlas:
   - Hyena_walk_0
   - Hyena_walk_3
   - Hyena_walk_2
+  - building-002
   - building_2
+  - building-001
   - wall-0005
   - wall-0003
   - wall-0004

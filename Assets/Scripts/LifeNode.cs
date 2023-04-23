@@ -96,7 +96,7 @@ public class LifeNode
     public static LifeNode CreateBornNode()
     {
         var node = new LifeNode();
-        var bornPlace = PlaceCollection.GetPlace(10002);
+        var bornPlace = PlaceCollection.GetPlace(10001);
         node.Place = bornPlace;
         node.Location = new Location() {MapID = bornPlace.MapID, PlaceID = bornPlace.ID};
         return node;
