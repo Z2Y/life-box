@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -53,7 +52,7 @@ namespace Controller
 
             }
 
-            for (int i = 0; i < trailList.Count; i++)
+            for (var i = 0; i < trailList.Count; i++)
             {
                 trailList[i].updateAlpha(trailFadeSpeed * Time.deltaTime);
 
@@ -71,7 +70,6 @@ namespace Controller
             if (spawning) return;
             spawning = true;
             var trail = await pool.GetAsync();
-            var trialTransform = trail.transform;
             trail.Init(transform);
             trail.updateSortingOrder(characterRenderer.sortingOrder - 1);
 

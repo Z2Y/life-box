@@ -19,7 +19,7 @@ namespace Controller
         {
             var sourcePath = $"{Application.streamingAssetsPath}/db.realm";
             var targetPath = $"{Application.persistentDataPath}/db.realm";
-            Debug.Log($"Checking Db File is in {Application.persistentDataPath}");
+            // Debug.Log($"Checking Db File is in {Application.persistentDataPath}");
             if (!File.Exists(targetPath))
             {
                 Debug.Log($"Db File is Not Exist in {Application.persistentDataPath}, Copying...");

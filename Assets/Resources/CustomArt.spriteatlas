@@ -46,6 +46,7 @@ SpriteAtlas:
   - {fileID: -1885567557, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
   - {fileID: 1336906701, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
   - {fileID: -2014805301, guid: 29cfed41f243f4922a88e10c60423439, type: 3}
+  - {fileID: 21300000, guid: 3807b491b2d5b443299d233678359571, type: 3}
   - {fileID: 21300000, guid: 6da38192021a742578fa313b672db530, type: 3}
   - {fileID: -26086281, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
   - {fileID: -1487320371, guid: eb0925e260fb2492c8bda77ca6de0552, type: 3}
@@ -87,6 +88,7 @@ SpriteAtlas:
   - Hyena_death_3
   - Hyena_death_0
   - Hyena_death_1
+  - builing-003
   - wall-0001
   - Hyena_idle_0
   - Hyena_idle_1
