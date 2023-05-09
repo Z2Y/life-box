@@ -21,7 +21,7 @@ namespace Logic.Battle.Realtime.SkillAction
 
         private NPCAnimationController _controller;
         private CharacterState _originState;
-        private int skillState = 0;
+        private int skillState;
 
         public void Init()
         {

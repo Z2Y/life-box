@@ -30,7 +30,6 @@ namespace Logic.Map.MapProcedure
 
         public override void OnProcedureFinish(Action onFinish)
         {
-            
             _onFinish += onFinish;
         }
 

@@ -7,7 +7,6 @@ using Logic.Enemy;
 using Logic.Projectile;
 using Model;
 using UnityEngine;
-using Utils;
 using Character = Assets.HeroEditor.Common.Scripts.CharacterScripts.Character;
 
 namespace Logic.Battle.Realtime.SkillAction
