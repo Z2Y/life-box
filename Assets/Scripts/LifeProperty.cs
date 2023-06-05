@@ -7,9 +7,9 @@ using Cathei.LinqGen;
 
 public class LifeProperty
 {
-    public Dictionary<SubPropertyType, PropertyValue> propertys = new ();
+    public readonly Dictionary<SubPropertyType, PropertyValue> propertys = new ();
 
-    public PropertyChangeEvent onPropertyChange = new ();
+    public readonly PropertyChangeEvent onPropertyChange = new ();
 
     public PropertyValue GetProperty(SubPropertyType pType)
     {
@@ -38,9 +38,9 @@ public static class LifePropertyFactory
         }
     }
 
-    public static RangeInt DefaultRange = new RangeInt(0, 20);
+    private static readonly RangeInt DefaultRange = new (0, 20);
 
-    public static readonly List<RandomPropertyConfig> DefaultRandomConfig = new List<RandomPropertyConfig>() {
+    private static readonly List<RandomPropertyConfig> DefaultRandomConfig = new List<RandomPropertyConfig>() {
         new (SubPropertyType.Fortune, DefaultRange),
         new (SubPropertyType.Literary, DefaultRange),
         new (SubPropertyType.Wealth, DefaultRange),
