@@ -54,12 +54,12 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
         validItemIndex = Config.Item.Select((_, idx) => isConditionValid(Config.Condition[idx]) ? idx : -1).Where((idx) => idx >= 0).ToList();
         validItemIndex = validItemIndex.Shuffle().Take(Config.MaxItemCount).ToList();
         isStoring = true;
-        for (int i = 0; i < validItemIndex.Count; i++)
+        for (var i = 0; i < validItemIndex.Count; i++)
         {
-            Item item = ItemCollection.GetItem(Config.Item[validItemIndex[i]]);
-            int RefreshCount = Config.RefreshCount[validItemIndex[i]];
-            int Price = Config.Price[validItemIndex[i]];
-            int Resycle = Config.Recycle[validItemIndex[i]];
+            var item = ItemCollection.GetItem(Config.Item[validItemIndex[i]]);
+            var RefreshCount = Config.RefreshCount[validItemIndex[i]];
+            var Price = Config.Price[validItemIndex[i]];
+            var Recycle = Config.Recycle[validItemIndex[i]];
             ShopItemStack stack;
             if (i < Stacks.Count) {
                 stack = Stacks[i] as ShopItemStack;
@@ -69,7 +69,7 @@ public class ShopInventory : ItemInventory<Item, ShopItemStack>
             }
             stack.StoreItem(item, RefreshCount);
             stack.Price = (int)(Price * SellRate);
-            stack.Recycle = (int)(Resycle * RecycleRate);
+            stack.Recycle = (int)(Recycle * RecycleRate);
         }
         isStoring = false;
         lastRefreshTime = time;

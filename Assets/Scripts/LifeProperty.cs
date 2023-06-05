@@ -50,7 +50,7 @@ public static class LifePropertyFactory
     public static LifeProperty Random(int total, List<RandomPropertyConfig> configs = null)
     {
         configs ??= DefaultRandomConfig;
-        LifeProperty lifeProperty = new LifeProperty();
+        var lifeProperty = new LifeProperty();
         // int randomTotal = configs.Gen().Select((config) => config.propertyRange.end).Sum();
         foreach (var config in configs)
         {

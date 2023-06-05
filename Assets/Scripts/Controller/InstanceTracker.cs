@@ -5,7 +5,7 @@ namespace Controller
 {
     public class InstanceTracker<T> : MonoBehaviour where T : MonoBehaviour
     {
-        public static List<T> Instances { get; private set; } = new List<T>();
+        public static List<T> Instances { get; } = new ();
         int instanceIndex = 0;
 
         protected virtual void OnEnable()

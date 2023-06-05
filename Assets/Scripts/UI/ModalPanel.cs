@@ -14,8 +14,8 @@ public class ModalPanel : UIBase {
         description = transform.Find("Panel/Description").GetComponent<Text>();
         okButton = transform.Find("Panel/Buttons/OkButton").GetComponent<Button>();
         cancelButton = transform.Find("Panel/Buttons/CancelButton").GetComponent<Button>();
-        okButton.onClick.AddListener(this.Destroy);
-        cancelButton.onClick.AddListener(this.Destroy);
+        okButton.onClick.AddListener(Destroy);
+        cancelButton.onClick.AddListener(Destroy);
     }
 
     public void SetDescription(string text) {

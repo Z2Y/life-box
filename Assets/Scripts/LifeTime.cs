@@ -22,7 +22,7 @@ public struct TimeSpan {
 
     public override bool Equals(object obj)
     {
-        TimeSpan? second = obj as TimeSpan?; 
+        TimeSpan? second = obj as TimeSpan?;
 
         return second != null && this == (TimeSpan)second; 
     }

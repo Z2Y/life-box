@@ -24,7 +24,7 @@ public class ItemInventory
         this.Capacity = capacity;
     }
 
-    public virtual ItemStack GetStack(long itemId)
+    public /*virtual*/ ItemStack GetStack(long itemId)
     {
         foreach (ItemStack stack in Stacks)
         {
@@ -59,7 +59,7 @@ public class ItemInventory
         return stack.StoreItem(item);
     }
 
-    public virtual bool ReplaceStack(int index, ItemStack stack)
+    public /*virtual*/ bool ReplaceStack(int index, ItemStack stack)
     {
         if (index < 0 || index >= Stacks.Count || Stacks[index] == stack)
         {
