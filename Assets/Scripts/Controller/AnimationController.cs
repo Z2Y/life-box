@@ -5,9 +5,9 @@ namespace Controller
 {
     public class AnimationController : MonoBehaviour, IMoveAnimator, IAttackAnimator
     {
-        public Animator animator { get; private set; }
-        public Vector3 Speed { get; private set; }
-        public bool Attacking { get; private set;  }
+        private Animator animator { get; set; }
+        private Vector3 Speed { get; set; }
+        private bool Attacking { get; set;  }
 
         private Transform aim;
 

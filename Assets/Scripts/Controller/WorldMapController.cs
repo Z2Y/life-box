@@ -34,6 +34,8 @@ namespace Controller
 
         public List<PlaceController> Places { get; private set; } = new ();
         public List<PlaceController> ActivePlaces { get; private set; } = new ();
+
+        public WorldGridBlock Blocks { get; } = new ();
         
 
         private void Awake()
@@ -105,10 +107,8 @@ namespace Controller
 
         public bool isGridPositionBlocked(Vector3Int pos)
         {
-            // todo
-            return false;
+            return Blocks.isBlocked(pos) || !worldBounds.Contains(pos);
         }
-
 
         public GridLayout Ground => ground;
 
